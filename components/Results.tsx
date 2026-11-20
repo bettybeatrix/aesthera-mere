@@ -154,7 +154,7 @@ export default function Results() {
           </p>
 
           <Link
-            href="/#results"
+            href="/results"
             className="mt-6 inline-flex items-center gap-3 border-b border-[#4C5534] pb-2 font-montserrat text-xs font-medium uppercase tracking-[0.12em] text-[#4C5534] transition hover:gap-5"
           >
             Explore More Results <ArrowUpRightIcon className="h-4 w-4" />
