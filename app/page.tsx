@@ -1,35 +1,64 @@
 
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import MeetOurDoctors from "@/components/MeetOurDoctors";
+import Treatments from "@/components/Treatments";
+import Results from "@/components/Results";
+import Testimonials from "@/components/Testimonials";
+import About from "@/components/About";
+import Promos from "@/components/Promos";
+import Consultation from "@/components/Consultation";
+import Footer from "@/components/Footer";
+import HomeScrollEffects from "@/components/HomeScrollEffects";
+
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#F7F4EF]">
-      <nav className="flex items-center justify-between px-8 py-6">
-        <h1 className="font-serif text-2xl text-[#485D40]">
-          Aesthera Mère
-        </h1>
+    <>
+      <Navbar />
+      <HomeScrollEffects />
 
-        <span className="text-sm text-[#485D40]">
-          Beauty Creations
-        </span>
-      </nav>
+      <main id="top">
+        {/* 1. Hero */}
+        <Hero />
 
-      <section className="flex min-h-[75vh] flex-col items-center justify-center px-6 text-center">
-        <p className="mb-5 text-sm tracking-[0.3em] text-[#485D40]">
-          WELCOME TO AESTHERA MÈRE
-        </p>
+        {/* 2. Meet Our Doctors */}
+        <div data-scroll-reveal="up">
+          <MeetOurDoctors />
+        </div>
 
-        <h2 className="mb-6 font-serif text-5xl text-[#485D40]">
-          Where Beauty Meets Care
-        </h2>
+        {/* 3. Our Treatments */}
+        <div data-scroll-reveal="up">
+          <Treatments />
+        </div>
 
-        <p className="mb-8 max-w-lg text-gray-600">
-          Discover a personalized approach to beauty,
-          confidence, and self-care.
-        </p>
+        {/* 4. Treatment Results */}
+        <div data-scroll-reveal="up">
+          <Results />
+        </div>
 
-        <button className="bg-[#485D40] px-8 py-3 text-white">
-          Explore Treatments
-        </button>
-      </section>
-    </main>
+        {/* 5. Client Testimonials */}
+        <div data-scroll-reveal="up">
+          <Testimonials />
+        </div>
+
+        {/* 6. About Aesthera */}
+        <div data-scroll-reveal="up">
+          <About />
+        </div>
+
+        {/* 7. Our Promotions */}
+        <div data-scroll-reveal="up">
+          <Promos />
+        </div>
+
+        {/* 8. Ending Card */}
+        <div data-scroll-reveal="up">
+          <Consultation />
+        </div>
+      </main>
+
+      {/* 9. Footer */}
+      <Footer />
+    </>
   );
 }

@@ -10,4 +10,231 @@
 body {
   background: var(--color-cream);
   color: var(--color-text);
+  text-rendering: optimizeLegibility;
+}
+
+body > main {
+  flex: 1 0 auto;
+}
+
+::selection {
+  background: #4F6442;
+  color: #FFFCF3;
+}
+
+/* Keep compact navigation panels scrollable without a persistent gutter. */
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+.font-montserrat {
+  font-family: var(--font-montserrat), Arial, sans-serif;
+}
+
+
+/* BODONI FLF */
+@font-face {
+  font-family: "Bodoni FLF";
+  src: url("/fonts/BodoniFLF-Roman.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Bodoni FLF";
+  src: url("/fonts/BodoniFLF-Bold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+.font-seasons {
+  font-family: var(--font-seasons), Georgia, serif;
+}
+
+.font-bodoni {
+  font-family: "Bodoni FLF", Georgia, serif;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroIntroReveal {
+  from {
+    opacity: 0;
+    translate: 0 22px;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* Cinematic hero motion, driven by scroll-linked CSS custom properties. */
+.hero-scroll-media {
+  translate: 0 var(--hero-media-y, 0px);
+  scale: var(--hero-media-scale, 1.025);
+  transform-origin: center center;
+  will-change: translate, scale;
+}
+
+.hero-scroll-content {
+  opacity: var(--hero-content-opacity, 1);
+  translate: 0 var(--hero-content-y, 0px);
+  will-change: opacity, translate;
+}
+
+.hero-intro-title,
+.hero-intro-actions {
+  animation: heroIntroReveal 780ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-intro-title {
+  animation-delay: 100ms;
+}
+
+.hero-intro-actions {
+  animation-delay: 220ms;
+}
+
+/* Homepage reveal motion replays whenever elements re-enter the viewport. */
+html.home-motion-ready [data-home-reveal] {
+  opacity: 0;
+  transition-duration: 720ms;
+  transition-delay: var(--home-reveal-delay, 0ms);
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, translate, scale;
+}
+
+html.home-motion-ready [data-home-reveal="text"] {
+  translate: 0 18px;
+  transition-property: opacity, translate;
+}
+
+html.home-motion-ready [data-home-reveal="card"] {
+  translate: 0 22px;
+  scale: 0.992;
+  transition-property: opacity, translate, scale, transform, box-shadow;
+  transition-duration: 760ms;
+}
+
+html.home-motion-ready [data-home-reveal="image"] {
+  scale: 0.985;
+  transition-property: opacity, scale, transform;
+  transition-duration: 800ms;
+}
+
+html.home-motion-ready [data-home-reveal].is-revealed {
+  opacity: 1;
+  translate: 0 0;
+  scale: 1;
+  will-change: auto;
+}
+
+/* A consistent rhythm for the homepage sections. */
+.home-section {
+  padding: clamp(4.5rem, 7vw, 6.75rem) clamp(1.25rem, 3vw, 2rem);
+}
+.home-section h2 { text-wrap: balance; }
+.home-section p { text-wrap: pretty; }
+
+.luxury-card {
+  border: 1px solid rgb(79 100 66 / 0.12);
+  box-shadow: 0 8px 30px rgb(30 58 42 / 0.055);
+  transition:
+    transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 500ms ease,
+    box-shadow 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.luxury-card:hover {
+  transform: translateY(-6px);
+  border-color: rgb(179 149 82 / 0.34);
+  box-shadow: 0 24px 55px -24px rgb(30 58 42 / 0.3);
+}
+
+.luxury-image {
+  transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.group:hover .luxury-image {
+  transform: scale(1.035);
+}
+
+.luxury-button {
+  box-shadow: 0 8px 24px -12px rgb(30 58 42 / 0.55);
+  transition:
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 300ms ease,
+    border-color 300ms ease,
+    color 300ms ease,
+    box-shadow 300ms ease;
+}
+
+.luxury-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -12px rgb(30 58 42 / 0.52);
+}
+
+.text-link-arrow {
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.group:hover .text-link-arrow {
+  transform: translateX(4px);
+}
+
+.home-hero-image { background-position: 65% center; }
+.home-hero-overlay {
+  background: linear-gradient(90deg, #F6F3ED 0%, #F6F3ED 12%, transparent 66%);
+}
+section[id] { scroll-margin-top: 7rem; }
+a:focus-visible, button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 5px;
+}
+@media (max-width: 767px) {
+  .home-hero { min-height: auto; padding-top: 12rem; }
+  .home-hero-image {
+    bottom: auto; height: 21rem;
+    background-position: 85% top;
+  }
+  .home-hero-overlay {
+    background: linear-gradient(0deg, #F6F3ED 0%, #F6F3ED 48%, transparent 80%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-home-reveal] {
+    opacity: 1 !important;
+    translate: none !important;
+    scale: 1 !important;
+  }
+
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }
