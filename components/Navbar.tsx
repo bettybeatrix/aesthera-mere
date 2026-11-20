@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import TreatmentsMegaMenu from "@/components/TreatmentsMegaMenu";
 import { useBooking } from "@/components/BookingProvider";
 import { useTreatmentsMenu } from "@/components/TreatmentsMenuProvider";
+import { ArrowUpRightIcon } from "@/components/Icons";
 import { treatmentCategories as treatmentCatalog } from "@/data/treatments";
 
 const navLinks = [
@@ -136,7 +137,7 @@ function MobileNavigation({ pathname, onClose, onTreatments }: { pathname: strin
           {navLinks.map((link) => {
             const active = link.href === "/" ? pathname === "/" : pathname === link.href || pathname.startsWith(`${link.href}/`);
             const classes = `group flex min-h-12 w-full items-center justify-between gap-4 border-b border-[#80755F]/15 py-2.5 text-left transition-colors hover:text-[#4F6442] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4F6442] ${active ? "text-[#4F6442]" : "text-[#4C5534]"}`;
-            const label = <><span className="font-montserrat text-[14px] font-medium leading-tight">{link.name}</span><span aria-hidden="true" className={`text-[14px] transition-transform group-hover:translate-x-1 ${active ? "text-[#4F6442]" : "text-[#80755F]"}`}>{link.name === "Treatments" ? "+" : active ? "•" : "↗"}</span></>;
+            const label = <><span className="font-montserrat text-[14px] font-medium leading-tight">{link.name}</span><span aria-hidden="true" className={`text-[14px] transition-transform group-hover:translate-x-1 ${active ? "text-[#4F6442]" : "text-[#80755F]"}`}>{link.name === "Treatments" ? "+" : active ? "•" : <ArrowUpRightIcon className="h-4 w-4" />}</span></>;
             return link.name === "Treatments" ? (
               <button key={link.name} type="button" onClick={onTreatments} aria-haspopup="dialog" aria-controls="treatments-mega-menu" className={classes}>{label}</button>
             ) : <Link key={link.name} href={link.href} onClick={onClose} aria-current={active ? "page" : undefined} className={classes}>{label}</Link>;

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowUpRightIcon } from "@/components/Icons";
 import type { TreatmentGroup } from "@/data/treatments";
 
 export default function TreatmentSubcategoryCard({
@@ -30,7 +31,7 @@ export default function TreatmentSubcategoryCard({
         <p className="mt-3 font-montserrat text-[13px] leading-6 text-[#80755F]">{group.description}</p>
         <span className="mt-auto inline-flex items-center gap-2 pt-6 font-montserrat text-[11px] font-semibold uppercase tracking-[0.1em] text-[#4C5534]">
           Explore treatments
-          <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">↗</span>
+          <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1"><ArrowUpRightIcon className="h-4 w-4" /></span>
         </span>
       </div>
     </Link>

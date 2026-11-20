@@ -7,6 +7,7 @@ import {
   useState,
   type FormEvent,
 } from "react";
+import { ArrowRightIcon } from "@/components/Icons";
 
 type BookingModalProps = {
   open: boolean;
@@ -764,7 +765,7 @@ export default function BookingModal({
                   hover:bg-[#39432D]
                   disabled:cursor-not-allowed disabled:opacity-40"
               >
-                Preview Appointment Request →
+                <span className="inline-flex items-center justify-center gap-2">Preview Appointment Request <ArrowRightIcon className="h-4 w-4" /></span>
               </button>
 
               <p className="text-center font-montserrat

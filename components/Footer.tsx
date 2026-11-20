@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowUpIcon, ArrowUpRightIcon } from "@/components/Icons";
 
 const GOOGLE_MAPS_URL =
   "https://www.google.com/maps/place/Aesthera+Mere+Beauty+Creations/@14.570535,121.0493446,17z/data=!4m8!3m7!1s0x3397c9ff0d4effff:0x8f90fb8a8325a1c2!8m2!3d14.5705298!4d121.0519195!9m1!1b1!16s%2Fg%2F11nb_t70wc";
@@ -303,7 +304,7 @@ export default function Footer() {
                 className="mt-0 inline-flex min-h-8 items-center gap-2 font-montserrat text-[11px] text-[#FFFCF3] hover:underline hover:underline-offset-4"
               >
                 Get Directions
-                <span aria-hidden="true">↗</span>
+                <ArrowUpRightIcon className="h-4 w-4" />
               </a>
             </div>
           </div>
@@ -344,7 +345,7 @@ export default function Footer() {
                   onClick={backToTop}
                   className="font-montserrat text-[11px] text-[#FFFCF3]/80 hover:text-white"
                 >
-                  Back to Top ↑
+                  <span className="inline-flex items-center gap-1.5">Back to Top <ArrowUpIcon className="h-3.5 w-3.5" /></span>
                 </button>
               </div>
             </div>

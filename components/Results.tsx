@@ -4,6 +4,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowLeftIcon, ArrowRightIcon, ArrowUpRightIcon } from "@/components/Icons";
 
 const results = [
   {
@@ -127,7 +128,7 @@ export default function Results() {
               aria-label="Previous results"
               className="flex h-11 w-11 items-center justify-center rounded-full border border-[#80755F]/60 text-[#4C5534] transition hover:bg-[#4C5534] hover:text-white"
             >
-              ←
+              <ArrowLeftIcon className="h-5 w-5" />
             </button>
 
             <span className="font-montserrat text-xs tracking-[0.15em] text-[#80755F]">
@@ -141,7 +142,7 @@ export default function Results() {
               aria-label="Next results"
               className="flex h-11 w-11 items-center justify-center rounded-full border border-[#80755F]/60 text-[#4C5534] transition hover:bg-[#4C5534] hover:text-white"
             >
-              →
+              <ArrowRightIcon className="h-5 w-5" />
             </button>
           </div>
         )}
@@ -156,7 +157,7 @@ export default function Results() {
             href="/results"
             className="mt-6 inline-flex items-center gap-3 border-b border-[#4C5534] pb-2 font-montserrat text-xs font-medium uppercase tracking-[0.12em] text-[#4C5534] transition hover:gap-5"
           >
-            Explore More Results ↗
+            Explore More Results <ArrowUpRightIcon className="h-4 w-4" />
           </Link>
         </div>
       </div>

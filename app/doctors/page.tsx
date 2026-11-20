@@ -4,6 +4,7 @@ import Image, { type StaticImageData } from "next/image";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { useBooking } from "@/components/BookingProvider";
+import { ArrowUpRightIcon } from "@/components/Icons";
 import doctor1Image from "@/public/images/doctors/doctor1.png";
 import doctor2Image from "@/public/images/doctors/doctor2.png";
 
@@ -63,7 +64,7 @@ export default function DoctorsPage() {
                 <h2 className="font-seasons mt-3 text-[clamp(3rem,5vw,5rem)] leading-none">{doctor.name}</h2>
                 {doctor.description && <p className="mt-6 max-w-lg font-montserrat text-sm leading-7 text-[#80755F]">{doctor.description}</p>}
                 <button type="button" onClick={() => openBooking("", doctor.name)} className="mt-8 inline-flex min-h-12 items-center gap-3 rounded-full bg-[#4C5534] px-8 font-montserrat text-xs font-semibold text-white transition hover:bg-[#35452F]">
-                  Book with {doctor.name}<span aria-hidden="true">↗</span>
+                  Book with {doctor.name}<ArrowUpRightIcon className="h-4 w-4" />
                 </button>
               </div>
             </article>

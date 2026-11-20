@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+import { StarIcon } from "@/components/Icons";
 
 type Testimonial = {
   id: number;
@@ -177,9 +178,7 @@ export default function Testimonials() {
                 aria-label={`${current.rating} out of 5 stars`}
               >
                 {Array.from({ length: 5 }, (_, i) => (
-                  <span key={i} aria-hidden="true">
-                    {i < (current.rating ?? 0) ? "★" : "☆"}
-                  </span>
+                  <StarIcon key={i} filled={i < (current.rating ?? 0)} className="h-4 w-4" />
                 ))}
               </div>
             )}

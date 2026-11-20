@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowUpRightIcon } from "@/components/Icons";
 import { treatmentCategories as categories } from "@/data/treatments";
 
 export default function Treatments() {
@@ -52,7 +53,7 @@ export default function Treatments() {
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden p-5 text-white transition-opacity duration-300 lg:block lg:group-hover:opacity-0 lg:group-focus-within:opacity-0">
                     <span className="text-[10px] tracking-[0.22em]">0{i + 1}</span>
                     <h3 className="mt-2 text-[clamp(19px,1.8vw,27px)] leading-tight" style={{ fontFamily: '"The Seasons", Georgia, serif' }}>{category.name}</h3>
-                    <p className="mt-4 text-[10px] font-medium uppercase tracking-[0.12em]">Hover to explore <span aria-hidden="true">↗</span></p>
+                    <p className="mt-4 inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.12em]">Hover to explore <ArrowUpRightIcon className="h-3 w-3" /></p>
                   </div>
                   <nav aria-label={`${category.name} treatments`} className="pointer-events-none absolute inset-0 hidden flex-col justify-center overflow-y-auto px-4 py-4 text-white opacity-0 transition-opacity duration-300 lg:flex lg:group-hover:pointer-events-auto lg:group-hover:opacity-100 lg:group-focus-within:pointer-events-auto lg:group-focus-within:opacity-100">
                     <p className="mb-1 text-[9px] uppercase tracking-[0.18em] text-[#FFFCF3]">Explore treatments</p>
@@ -60,11 +61,11 @@ export default function Treatments() {
                     <div className="border-t border-white/40 pt-1">
                       {category.groups.map((group) => (
                         <Link key={group.slug} href={`${base}/${group.slug}`} scroll={true} className="am-desktop-treatment-link flex min-h-9 items-center justify-between gap-2 border-b border-white/20 py-1.5 text-[11px] leading-snug transition-colors hover:text-[#FFFCF3] focus-visible:outline-2 focus-visible:outline-white xl:text-xs">
-                          <span>{group.title}</span><span aria-hidden="true">↗</span>
+                          <span>{group.title}</span><ArrowUpRightIcon className="h-3.5 w-3.5 shrink-0" />
                         </Link>
                       ))}
                     </div>
-                    <Link href={base} scroll={true} className="am-desktop-treatment-link mt-3 inline-flex items-center gap-2 self-start border-b border-white pb-1 text-[10px] font-semibold uppercase tracking-[0.08em] focus-visible:outline-2 focus-visible:outline-white">View category <span aria-hidden="true">↗</span></Link>
+                    <Link href={base} scroll={true} className="am-desktop-treatment-link mt-3 inline-flex items-center gap-2 self-start border-b border-white pb-1 text-[10px] font-semibold uppercase tracking-[0.08em] focus-visible:outline-2 focus-visible:outline-white">View category <ArrowUpRightIcon className="h-3.5 w-3.5" /></Link>
                   </nav>
                   {/* Keyboard users can focus a persistent trigger rather than needing mouse hover. */}
                   <Link href={base} scroll={true} aria-label={`View ${category.name} treatments`} className="absolute inset-0 hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-white lg:block lg:group-hover:pointer-events-none lg:group-focus-within:pointer-events-none" />
@@ -76,10 +77,10 @@ export default function Treatments() {
                   <nav aria-label={`${category.name} subcategories`} className="flex flex-col">
                     {category.groups.map((group) => (
                       <Link key={group.slug} href={`${base}/${group.slug}`} scroll={true} className="flex min-h-11 items-center justify-between gap-2 border-b border-[#80755F]/20 py-2 text-sm text-[#4C5534] focus-visible:outline-2 focus-visible:outline-[#4C5534]">
-                        <span>{group.title}</span><span aria-hidden="true">↗</span>
+                        <span>{group.title}</span><ArrowUpRightIcon className="h-5 w-5 shrink-0" />
                       </Link>
                     ))}
-                    <Link href={base} scroll={true} className="mt-3 inline-flex min-h-11 items-center gap-2 text-xs font-semibold uppercase tracking-[0.07em] text-[#4C5534]">View category <span aria-hidden="true">↗</span></Link>
+                    <Link href={base} scroll={true} className="mt-3 inline-flex min-h-11 items-center gap-2 text-xs font-semibold uppercase tracking-[0.07em] text-[#4C5534]">View category <ArrowUpRightIcon className="h-4 w-4" /></Link>
                   </nav>
                 </div>
               </article>
@@ -88,7 +89,7 @@ export default function Treatments() {
         </div>
         <div className="mt-8 text-center">
           <Link href="/treatments" className="group inline-flex min-h-12 items-center justify-center gap-3 rounded-full border border-[#4C5534] px-7 text-xs font-semibold uppercase tracking-[0.08em] text-[#4C5534] transition-colors hover:bg-[#4C5534] hover:text-white">
-            View All Treatments <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">↗</span>
+            View All Treatments <span aria-hidden="true" className="transition-transform group-hover:translate-x-1"><ArrowUpRightIcon className="h-4 w-4" /></span>
           </Link>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useBooking } from "@/components/BookingProvider";
 import { useTreatmentsMenu } from "@/components/TreatmentsMenuProvider";
+import { ArrowUpRightIcon } from "@/components/Icons";
 
 // Hero slideshow assets live in public/images/hero/.
 const slides = [
@@ -152,7 +153,7 @@ export default function Hero() {
               className="font-montserrat inline-flex min-h-12 items-center justify-center gap-3 rounded-full border border-[#FFFCF3] bg-transparent px-7 py-3 text-[13px] font-semibold text-[#FFFCF3] transition-colors hover:border-[#B39552] hover:bg-[#B39552] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
               Explore Treatments
-              <span aria-hidden="true">↗</span>
+              <ArrowUpRightIcon className="h-4 w-4" />
             </button>
           </div>
         </div>

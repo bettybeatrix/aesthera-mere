@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowUpRightIcon } from "@/components/Icons";
 import type { Treatment } from "@/data/treatments";
 
 export default function TreatmentCard({
@@ -31,7 +32,7 @@ export default function TreatmentCard({
             {treatment.packagePrice && <p className="mt-2 font-montserrat text-[11px] font-semibold uppercase tracking-[0.1em] text-[#80755F]">Package available</p>}
           </div>
           <Link href={href} className="mt-5 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#4C5534] px-5 font-montserrat text-xs font-semibold text-white transition-colors hover:bg-[#4F6442]">
-            View Details <span aria-hidden="true">↗</span>
+            View Details <ArrowUpRightIcon className="h-4 w-4" />
           </Link>
         </div>
       </div>

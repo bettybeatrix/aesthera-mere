@@ -4,6 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useBooking } from "@/components/BookingProvider";
+import { ArrowRightIcon } from "@/components/Icons";
 
 import doctor1Image from "@/public/images/doctors/doctor1.png";
 import doctor2Image from "@/public/images/doctors/doctor2.png";
@@ -165,7 +166,7 @@ export default function MeetOurDoctors() {
             className="inline-flex min-h-11 items-center gap-3 border-b border-[#4C5534] pb-1 font-montserrat text-[12px] font-medium tracking-[0.08em] text-[#4C5534] transition-all duration-300 hover:gap-5"
           >
             View All Doctors
-            <span aria-hidden="true">→</span>
+            <ArrowRightIcon className="h-4 w-4" />
           </Link>
         </div>
 

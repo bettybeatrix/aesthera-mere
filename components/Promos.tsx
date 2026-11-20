@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import BookingTrigger from "@/components/BookingTrigger";
+import { ArrowUpRightIcon } from "@/components/Icons";
 import promo1Image from "@/public/images/promotions/promo1.png";
 import promo2Image from "@/public/images/promotions/promo2.png";
 import promo3Image from "@/public/images/promotions/promo3.png";
@@ -23,7 +24,7 @@ export default function Promos() {
             <p className="mt-4 font-montserrat text-sm leading-7 text-[#80755F]">Explore our current treatment offers. Final eligibility, inclusions, and validity are confirmed during consultation.</p>
           </div>
           <Link href="/promos" className="group inline-flex w-fit items-center gap-2 border-b border-[#4C5534] pb-1 font-montserrat text-[13px] font-semibold text-[#4C5534] transition-opacity hover:opacity-70">
-            View Promos &amp; Packages <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">↗</span>
+            View Promos &amp; Packages <span aria-hidden="true" className="transition-transform group-hover:translate-x-1"><ArrowUpRightIcon className="h-4 w-4" /></span>
           </Link>
         </div>
 
@@ -44,7 +45,7 @@ export default function Promos() {
                   <div className="flex justify-between gap-4"><dt className="text-[#80755F]">Validity</dt><dd className="max-w-[190px] text-right text-[#4C5534]">{offer.validity}</dd></div>
                 </dl>
                 <BookingTrigger initialTreatment={offer.name} className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#4C5534] px-5 font-montserrat text-xs font-semibold text-white transition-colors hover:bg-[#35452F]">
-                  Book This Offer <span aria-hidden="true">↗</span>
+                  Book This Offer <ArrowUpRightIcon className="h-4 w-4" />
                 </BookingTrigger>
               </div>
             </article>
