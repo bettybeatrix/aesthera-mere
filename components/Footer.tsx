@@ -29,7 +29,7 @@ const socialLinks = [
 const menuLinks = [
   { label: "Treatments", href: "/treatments" },
   { label: "Our Doctors", href: "/doctors" },
-  { label: "Results", href: "/results" },
+  { label: "Results", href: "/#results" },
   { label: "Promos", href: "/promos" },
   { label: "About Us", href: "/about" },
   { label: "FAQ", href: "/faq" },
