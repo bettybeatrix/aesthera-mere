@@ -275,38 +275,6 @@ export default function DoctorsPage() {
           </section>
         </div>
 
-        {/* CLOSING SECTION */}
-        <section className="bg-[#4C5534] px-6
-          py-16 text-center md:py-20">
-          <p className="font-montserrat text-[11px]
-            uppercase tracking-[0.2em] text-[#F6F3ED]">
-            PERSONALIZED CARE
-          </p>
-
-          <h2 className="mx-auto mt-4 max-w-2xl
-            font-bodoni text-4xl text-[#FFFCF3]
-            md:text-5xl">
-            Your Journey Begins with Expert Care
-          </h2>
-
-          <p className="mx-auto mt-5 max-w-lg
-            font-montserrat text-sm leading-7
-            text-[#F6F3ED]/80">
-            Schedule a consultation and discover
-            a personalized approach to aesthetic care.
-          </p>
-
-          <button
-            type="button"
-            onClick={() => openBooking()}
-            className="mt-8 rounded-full bg-[#FFFCF3]
-              px-9 py-4 font-montserrat text-sm
-              font-medium text-[#4C5534]
-              transition hover:bg-white"
-          >
-            Book a Consultation ↗
-          </button>
-        </section>
       </main>
       <Footer />
     </>
