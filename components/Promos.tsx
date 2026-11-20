@@ -41,9 +41,15 @@ export default function Promos() {
             <h2 id="promos-heading" className="font-seasons text-[clamp(2.6rem,5vw,4.5rem)] leading-[1.08] text-[#4C5534]">Our Promotions</h2>
             <p className="mt-4 font-montserrat text-sm leading-7 text-[#80755F]">Explore our current treatment offers. Final eligibility, inclusions, and validity are confirmed during consultation.</p>
           </div>
-          <Link href="/promos" className="group inline-flex w-fit items-center gap-2 border-b border-[#4C5534] pb-1 font-montserrat text-[13px] font-semibold text-[#4C5534] transition-opacity hover:opacity-70">
-            View Promos &amp; Packages <span aria-hidden="true" className="transition-transform group-hover:translate-x-1"><ArrowUpRightIcon className="h-4 w-4" /></span>
-          </Link>
+          <div className="w-full md:w-auto md:text-right">
+            <p className="mb-2 font-montserrat text-[10px] font-semibold uppercase tracking-[0.18em] text-[#80755F]">
+              {offers.length} current offers
+            </p>
+            <Link href="/promos" className="group inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-full bg-[#4C5534] px-6 font-montserrat text-[12px] font-semibold uppercase tracking-[0.08em] text-white shadow-[0_12px_28px_-18px_rgba(30,58,42,0.75)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#35452F] hover:shadow-[0_18px_34px_-18px_rgba(30,58,42,0.8)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4C5534] md:w-auto">
+              View All Promos &amp; Packages
+              <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"><ArrowUpRightIcon className="h-4 w-4" /></span>
+            </Link>
+          </div>
         </div>
 
         <div className="grid grid-cols-[44px_minmax(0,1fr)_44px] items-center gap-2 sm:gap-4">
