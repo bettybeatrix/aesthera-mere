@@ -13,7 +13,6 @@ const CATEGORIES = [
   { id: "all", label: "All Promos & Deals" },
   { id: "contour", label: "Ultraformer MPT & Slimming" },
   { id: "injectables", label: "JuveTox, Luhilo & Botox" },
-  { id: "launch", label: "Grand Launch & Summer Offers" },
   { id: "facials", label: "Medical Peels & 5+1 Facials" },
 ];
 
@@ -63,158 +62,143 @@ function PromoModal({
     document.addEventListener("keydown", handler);
     // Lock body scroll while open
     document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", handler);
-      document.body.style.overflow = "";
-    };
-  }, [onClose]);
-
-  return (
-    // Backdrop
+    return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-[#25291f]/45 p-0 backdrop-blur-sm sm:items-center sm:p-4"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label={card.title}
+      aria-labelledby="promo-detail-title"
     >
-      {/* Panel — stop click propagation so clicks inside don't close */}
       <div
-        className="relative flex max-h-[92dvh] w-full max-w-[680px] flex-col overflow-hidden rounded-t-[28px] bg-[#FFFCF3] shadow-2xl sm:rounded-[28px]"
-        onClick={(e) => e.stopPropagation()}
+        className="flex max-h-[92dvh] w-full max-w-[680px] flex-col overflow-hidden rounded-t-[24px] border border-[#80755F]/20 bg-[#FFFCF3] shadow-2xl sm:rounded-[24px]"
+        onClick={(event) => event.stopPropagation()}
       >
-        {/* Image header */}
-        <div className="relative h-56 w-full shrink-0 overflow-hidden sm:h-64">
-          <Image
-            src={card.image}
-            alt={card.title}
-            fill
-            quality={90}
-            sizes="680px"
-            className="object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-
-          {/* Badges on image */}
-          <span className="absolute left-4 top-4 rounded-full bg-[#4C5534] px-3.5 py-1.5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.12em] text-white shadow">
-            {card.badge}
-          </span>
-          {card.savings && (
-            <span className="absolute right-4 top-4 rounded-full bg-[#4f6442] px-3 py-1 font-montserrat text-[10px] font-semibold uppercase tracking-[0.08em] text-white shadow">
-              {card.savings}
-            </span>
-          )}
-
-          {/* Title over image */}
-          <div className="absolute bottom-0 left-0 right-0 p-5">
-            <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-white/70">
+        <header className="flex items-start justify-between gap-5 border-b border-[#80755F]/20 px-6 py-6 sm:px-8">
+          <div className="min-w-0">
+            <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.18em] text-[#80755F]">
               {card.categoryLabel}
             </p>
-            <h2 className="font-seasons mt-1 text-2xl leading-tight text-white sm:text-3xl">
+            <h2 id="promo-detail-title" className="font-seasons mt-2 text-2xl leading-tight text-[#4C5534] sm:text-3xl">
               {card.title}
             </h2>
+            <span className="mt-3 inline-flex rounded-full border border-[#4f6442]/25 px-3 py-1 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-[#4f6442]">
+              {card.badge}
+            </span>
           </div>
-
-          {/* Close button */}
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close"
-            className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition hover:bg-black/60"
+            aria-label="Close promo details"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#80755F]/25 text-[#4C5534] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4C5534]"
           >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M2 2l12 12M14 2L2 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
           </button>
-        </div>
+        </header>
 
-        {/* Scrollable body */}
         <div className="flex-1 overflow-y-auto px-6 py-6 sm:px-8">
-          {/* Subtitle */}
-          <p className="font-montserrat text-xs font-semibold text-[#4f6442]">
+          <p className="font-montserrat text-sm font-semibold leading-6 text-[#4f6442]">
             {card.subtitle}
           </p>
-
-          {/* Description */}
           <p className="mt-3 font-montserrat text-sm leading-7 text-[#80755F]">
             {card.description}
           </p>
 
-          {/* Pricing details — render only the values supplied by the promo data. */}
-          {(getPromoPriceLabel(card) || getRegularPriceLabel(card) || card.bonusText) && (
-            <div className="mt-5 rounded-2xl border border-[#80755F]/15 bg-white p-5 font-montserrat">
-              {getPromoPriceLabel(card) && (
-                <div className="flex items-baseline justify-between gap-3">
-                  <span className="text-[11px] uppercase tracking-wider text-[#80755F]">
-                    Promo Rate
-                  </span>
-                  <span className="text-right text-xl font-semibold text-[#4C5534]">
-                    {getPromoPriceLabel(card)}
-                  </span>
-                </div>
-              )}
-              {getRegularPriceLabel(card) && (
-                <div className="mt-2 flex items-baseline justify-between gap-3 text-xs text-[#80755F]">
-                  <span>Regular Rate</span>
-                  <span className="text-right">{getRegularPriceLabel(card)}</span>
-                </div>
-              )}
-              {card.bonusText && (
-                <div className="mt-3 rounded-xl bg-[#4f6442]/10 px-4 py-2.5 text-xs font-semibold text-[#4f6442]">
-                  {card.bonusText}
-                </div>
-              )}
+          <section aria-label="Pricing information" className="mt-6 rounded-2xl border border-[#80755F]/20 bg-white p-5">
+            <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
+              Offer pricing
+            </p>
+            <div className="mt-3 flex flex-wrap items-baseline justify-between gap-2">
+              <span className="font-montserrat text-xs text-[#80755F]">Promo rate</span>
+              <span className="font-montserrat text-xl font-semibold text-[#4C5534]">
+                {getPromoPriceLabel(card) ?? "Price upon inquiry"}
+              </span>
             </div>
-          )}
-
-          {/* Recommended For */}
-          {card.recommendedFor && card.recommendedFor.length > 0 && (
-            <div className="mt-5">
-              <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
-                Recommended For
+            {getRegularPriceLabel(card) && (
+              <div className="mt-2 flex flex-wrap items-baseline justify-between gap-2">
+                <span className="font-montserrat text-xs text-[#80755F]">Regular rate</span>
+                <span className="font-montserrat text-xs text-[#80755F]">
+                  {getRegularPriceLabel(card)}
+                </span>
+              </div>
+            )}
+            {card.savings && (
+              <p className="mt-3 border-t border-[#80755F]/15 pt-3 font-montserrat text-xs font-semibold text-[#4f6442]">
+                {card.savings}
               </p>
+            )}
+            {card.bonusText && (
+              <p className="mt-2 font-montserrat text-xs leading-5 text-[#80755F]">
+                {card.bonusText}
+              </p>
+            )}
+          </section>
+
+          <section className="mt-6">
+            <h3 className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
+              Offer validity
+            </h3>
+            <p className="mt-2 font-montserrat text-xs leading-6 text-[#4C5534]">
+              {card.validity ?? "Confirm current availability with the clinic."}
+            </p>
+          </section>
+
+          {card.recommendedFor && card.recommendedFor.length > 0 && (
+            <section className="mt-6">
+              <h3 className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
+                Recommended for
+              </h3>
               <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {card.recommendedFor.map((item, idx) => (
-                  <li
-                    key={idx}
-                    className="flex items-start gap-2 font-montserrat text-xs text-[#4C5534]"
-                  >
-                    <span className="mt-0.5 text-[#4f6442]">✓</span>
+                  <li key={idx} className="flex items-start gap-2 font-montserrat text-xs leading-5 text-[#4C5534]">
+                    <span className="mt-0.5 text-[#4f6442]" aria-hidden="true">✓</span>
                     {item}
                   </li>
                 ))}
               </ul>
-            </div>
+            </section>
           )}
 
-          {/* Inclusions */}
-          <div className="mt-5">
-            <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
-              What&apos;s Included
-            </p>
-            <ul className="mt-3 space-y-2.5">
+          <section className="mt-6">
+            <h3 className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
+              Inclusions and offer details
+            </h3>
+            <ul className="mt-3 space-y-3">
               {card.inclusions.map((item, idx) => (
-                <li
-                  key={idx}
-                  className="flex items-start gap-3 font-montserrat text-xs text-[#4C5534]"
-                >
-                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[#4f6442]" />
-                  {item}
+                <li key={idx} className="flex items-start gap-3 font-montserrat text-xs leading-6 text-[#4C5534]">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#4f6442]" aria-hidden="true" />
+                  <span>{item}</span>
                 </li>
               ))}
             </ul>
-          </div>
+          </section>
 
-          {/* CTA */}
+          {card.terms && card.terms.length > 0 && (
+            <section className="mt-6 border-t border-[#80755F]/15 pt-5">
+              <h3 className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
+                Terms and conditions
+              </h3>
+              <ul className="mt-3 space-y-2">
+                {card.terms.map((term, idx) => (
+                  <li key={idx} className="font-montserrat text-xs leading-6 text-[#80755F]">
+                    {idx + 1}. {term}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
           <BookingTrigger
             initialTreatment={card.title}
-            className="mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#4C5534] px-5 font-montserrat text-xs font-semibold text-white transition-all hover:bg-[#35452F]"
+            className="mt-8 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#4C5534] px-5 font-montserrat text-xs font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#4C5534]"
           >
             Avail This Promo <ArrowUpRightIcon className="h-4 w-4" />
           </BookingTrigger>
-
-          {/* bottom breathing room for mobile */}
-          <div className="h-4" />
+          <p className="mt-3 text-center font-montserrat text-[10px] leading-5 text-[#80755F]">
+            Sample frontend offer. Final rates, eligibility, and availability will be managed through the backend.
+          </p>
         </div>
       </div>
     </div>
@@ -274,7 +258,7 @@ function PromoCardItem({
         {/* Price row */}
         <div className="mt-auto flex items-baseline justify-between gap-3 pt-4">
           <span className="font-montserrat text-base font-semibold text-[#4C5534]">
-            {getPromoPriceLabel(card) ?? "Explore offer"}
+            {getPromoPriceLabel(card) ?? "Price upon inquiry"}
           </span>
           {getRegularPriceLabel(card) && (
             <span className="font-montserrat text-xs text-[#80755F]">
