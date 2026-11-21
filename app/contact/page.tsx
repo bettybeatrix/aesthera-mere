@@ -27,8 +27,8 @@ export default function ContactPage() {
         <section className="border-b border-[#80755F]/20 px-6 pb-16 pt-14 md:px-10 md:pb-24 md:pt-20">
           <div className="mx-auto max-w-[1180px]">
             <div>
-              <h1 className="font-seasons max-w-[720px] text-[clamp(3.8rem,8vw,7rem)] leading-[0.9] tracking-[-0.035em]">
-                Let&apos;s get <span className="italic text-[#7A8560]">in touch.</span>
+              <h1 className="font-seasons max-w-[720px] text-[clamp(3.2rem,10vw,7rem)] leading-[1.06] tracking-[-0.035em] sm:leading-[0.98]">
+                Let&apos;s get <span className="block italic text-[#7A8560] sm:inline">in touch.</span>
               </h1>
               <div className="mt-8 flex flex-wrap gap-3">
                 <BookingTrigger className="font-montserrat inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[#4C5534] px-7 text-xs font-semibold text-white transition-colors hover:bg-[#35452F] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4C5534]">
