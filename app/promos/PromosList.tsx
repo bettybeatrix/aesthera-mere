@@ -13,7 +13,6 @@ const CATEGORIES = [
   { id: "all", label: "All Promos & Deals" },
   { id: "contour", label: "Ultraformer MPT & Slimming" },
   { id: "injectables", label: "JuveTox, Luhilo & Botox" },
-  { id: "launch", label: "Grand Launch & Summer Offers" },
   { id: "facials", label: "Medical Peels & 5+1 Facials" },
 ];
 
@@ -23,6 +22,28 @@ const CATEGORIES = [
 interface PromosListProps {
   promos: PromoCard[];
   pricingTables: PricingTable[];
+}
+
+const pesoFormatter = new Intl.NumberFormat("en-PH", {
+  style: "currency",
+  currency: "PHP",
+  maximumFractionDigits: 0,
+});
+
+function formatPrice(value: number): string {
+  return pesoFormatter.format(value);
+}
+
+function getPromoPriceLabel(card: PromoCard): string | undefined {
+  if (card.promoPriceLabel) return card.promoPriceLabel;
+  if (typeof card.promoPrice === "number") return formatPrice(card.promoPrice);
+  return undefined;
+}
+
+function getRegularPriceLabel(card: PromoCard): string | undefined {
+  if (card.regularPriceLabel) return card.regularPriceLabel;
+  if (typeof card.regularPrice === "number") return formatPrice(card.regularPrice);
+  return undefined;
 }
 
 // ---------------------------------------------------------------------------
@@ -35,163 +56,180 @@ function PromoModal({
   card: PromoCard;
   onClose: () => void;
 }) {
-  // Close on Escape key
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+    const previousOverflow = document.body.style.overflow;
+    const handler = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
     };
+
     document.addEventListener("keydown", handler);
-    // Lock body scroll while open
     document.body.style.overflow = "hidden";
+
     return () => {
       document.removeEventListener("keydown", handler);
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
     };
   }, [onClose]);
 
+  const discountLabel =
+    typeof card.promoPrice === "number" &&
+    typeof card.regularPrice === "number" &&
+    card.regularPrice > 0
+      ? `${Math.round((1 - card.promoPrice / card.regularPrice) * 100)}% OFF`
+      : card.discountLabel;
+
   return (
-    // Backdrop
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm sm:items-center sm:p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-[#25291f]/45 p-0 backdrop-blur-sm sm:items-center sm:p-4"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label={card.title}
+      aria-labelledby="promo-detail-title"
     >
-      {/* Panel — stop click propagation so clicks inside don't close */}
       <div
-        className="relative flex max-h-[92dvh] w-full max-w-[680px] flex-col overflow-hidden rounded-t-[28px] bg-[#FFFCF3] shadow-2xl sm:rounded-[28px]"
-        onClick={(e) => e.stopPropagation()}
+        className="flex max-h-[92dvh] w-full max-w-[700px] flex-col overflow-hidden rounded-t-[24px] border border-[#80755F]/20 bg-[#FFFCF3] shadow-2xl sm:rounded-[24px]"
+        onClick={(event) => event.stopPropagation()}
       >
-        {/* Image header */}
-        <div className="relative h-56 w-full shrink-0 overflow-hidden sm:h-64">
-          <Image
-            src={card.image}
-            alt={card.title}
-            fill
-            quality={90}
-            sizes="680px"
-            className="object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-
-          {/* Badges on image */}
-          <span className="absolute left-4 top-4 rounded-full bg-[#4C5534] px-3.5 py-1.5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.12em] text-white shadow">
-            {card.badge}
-          </span>
-          {card.savings && (
-            <span className="absolute right-4 top-4 rounded-full bg-[#4f6442] px-3 py-1 font-montserrat text-[10px] font-semibold uppercase tracking-[0.08em] text-white shadow">
-              {card.savings}
-            </span>
-          )}
-
-          {/* Title over image */}
-          <div className="absolute bottom-0 left-0 right-0 p-5">
-            <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-white/70">
+        <header className="flex items-start justify-between gap-5 border-b border-[#80755F]/20 px-6 py-6 sm:px-8">
+          <div className="min-w-0">
+            <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.18em] text-[#80755F]">
               {card.categoryLabel}
             </p>
-            <h2 className="font-seasons mt-1 text-2xl leading-tight text-white sm:text-3xl">
+            <h2 id="promo-detail-title" className="font-seasons mt-2 text-2xl leading-tight text-[#4C5534] sm:text-3xl">
               {card.title}
             </h2>
+            <p className="mt-2 font-montserrat text-sm leading-6 text-[#4f6442]">
+              {card.subtitle}
+            </p>
           </div>
-
-          {/* Close button */}
           <button
             type="button"
             onClick={onClose}
-            aria-label="Close"
-            className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition hover:bg-black/60"
+            aria-label="Close promo details"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#80755F]/25 text-[#4C5534] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4C5534]"
           >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M2 2l12 12M14 2L2 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
           </button>
-        </div>
+        </header>
 
-        {/* Scrollable body */}
         <div className="flex-1 overflow-y-auto px-6 py-6 sm:px-8">
-          {/* Subtitle */}
-          <p className="font-montserrat text-xs font-semibold text-[#4f6442]">
-            {card.subtitle}
-          </p>
-
-          {/* Description */}
-          <p className="mt-3 font-montserrat text-sm leading-7 text-[#80755F]">
-            {card.description}
-          </p>
-
-          {/* Pricing box */}
-          <div className="mt-5 rounded-2xl border border-[#80755F]/15 bg-white p-5 font-montserrat">
-            <div className="flex items-baseline justify-between gap-2">
-              <span className="text-[11px] uppercase tracking-wider text-[#80755F]">
-                Promo Rate
+          <section aria-label="Promotion pricing" className="rounded-2xl border border-[#4f6442]/20 bg-white p-5 sm:p-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <span className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
+                Special promotional price
               </span>
-              <span className="text-2xl font-bold text-[#4C5534]">
-                {card.promoPrice}
-              </span>
+              {discountLabel && (
+                <span className="rounded-full bg-[#4C5534] px-3 py-1.5 font-montserrat text-[10px] font-bold tracking-[0.08em] text-white">
+                  {discountLabel}
+                </span>
+              )}
             </div>
-            {card.regularPrice && (
-              <div className="mt-1.5 flex items-baseline justify-between gap-2 text-xs text-[#80755F]">
-                <span>Regular Rate</span>
-                <span className="line-through">{card.regularPrice}</span>
-              </div>
+            <div className="mt-3 flex flex-wrap items-end gap-x-3 gap-y-1">
+              <span className="font-seasons text-4xl leading-none text-[#4C5534] sm:text-5xl">
+                {getPromoPriceLabel(card) ?? "Price upon inquiry"}
+              </span>
+              {getRegularPriceLabel(card) && (
+                <span className="pb-1 font-montserrat text-sm text-[#80755F] line-through">
+                  {getRegularPriceLabel(card)}
+                </span>
+              )}
+            </div>
+            {card.savings && (
+              <p className="mt-3 font-montserrat text-xs font-semibold text-[#4f6442]">
+                {card.savings}
+              </p>
             )}
             {card.bonusText && (
-              <div className="mt-3 flex items-center gap-2 rounded-xl bg-[#4f6442]/10 px-4 py-2.5 text-xs font-semibold text-[#4f6442]">
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#4f6442]" />
+              <p className="mt-2 font-montserrat text-xs leading-5 text-[#80755F]">
                 {card.bonusText}
-              </div>
+              </p>
             )}
+          </section>
+
+          <section className="mt-6">
+            <h3 className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
+              About this offer
+            </h3>
+            <p className="mt-2 font-montserrat text-sm leading-7 text-[#4C5534]">
+              {card.description}
+            </p>
+          </section>
+
+          <div className="mt-6 grid gap-4 border-y border-[#80755F]/15 py-5 sm:grid-cols-2">
+            <div>
+              <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.14em] text-[#80755F]">
+                Package / sessions
+              </p>
+              <p className="mt-2 font-montserrat text-xs leading-6 text-[#4C5534]">
+                {card.sessions ?? "As specified in the treatment inclusions"}
+              </p>
+            </div>
+            <div>
+              <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.14em] text-[#80755F]">
+                Offer validity
+              </p>
+              <p className="mt-2 font-montserrat text-xs leading-6 text-[#4C5534]">
+                {card.validity ?? (card.validUntil ? `Until ${card.validUntil}` : "While the offer is active")}
+              </p>
+            </div>
           </div>
 
-          {/* Recommended For */}
           {card.recommendedFor && card.recommendedFor.length > 0 && (
-            <div className="mt-5">
-              <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
-                Recommended For
-              </p>
+            <section className="mt-6">
+              <h3 className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
+                Recommended for
+              </h3>
               <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {card.recommendedFor.map((item, idx) => (
-                  <li
-                    key={idx}
-                    className="flex items-start gap-2 font-montserrat text-xs text-[#4C5534]"
-                  >
-                    <span className="mt-0.5 text-[#4f6442]">✓</span>
+                  <li key={idx} className="flex items-start gap-2 font-montserrat text-xs leading-5 text-[#4C5534]">
+                    <span className="mt-0.5 text-[#4f6442]" aria-hidden="true">✓</span>
                     {item}
                   </li>
                 ))}
               </ul>
-            </div>
+            </section>
           )}
 
-          {/* Inclusions */}
-          <div className="mt-5">
-            <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
-              What&apos;s Included
-            </p>
-            <ul className="mt-3 space-y-2.5">
+          <section className="mt-6">
+            <h3 className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
+              Inclusions
+            </h3>
+            <ul className="mt-3 space-y-3">
               {card.inclusions.map((item, idx) => (
-                <li
-                  key={idx}
-                  className="flex items-start gap-3 font-montserrat text-xs text-[#4C5534]"
-                >
-                  <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[#4f6442]" />
-                  {item}
+                <li key={idx} className="flex items-start gap-3 font-montserrat text-xs leading-6 text-[#4C5534]">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#4f6442]" aria-hidden="true" />
+                  <span>{item}</span>
                 </li>
               ))}
             </ul>
-          </div>
+          </section>
 
-          {/* CTA */}
+          {card.terms && card.terms.length > 0 && (
+            <section className="mt-6 border-t border-[#80755F]/15 pt-5">
+              <h3 className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
+                Terms and conditions
+              </h3>
+              <ul className="mt-3 space-y-2">
+                {card.terms.map((term, idx) => (
+                  <li key={idx} className="font-montserrat text-xs leading-6 text-[#80755F]">
+                    {idx + 1}. {term}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
           <BookingTrigger
             initialTreatment={card.title}
-            className="mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#4C5534] px-5 font-montserrat text-xs font-semibold text-white transition-all hover:bg-[#35452F]"
+            className="mt-8 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#4C5534] px-5 font-montserrat text-xs font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#4C5534]"
           >
             Avail This Promo <ArrowUpRightIcon className="h-4 w-4" />
           </BookingTrigger>
-
-          {/* bottom breathing room for mobile */}
-          <div className="h-4" />
+          <p className="mt-3 text-center font-montserrat text-[10px] leading-5 text-[#80755F]">
+            Frontend demonstration pricing and offer details. Final clinic offers will be managed through the backend.
+          </p>
         </div>
       </div>
     </div>
@@ -199,7 +237,7 @@ function PromoModal({
 }
 
 // ---------------------------------------------------------------------------
-// Clean Promo Card (minimal — click to open modal)
+// Promo card — prominent discount and pricing, no hover-dependent content
 // ---------------------------------------------------------------------------
 function PromoCardItem({
   card,
@@ -208,13 +246,20 @@ function PromoCardItem({
   card: PromoCard;
   onClick: () => void;
 }) {
+  const discountLabel =
+    typeof card.promoPrice === "number" &&
+    typeof card.regularPrice === "number" &&
+    card.regularPrice > 0
+      ? `${Math.round((1 - card.promoPrice / card.regularPrice) * 100)}% OFF`
+      : card.discountLabel;
+
   return (
     <button
       type="button"
       onClick={onClick}
-      className="group relative flex w-full flex-col overflow-hidden rounded-[20px] border border-[#80755F]/20 bg-white text-left shadow-[0_12px_30px_-20px_rgba(30,58,42,0.25)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_45px_-15px_rgba(30,58,42,0.40)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4C5534]"
+      aria-label={`View ${card.title} details`}
+      className="flex w-full flex-col overflow-hidden rounded-[20px] border border-[#80755F]/20 bg-white text-left shadow-[0_8px_24px_-20px_rgba(30,58,42,0.28)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4C5534] focus-visible:ring-offset-2"
     >
-      {/* Image */}
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#E7E1D7]">
         <Image
           src={card.image}
@@ -222,24 +267,19 @@ function PromoCardItem({
           fill
           quality={85}
           sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
-          className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+          className="object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-
-        {/* Badge */}
-        <span className="absolute left-4 top-4 rounded-full bg-[#4C5534] px-3 py-1.5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white shadow">
+        <span className="absolute left-4 top-4 rounded-full bg-[#4C5534] px-3 py-1.5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white">
           {card.badge}
         </span>
-
-        {/* Savings chip */}
-        {card.savings && (
-          <span className="absolute right-4 top-4 rounded-full bg-[#4f6442] px-3 py-1 font-montserrat text-[10px] font-semibold text-white shadow">
-            {card.savings}
+        {discountLabel && (
+          <span className="absolute right-4 top-4 rounded-full bg-[#F4E9D7] px-3 py-1.5 font-montserrat text-[10px] font-bold tracking-[0.06em] text-[#4C5534]">
+            {discountLabel}
           </span>
         )}
       </div>
 
-      {/* Card footer — always visible */}
       <div className="flex flex-1 flex-col p-5">
         <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.14em] text-[#80755F]">
           {card.categoryLabel}
@@ -248,22 +288,32 @@ function PromoCardItem({
           {card.title}
         </h3>
 
-        {/* Price row */}
-        <div className="mt-auto flex items-center justify-between pt-4">
-          <span className="font-montserrat text-base font-bold text-[#4C5534]">
-            {card.promoPrice}
-          </span>
-          {card.regularPrice && (
-            <span className="font-montserrat text-xs text-[#80755F] line-through">
-              {card.regularPrice}
+        <div className="mt-auto pt-5">
+          <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
+            Promo price
+          </p>
+          <div className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span className="font-seasons text-3xl leading-none text-[#4C5534]">
+              {getPromoPriceLabel(card) ?? "Price upon inquiry"}
             </span>
+            {getRegularPriceLabel(card) && (
+              <span className="font-montserrat text-xs text-[#80755F] line-through">
+                {getRegularPriceLabel(card)}
+              </span>
+            )}
+          </div>
+          {card.savings && (
+            <p className="mt-2 font-montserrat text-[11px] font-semibold text-[#4f6442]">
+              {card.savings}
+            </p>
           )}
         </div>
 
-        {/* "View Details" hint */}
-        <div className="mt-3 flex items-center gap-1.5 font-montserrat text-[11px] font-semibold text-[#4f6442] transition-all group-hover:gap-2.5">
-          View full details
-          <ArrowUpRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        <div className="mt-4 flex items-center justify-between border-t border-[#80755F]/15 pt-3">
+          <span className="font-montserrat text-[11px] font-semibold text-[#4f6442]">
+            View full details
+          </span>
+          <ArrowUpRightIcon className="h-4 w-4 text-[#4f6442]" />
         </div>
       </div>
     </button>
@@ -293,12 +343,12 @@ function PricingTableBlock({ table }: { table: PricingTable }) {
           </thead>
           <tbody className="divide-y divide-[#80755F]/10">
             {table.rows.map((row) => (
-              <tr key={row.name} className="transition-colors hover:bg-[#FFFCF3]/60">
+              <tr key={row.name}>
                 <td className="px-6 py-4 font-semibold text-[#4C5534]">{row.name}</td>
-                <td className="px-6 py-4 text-[#80755F] line-through">{row.regular}</td>
-                <td className="px-6 py-4 font-medium text-[#4C5534]">{row.promo}</td>
-                <td className="px-6 py-4 font-bold text-[#4C5534]">{row.package}</td>
-                <td className="px-6 py-4 font-semibold text-[#4f6442]">{row.effective}</td>
+                <td className="px-6 py-4 text-[#80755F]">{formatPrice(row.regular)}</td>
+                <td className="px-6 py-4 font-medium text-[#4C5534]">{formatPrice(row.promo)}</td>
+                <td className="px-6 py-4 font-semibold text-[#4C5534]">{formatPrice(row.package)}</td>
+                <td className="px-6 py-4 font-semibold text-[#4f6442]">{formatPrice(row.effective)}</td>
               </tr>
             ))}
           </tbody>
@@ -427,10 +477,10 @@ export default function PromosList({ promos, pricingTables }: PromosListProps) {
                   key={tab}
                   type="button"
                   onClick={() => setActiveTableTab(tab)}
-                  className={`rounded-full px-6 py-2.5 font-montserrat text-xs font-semibold transition-all ${
+                  className={`rounded-full px-6 py-2.5 font-montserrat text-xs font-semibold ${
                     activeTableTab === tab
                       ? "bg-[#4C5534] text-white shadow-sm"
-                      : "text-[#4C5534] hover:text-[#80755F]"
+                      : "text-[#4C5534]"
                   }`}
                 >
                   {tab === "facials" ? "Facial Packages (5 + 1)" : "Aesthera Drips (10 + 2 & 5 + 1)"}
