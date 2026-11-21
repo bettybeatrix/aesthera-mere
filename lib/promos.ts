@@ -1,36 +1,4 @@
-/**
- * lib/promos.ts — Promo data-fetching layer
- *
- * RIGHT NOW (frontend only):
- *   getPromos() and getPricingTables() return hard-coded mock data.
- *   Images are served from /public/images/promotions/.
- *
- * WHEN BACKEND IS READY (Supabase / REST API):
- *   Replace the mock arrays below with real fetch/supabase calls.
- *   The page and components never need to change — only this file.
- *
- * Example future swap:
- *   import { supabase } from "@/lib/supabase";
- *   export async function getPromos() {
- *     const { data } = await supabase
- *       .from("promos")
- *       .select("*")
- *       .eq("is_active", true)
- *       .order("published_at", { ascending: false });
- *     return data ?? [];
- *   }
- *
- * Image folder convention:
- *   - Frontend-only: /public/images/promotions/<slug>.jpg
- *   - With backend:  Supabase Storage bucket "promos", filename "<slug>.jpg"
- *     URL pattern: https://<project>.supabase.co/storage/v1/object/public/promos/<slug>.jpg
- */
-
 import type { PromoCard, PricingTable } from "@/types/promo";
-
-// ---------------------------------------------------------------------------
-// MOCK DATA — replace with DB/API calls when backend is ready
-// ---------------------------------------------------------------------------
 
 const MOCK_PROMOS: PromoCard[] = [
   {
@@ -40,8 +8,8 @@ const MOCK_PROMOS: PromoCard[] = [
     categoryLabel: "Summer Opening Special",
     badge: "Starting April 24",
     subtitle: "Feel and Look More Sculpted — Just in Time for Summer",
-    promoPrice: "Up to 30% OFF",
-    regularPrice: "Standard Rates",
+    promoPriceLabel: "Up to 30% OFF",
+    regularPriceLabel: "Standard rates not supplied in source",
     savings: "Pre-Launch Offer",
     description:
       "Get summer-ready before the grand opening! Enjoy exclusive pre-launch discounts on non-doctor's and doctor's procedures starting April 17–22, right before we officially open on April 24.",
@@ -63,8 +31,8 @@ const MOCK_PROMOS: PromoCard[] = [
     categoryLabel: "Advanced Non-Surgical Face Lifting",
     badge: "Flagship Lifting",
     subtitle: "Advanced Multi-Depth Micro & Macro Focused Ultrasound",
-    promoPrice: "₱59,995",
-    regularPrice: "₱79,995",
+    promoPrice: 59995,
+    regularPrice: 79995,
     savings: "Save ₱20,000",
     description:
       "Uses advanced multi-depth HIFU technology to lift, tighten, and contour the skin with greater precision, helping restore firmer, more youthful-looking facial contours.",
@@ -92,8 +60,8 @@ const MOCK_PROMOS: PromoCard[] = [
     categoryLabel: "Biostimulator & Pore Refinement",
     badge: "Most Popular",
     subtitle: "Juvelook PDLLA + 20 Units MicroTox + RemeePro",
-    promoPrice: "₱27,990",
-    regularPrice: "₱45,000",
+    promoPrice: 27990,
+    regularPrice: 45000,
     savings: "Save ₱17,010",
     description:
       "Combines the hydrating and collagen-boosting benefits of Juvelook with the wrinkle-relaxing effects of Botox. Deeply hydrates, refines pores, improves texture and firmness, and softens fine lines for a smoother, radiant glass skin finish.",
@@ -121,8 +89,8 @@ const MOCK_PROMOS: PromoCard[] = [
     categoryLabel: "Amino Acids & Peptide Complex",
     badge: "10% OFF",
     subtitle: "High & Low Molecular Weight Amino Acids + Peptides",
-    promoPrice: "10% Discount",
-    regularPrice: "₱21,990",
+    promoPriceLabel: "10% Discount",
+    regularPrice: 21990,
     savings: "Special 10% Off",
     description:
       "Deeply nourishes and brightens the skin to enhance clarity, hydration, and luminosity, revealing a naturally translucent and healthy-looking glow from within.",
@@ -149,8 +117,8 @@ const MOCK_PROMOS: PromoCard[] = [
     categoryLabel: "Targeted Lipolysis & Sculpting",
     badge: "Best Value 4+1",
     subtitle: "Lecithin + Bromelain + Vitamin Complex",
-    promoPrice: "₱27,960 for 4+1 Bottles",
-    regularPrice: "₱39,950",
+    promoPrice: 27960,
+    regularPrice: 39950,
     savings: "Save ₱11,990",
     description:
       "High-concentration lipolytic solution designed to target stubborn localized fat deposits across chin, arms, abdomen, or love handles safely and naturally.",
@@ -172,11 +140,11 @@ const MOCK_PROMOS: PromoCard[] = [
     categoryLabel: "Facial Rejuvenation",
     badge: "Per Unit Promo",
     subtitle: "Nabota & Xeomin Medical Neuromodulators",
-    promoPrice: "As low as ₱150 / unit",
-    regularPrice: "₱250 – ₱450 / unit",
+    promoPriceLabel: "As low as ₱150 / unit",
+    regularPriceLabel: "₱250 – ₱450 / unit",
     savings: "Per-Unit Special",
     description:
-      "Smooth fine expression lines, soften masseter bulk for jawline slimming, or balance facial symmetry with FDA-cleared genuine neurotoxins administered by physicians.",
+      "Smooth fine expression lines, soften masseter bulk for jawline slimming, or balance facial symmetry with genuine neurotoxins administered by physicians.",
     inclusions: [
       "TheraTox (Nabota Korea): As low as ₱150 per unit",
       "TheraTox Elite (Xeomin Germany - Zero Complexing Proteins): As low as ₱350 per unit",
@@ -194,8 +162,8 @@ const MOCK_PROMOS: PromoCard[] = [
     categoryLabel: "Grand Opening — April 25, 2026",
     badge: "We Open April 25",
     subtitle: "The Wait is Over — Unveil Your Best Form & Skin",
-    promoPrice: "Up to 30% OFF",
-    regularPrice: "Standard Rates",
+    promoPriceLabel: "Up to 30% OFF",
+    regularPriceLabel: "Standard rates not supplied in source",
     savings: "Grand Opening Discount",
     description:
       "The wait is over. Celebrate our official grand opening at Madison Square Pioneer on April 25, 2026! Enjoy exclusive tiered discounts across both aesthetician-led and doctor-led clinical procedures.",
@@ -217,8 +185,8 @@ const MOCK_PROMOS: PromoCard[] = [
     categoryLabel: "Clinical Peels & Resurfacing",
     badge: "Midyear Special",
     subtitle: "Don't Miss These Limited-Time Offers!",
-    promoPrice: "As low as ₱3,990",
-    regularPrice: "Standard Session Rates",
+    promoPriceLabel: "As low as ₱3,990",
+    regularPriceLabel: "Standard session rates not supplied in source",
     savings: "Midyear Price Drop",
     description:
       "Deep chemical and enzyme resurfacing targeting chronic breakouts, back acne, post-inflammatory pigmentation, and rough skin texture. Limited-time midyear pricing on our most-requested clinical peel treatments.",
@@ -239,8 +207,8 @@ const MOCK_PROMOS: PromoCard[] = [
     categoryLabel: "Laser Hair Removal",
     badge: "Seasonal",
     subtitle: "Painless Triple-Wavelength Diode Technology",
-    promoPrice: "Up to 30% OFF",
-    regularPrice: "Standard Session Rates",
+    promoPriceLabel: "Up to 30% OFF",
+    regularPriceLabel: "Standard session rates not supplied in source",
     savings: "Summer Ready Deal",
     description:
       "One step closer to permanently smooth, hair-free underarms, legs, or bikini line. Our medical-grade cooling diode laser provides maximum comfort and efficacy.",
@@ -261,8 +229,8 @@ const MOCK_PROMOS: PromoCard[] = [
     categoryLabel: "Polynucleotide Therapy",
     badge: "10% OFF",
     subtitle: "Revitalize Your Skin with Genuine Rejuran®",
-    promoPrice: "10% Discount This Month",
-    regularPrice: "Standard Package Price",
+    promoPriceLabel: "10% Discount This Month",
+    regularPriceLabel: "Standard package price not supplied in source",
     savings: "Exclusive 10% Off",
     description:
       "Medical-grade wild salmon DNA polynucleotides (PN) that biologically repair damaged skin barriers, improve elasticity, and reverse cellular aging.",
@@ -283,8 +251,8 @@ const MOCK_PROMOS: PromoCard[] = [
     categoryLabel: "Community Celebration",
     badge: "Special Contest",
     subtitle: "In Honor of Motherly Care & Grace",
-    promoPrice: "FREE Pampering Prize",
-    regularPrice: "Priceless Care",
+    promoPriceLabel: "FREE Pampering Prize",
+    regularPriceLabel: "Priceless Care",
     savings: "Complimentary Service",
     description:
       "In tribute to our late mother who inspired Aesthera Mère, share a heartwarming photo and message dedicated to your mom on Facebook or Instagram for a chance to win a free pampering service.",
@@ -308,11 +276,11 @@ const MOCK_PRICING_TABLES: PricingTable[] = [
     subtitle: "Every package includes 6 total sessions (Buy 5, Get 1 FREE)",
     packageType: "5+1",
     rows: [
-      { name: "Aqua Reset Facial", regular: "₱1,980", promo: "₱1,280", package: "₱6,400", effective: "₱1,066 / session" },
-      { name: "Oxy Radiance Facial", regular: "₱2,280", promo: "₱1,580", package: "₱7,900", effective: "₱1,316 / session" },
-      { name: "Carbon Laser Facial", regular: "₱2,480", promo: "₱1,580", package: "₱7,900", effective: "₱1,316 / session" },
-      { name: "Korean Skin Reset Facial", regular: "₱2,480", promo: "₱1,680", package: "₱8,400", effective: "₱1,400 / session" },
-      { name: "Korean Acne Clarity Facial", regular: "₱2,980", promo: "₱1,880", package: "₱9,400", effective: "₱1,566 / session" },
+      { name: "Aqua Reset Facial", regular: 1980, promo: 1280, package: 6400, effective: 1066 },
+      { name: "Oxy Radiance Facial", regular: 2280, promo: 1580, package: 7900, effective: 1316 },
+      { name: "Carbon Laser Facial", regular: 2480, promo: 1580, package: 7900, effective: 1316 },
+      { name: "Korean Skin Reset Facial", regular: 2480, promo: 1680, package: 8400, effective: 1400 },
+      { name: "Korean Acne Clarity Facial", regular: 2980, promo: 1880, package: 9400, effective: 1566 },
     ],
   },
   {
@@ -321,10 +289,10 @@ const MOCK_PRICING_TABLES: PricingTable[] = [
     subtitle: "Elevated multi-technology fusion and Korean specialized care",
     packageType: "5+1",
     rows: [
-      { name: "Korean Whitening Facial", regular: "₱3,880", promo: "₱2,880", package: "₱14,400", effective: "₱2,400 / session" },
-      { name: "Korean Age Defy Facial", regular: "₱3,880", promo: "₱2,880", package: "₱14,400", effective: "₱2,400 / session" },
-      { name: "Aqua Reset Fusion", regular: "₱3,980", promo: "₱2,580", package: "₱12,900", effective: "₱2,150 / session" },
-      { name: "Oxy Radiance Fusion", regular: "₱3,980", promo: "₱2,780", package: "₱13,900", effective: "₱2,316 / session" },
+      { name: "Korean Whitening Facial", regular: 3880, promo: 2880, package: 14400, effective: 2400 },
+      { name: "Korean Age Defy Facial", regular: 3880, promo: 2880, package: 14400, effective: 2400 },
+      { name: "Aqua Reset Fusion", regular: 3980, promo: 2580, package: 12900, effective: 2150 },
+      { name: "Oxy Radiance Fusion", regular: 3980, promo: 2780, package: 13900, effective: 2316 },
     ],
   },
   {
@@ -333,9 +301,9 @@ const MOCK_PRICING_TABLES: PricingTable[] = [
     subtitle: "Buy 10 infusions, get 2 FREE (12 total infusions)",
     packageType: "10+2",
     rows: [
-      { name: "Harmonia's Push (Balance & Vitality)", regular: "₱1,990", promo: "₱1,190", package: "₱11,900", effective: "₱991 / drip" },
-      { name: "Helen's Drip (Trio Radiance)", regular: "₱2,990", promo: "₱1,890", package: "₱18,900", effective: "₱1,575 / drip" },
-      { name: "Achilles' Drip (Myers Cocktail & Energy)", regular: "₱3,480", promo: "₱1,990", package: "₱19,900", effective: "₱1,658 / drip" },
+      { name: "Harmonia's Push (Balance & Vitality)", regular: 1990, promo: 1190, package: 11900, effective: 991 },
+      { name: "Helen's Drip (Trio Radiance)", regular: 2990, promo: 1890, package: 18900, effective: 1575 },
+      { name: "Achilles' Drip (Myers Cocktail & Energy)", regular: 3480, promo: 1990, package: 19900, effective: 1658 },
     ],
   },
   {
@@ -344,40 +312,25 @@ const MOCK_PRICING_TABLES: PricingTable[] = [
     subtitle: "Premium formulations for immunity, slimming, whitening, and performance",
     packageType: "5+1",
     rows: [
-      { name: "Aphrodite Drip (Whitening + Anti-Aging)", regular: "₱3,990", promo: "₱2,990", package: "₱14,950", effective: "₱2,491 / drip" },
-      { name: "Poseidon Drip (Immunity Booster + Anti-Aging)", regular: "₱3,490", promo: "₱2,990", package: "₱14,950", effective: "₱2,491 / drip" },
-      { name: "Artemis Drip (Slimming + Metabolism)", regular: "₱4,490", promo: "₱3,290", package: "₱16,450", effective: "₱2,741 / drip" },
-      { name: "Apollo Drip (Repair + Cellular Glow)", regular: "₱3,490", promo: "₱2,290", package: "₱11,450", effective: "₱1,908 / drip" },
-      { name: "Zeus (Energy + Peak Performance)", regular: "₱5,990", promo: "₱3,990", package: "₱19,950", effective: "₱3,325 / drip" },
+      { name: "Aphrodite Drip (Whitening + Anti-Aging)", regular: 3990, promo: 2990, package: 14950, effective: 2491 },
+      { name: "Poseidon Drip (Immunity Booster + Anti-Aging)", regular: 3490, promo: 2990, package: 14950, effective: 2491 },
+      { name: "Artemis Drip (Slimming + Metabolism)", regular: 4490, promo: 3290, package: 16450, effective: 2741 },
+      { name: "Apollo Drip (Repair + Cellular Glow)", regular: 3490, promo: 2290, package: 11450, effective: 1908 },
+      { name: "Zeus (Energy + Peak Performance)", regular: 5990, promo: 3990, package: 19950, effective: 3325 },
     ],
   },
 ];
 
-// ---------------------------------------------------------------------------
-// DATA FETCHING FUNCTIONS
-// Replace the return statements below with real API/Supabase calls later.
-// ---------------------------------------------------------------------------
-
-/**
- * Returns all active promo cards, sorted newest first.
- * When backend is ready: query `promos` table where is_active = true.
- */
 export async function getPromos(): Promise<PromoCard[]> {
-  // TODO: replace with Supabase / REST API call
-  // const { data } = await supabase.from("promos").select("*").eq("is_active", true).order("published_at", { ascending: false });
-  // return data ?? [];
-  return MOCK_PROMOS.filter((p) => p.isActive !== false).sort(
-    (a, b) =>
-      new Date(b.publishedAt ?? 0).getTime() -
-      new Date(a.publishedAt ?? 0).getTime()
-  );
+  return MOCK_PROMOS
+    .filter((promo) => promo.isActive !== false)
+    .sort(
+      (a, b) =>
+        new Date(b.publishedAt ?? 0).getTime() -
+        new Date(a.publishedAt ?? 0).getTime()
+    );
 }
 
-/**
- * Returns all pricing tables (facials + drips).
- * When backend is ready: query `pricing_tables` table with related `pricing_rows`.
- */
 export async function getPricingTables(): Promise<PricingTable[]> {
-  // TODO: replace with Supabase / REST API call
   return MOCK_PRICING_TABLES;
 }
