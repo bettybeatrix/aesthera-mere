@@ -6,6 +6,10 @@ Use the [Aesthera Mère website guide](https://docs.google.com/document/d/1laKg3
 
 The guide's main goals are to help visitors compare treatments, build trust through doctor credentials and real results, and make consultation booking quick on mobile. Home page previews should lead to the relevant full pages. Before-and-after photos and patient feedback should be used with the permissions described in the guide.
 
+## Photo references
+
+Use the [Aesthera Mère Canva picture collection](https://canva.link/6lewhp5xz0o4tvy) as the reference for photos and other visual assets needed for website pages. Check the collection when selecting images for a page; the website guide above remains the reference for page content and requirements.
+
 ## Development
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
