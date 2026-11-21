@@ -35,13 +35,15 @@ function formatPrice(value: number): string {
 }
 
 function getPromoPriceLabel(card: PromoCard): string | undefined {
+  if (card.promoPriceLabel) return card.promoPriceLabel;
   if (typeof card.promoPrice === "number") return formatPrice(card.promoPrice);
-  return card.promoPriceLabel;
+  return undefined;
 }
 
 function getRegularPriceLabel(card: PromoCard): string | undefined {
+  if (card.regularPriceLabel) return card.regularPriceLabel;
   if (typeof card.regularPrice === "number") return formatPrice(card.regularPrice);
-  return card.regularPriceLabel;
+  return undefined;
 }
 
 // ---------------------------------------------------------------------------
