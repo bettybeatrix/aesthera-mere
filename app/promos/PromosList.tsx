@@ -54,15 +54,29 @@ function PromoModal({
   card: PromoCard;
   onClose: () => void;
 }) {
-  // Close on Escape key
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+    const previousOverflow = document.body.style.overflow;
+    const handler = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
     };
+
     document.addEventListener("keydown", handler);
-    // Lock body scroll while open
     document.body.style.overflow = "hidden";
-    return (
+
+    return () => {
+      document.removeEventListener("keydown", handler);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [onClose]);
+
+  const discountLabel =
+    typeof card.promoPrice === "number" &&
+    typeof card.regularPrice === "number" &&
+    card.regularPrice > 0
+      ? `${Math.round((1 - card.promoPrice / card.regularPrice) * 100)}% OFF`
+      : card.discountLabel;
+
+  return (
     <div
       className="fixed inset-0 z-50 flex items-end justify-center bg-[#25291f]/45 p-0 backdrop-blur-sm sm:items-center sm:p-4"
       onClick={onClose}
@@ -71,7 +85,7 @@ function PromoModal({
       aria-labelledby="promo-detail-title"
     >
       <div
-        className="flex max-h-[92dvh] w-full max-w-[680px] flex-col overflow-hidden rounded-t-[24px] border border-[#80755F]/20 bg-[#FFFCF3] shadow-2xl sm:rounded-[24px]"
+        className="flex max-h-[92dvh] w-full max-w-[700px] flex-col overflow-hidden rounded-t-[24px] border border-[#80755F]/20 bg-[#FFFCF3] shadow-2xl sm:rounded-[24px]"
         onClick={(event) => event.stopPropagation()}
       >
         <header className="flex items-start justify-between gap-5 border-b border-[#80755F]/20 px-6 py-6 sm:px-8">
@@ -82,9 +96,9 @@ function PromoModal({
             <h2 id="promo-detail-title" className="font-seasons mt-2 text-2xl leading-tight text-[#4C5534] sm:text-3xl">
               {card.title}
             </h2>
-            <span className="mt-3 inline-flex rounded-full border border-[#4f6442]/25 px-3 py-1 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-[#4f6442]">
-              {card.badge}
-            </span>
+            <p className="mt-2 font-montserrat text-sm leading-6 text-[#4f6442]">
+              {card.subtitle}
+            </p>
           </div>
           <button
             type="button"
@@ -99,33 +113,29 @@ function PromoModal({
         </header>
 
         <div className="flex-1 overflow-y-auto px-6 py-6 sm:px-8">
-          <p className="font-montserrat text-sm font-semibold leading-6 text-[#4f6442]">
-            {card.subtitle}
-          </p>
-          <p className="mt-3 font-montserrat text-sm leading-7 text-[#80755F]">
-            {card.description}
-          </p>
-
-          <section aria-label="Pricing information" className="mt-6 rounded-2xl border border-[#80755F]/20 bg-white p-5">
-            <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
-              Offer pricing
-            </p>
-            <div className="mt-3 flex flex-wrap items-baseline justify-between gap-2">
-              <span className="font-montserrat text-xs text-[#80755F]">Promo rate</span>
-              <span className="font-montserrat text-xl font-semibold text-[#4C5534]">
+          <section aria-label="Promotion pricing" className="rounded-2xl border border-[#4f6442]/20 bg-white p-5 sm:p-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <span className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
+                Special promotional price
+              </span>
+              {discountLabel && (
+                <span className="rounded-full bg-[#4C5534] px-3 py-1.5 font-montserrat text-[10px] font-bold tracking-[0.08em] text-white">
+                  {discountLabel}
+                </span>
+              )}
+            </div>
+            <div className="mt-3 flex flex-wrap items-end gap-x-3 gap-y-1">
+              <span className="font-seasons text-4xl leading-none text-[#4C5534] sm:text-5xl">
                 {getPromoPriceLabel(card) ?? "Price upon inquiry"}
               </span>
-            </div>
-            {getRegularPriceLabel(card) && (
-              <div className="mt-2 flex flex-wrap items-baseline justify-between gap-2">
-                <span className="font-montserrat text-xs text-[#80755F]">Regular rate</span>
-                <span className="font-montserrat text-xs text-[#80755F]">
+              {getRegularPriceLabel(card) && (
+                <span className="pb-1 font-montserrat text-sm text-[#80755F] line-through">
                   {getRegularPriceLabel(card)}
                 </span>
-              </div>
-            )}
+              )}
+            </div>
             {card.savings && (
-              <p className="mt-3 border-t border-[#80755F]/15 pt-3 font-montserrat text-xs font-semibold text-[#4f6442]">
+              <p className="mt-3 font-montserrat text-xs font-semibold text-[#4f6442]">
                 {card.savings}
               </p>
             )}
@@ -138,12 +148,31 @@ function PromoModal({
 
           <section className="mt-6">
             <h3 className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
-              Offer validity
+              About this offer
             </h3>
-            <p className="mt-2 font-montserrat text-xs leading-6 text-[#4C5534]">
-              {card.validity ?? "Confirm current availability with the clinic."}
+            <p className="mt-2 font-montserrat text-sm leading-7 text-[#4C5534]">
+              {card.description}
             </p>
           </section>
+
+          <div className="mt-6 grid gap-4 border-y border-[#80755F]/15 py-5 sm:grid-cols-2">
+            <div>
+              <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.14em] text-[#80755F]">
+                Package / sessions
+              </p>
+              <p className="mt-2 font-montserrat text-xs leading-6 text-[#4C5534]">
+                {card.sessions ?? "As specified in the treatment inclusions"}
+              </p>
+            </div>
+            <div>
+              <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.14em] text-[#80755F]">
+                Offer validity
+              </p>
+              <p className="mt-2 font-montserrat text-xs leading-6 text-[#4C5534]">
+                {card.validity ?? (card.validUntil ? `Until ${card.validUntil}` : "While the offer is active")}
+              </p>
+            </div>
+          </div>
 
           {card.recommendedFor && card.recommendedFor.length > 0 && (
             <section className="mt-6">
@@ -163,7 +192,7 @@ function PromoModal({
 
           <section className="mt-6">
             <h3 className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
-              Inclusions and offer details
+              Inclusions
             </h3>
             <ul className="mt-3 space-y-3">
               {card.inclusions.map((item, idx) => (
@@ -197,7 +226,7 @@ function PromoModal({
             Avail This Promo <ArrowUpRightIcon className="h-4 w-4" />
           </BookingTrigger>
           <p className="mt-3 text-center font-montserrat text-[10px] leading-5 text-[#80755F]">
-            Sample frontend offer. Final rates, eligibility, and availability will be managed through the backend.
+            Frontend demonstration pricing and offer details. Final clinic offers will be managed through the backend.
           </p>
         </div>
       </div>
@@ -206,7 +235,7 @@ function PromoModal({
 }
 
 // ---------------------------------------------------------------------------
-// Clean Promo Card (minimal — click to open modal)
+// Promo card — prominent discount and pricing, no hover-dependent content
 // ---------------------------------------------------------------------------
 function PromoCardItem({
   card,
@@ -215,13 +244,20 @@ function PromoCardItem({
   card: PromoCard;
   onClick: () => void;
 }) {
+  const discountLabel =
+    typeof card.promoPrice === "number" &&
+    typeof card.regularPrice === "number" &&
+    card.regularPrice > 0
+      ? `${Math.round((1 - card.promoPrice / card.regularPrice) * 100)}% OFF`
+      : card.discountLabel;
+
   return (
     <button
       type="button"
       onClick={onClick}
-      className="relative flex w-full flex-col overflow-hidden rounded-[20px] border border-[#80755F]/20 bg-white text-left shadow-[0_8px_24px_-20px_rgba(30,58,42,0.28)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4C5534] focus-visible:ring-offset-2"
+      aria-label={`View ${card.title} details`}
+      className="flex w-full flex-col overflow-hidden rounded-[20px] border border-[#80755F]/20 bg-white text-left shadow-[0_8px_24px_-20px_rgba(30,58,42,0.28)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4C5534] focus-visible:ring-offset-2"
     >
-      {/* Image */}
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#E7E1D7]">
         <Image
           src={card.image}
@@ -232,21 +268,16 @@ function PromoCardItem({
           className="object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-
-        {/* Badge */}
-        <span className="absolute left-4 top-4 rounded-full bg-[#4C5534] px-3 py-1.5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white shadow">
+        <span className="absolute left-4 top-4 rounded-full bg-[#4C5534] px-3 py-1.5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white">
           {card.badge}
         </span>
-
-        {/* Savings chip */}
-        {card.savings && (
-          <span className="absolute right-4 top-4 rounded-full bg-[#4f6442] px-3 py-1 font-montserrat text-[10px] font-semibold text-white shadow">
-            {card.savings}
+        {discountLabel && (
+          <span className="absolute right-4 top-4 rounded-full bg-[#F4E9D7] px-3 py-1.5 font-montserrat text-[10px] font-bold tracking-[0.06em] text-[#4C5534]">
+            {discountLabel}
           </span>
         )}
       </div>
 
-      {/* Card footer — always visible */}
       <div className="flex flex-1 flex-col p-5">
         <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.14em] text-[#80755F]">
           {card.categoryLabel}
@@ -255,21 +286,32 @@ function PromoCardItem({
           {card.title}
         </h3>
 
-        {/* Price row */}
-        <div className="mt-auto flex items-baseline justify-between gap-3 pt-4">
-          <span className="font-montserrat text-base font-semibold text-[#4C5534]">
-            {getPromoPriceLabel(card) ?? "Price upon inquiry"}
-          </span>
-          {getRegularPriceLabel(card) && (
-            <span className="font-montserrat text-xs text-[#80755F]">
-              {getRegularPriceLabel(card)}
+        <div className="mt-auto pt-5">
+          <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">
+            Promo price
+          </p>
+          <div className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span className="font-seasons text-3xl leading-none text-[#4C5534]">
+              {getPromoPriceLabel(card) ?? "Price upon inquiry"}
             </span>
+            {getRegularPriceLabel(card) && (
+              <span className="font-montserrat text-xs text-[#80755F] line-through">
+                {getRegularPriceLabel(card)}
+              </span>
+            )}
+          </div>
+          {card.savings && (
+            <p className="mt-2 font-montserrat text-[11px] font-semibold text-[#4f6442]">
+              {card.savings}
+            </p>
           )}
         </div>
 
-        <div className="mt-3 flex items-center gap-1.5 font-montserrat text-[11px] font-semibold text-[#4f6442]">
-          View full details
-          <ArrowUpRightIcon className="h-3.5 w-3.5" />
+        <div className="mt-4 flex items-center justify-between border-t border-[#80755F]/15 pt-3">
+          <span className="font-montserrat text-[11px] font-semibold text-[#4f6442]">
+            View full details
+          </span>
+          <ArrowUpRightIcon className="h-4 w-4 text-[#4f6442]" />
         </div>
       </div>
     </button>
