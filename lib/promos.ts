@@ -246,12 +246,10 @@ const MOCK_PRICING_TABLES: PricingTable[] = [
 ];
 
 export async function getPromos(): Promise<PromoCard[]> {
-  const todayInManila = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Manila",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
+  // The Philippines uses UTC+08:00 year-round. Build the local calendar
+  // date directly to avoid relying on Intl locale formatting during prerender.
+  const manilaNow = new Date(Date.now() + 8 * 60 * 60 * 1000);
+  const todayInManila = manilaNow.toISOString().slice(0, 10);
 
   return MOCK_PROMOS
     .filter((promo) => {
