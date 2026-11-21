@@ -25,6 +25,26 @@ interface PromosListProps {
   pricingTables: PricingTable[];
 }
 
+const pesoFormatter = new Intl.NumberFormat("en-PH", {
+  style: "currency",
+  currency: "PHP",
+  maximumFractionDigits: 0,
+});
+
+function formatPrice(value: number): string {
+  return pesoFormatter.format(value);
+}
+
+function getPromoPriceLabel(card: PromoCard): string | undefined {
+  if (typeof card.promoPrice === "number") return formatPrice(card.promoPrice);
+  return card.promoPriceLabel;
+}
+
+function getRegularPriceLabel(card: PromoCard): string | undefined {
+  if (typeof card.regularPrice === "number") return formatPrice(card.regularPrice);
+  return card.regularPriceLabel;
+}
+
 // ---------------------------------------------------------------------------
 // Promo Detail Modal
 // ---------------------------------------------------------------------------
@@ -120,29 +140,32 @@ function PromoModal({
             {card.description}
           </p>
 
-          {/* Pricing box */}
-          <div className="mt-5 rounded-2xl border border-[#80755F]/15 bg-white p-5 font-montserrat">
-            <div className="flex items-baseline justify-between gap-2">
-              <span className="text-[11px] uppercase tracking-wider text-[#80755F]">
-                Promo Rate
-              </span>
-              <span className="text-2xl font-bold text-[#4C5534]">
-                {card.promoPrice}
-              </span>
+          {/* Pricing details — render only the values supplied by the promo data. */}
+          {(getPromoPriceLabel(card) || getRegularPriceLabel(card) || card.bonusText) && (
+            <div className="mt-5 rounded-2xl border border-[#80755F]/15 bg-white p-5 font-montserrat">
+              {getPromoPriceLabel(card) && (
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="text-[11px] uppercase tracking-wider text-[#80755F]">
+                    Promo Rate
+                  </span>
+                  <span className="text-right text-xl font-semibold text-[#4C5534]">
+                    {getPromoPriceLabel(card)}
+                  </span>
+                </div>
+              )}
+              {getRegularPriceLabel(card) && (
+                <div className="mt-2 flex items-baseline justify-between gap-3 text-xs text-[#80755F]">
+                  <span>Regular Rate</span>
+                  <span className="text-right">{getRegularPriceLabel(card)}</span>
+                </div>
+              )}
+              {card.bonusText && (
+                <div className="mt-3 rounded-xl bg-[#4f6442]/10 px-4 py-2.5 text-xs font-semibold text-[#4f6442]">
+                  {card.bonusText}
+                </div>
+              )}
             </div>
-            {card.regularPrice && (
-              <div className="mt-1.5 flex items-baseline justify-between gap-2 text-xs text-[#80755F]">
-                <span>Regular Rate</span>
-                <span className="line-through">{card.regularPrice}</span>
-              </div>
-            )}
-            {card.bonusText && (
-              <div className="mt-3 flex items-center gap-2 rounded-xl bg-[#4f6442]/10 px-4 py-2.5 text-xs font-semibold text-[#4f6442]">
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#4f6442]" />
-                {card.bonusText}
-              </div>
-            )}
-          </div>
+          )}
 
           {/* Recommended For */}
           {card.recommendedFor && card.recommendedFor.length > 0 && (
@@ -212,7 +235,7 @@ function PromoCardItem({
     <button
       type="button"
       onClick={onClick}
-      className="group relative flex w-full flex-col overflow-hidden rounded-[20px] border border-[#80755F]/20 bg-white text-left shadow-[0_12px_30px_-20px_rgba(30,58,42,0.25)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_45px_-15px_rgba(30,58,42,0.40)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4C5534]"
+      className="relative flex w-full flex-col overflow-hidden rounded-[20px] border border-[#80755F]/20 bg-white text-left shadow-[0_8px_24px_-20px_rgba(30,58,42,0.28)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4C5534] focus-visible:ring-offset-2"
     >
       {/* Image */}
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#E7E1D7]">
@@ -222,7 +245,7 @@ function PromoCardItem({
           fill
           quality={85}
           sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
-          className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+          className="object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
 
@@ -249,21 +272,20 @@ function PromoCardItem({
         </h3>
 
         {/* Price row */}
-        <div className="mt-auto flex items-center justify-between pt-4">
-          <span className="font-montserrat text-base font-bold text-[#4C5534]">
-            {card.promoPrice}
+        <div className="mt-auto flex items-baseline justify-between gap-3 pt-4">
+          <span className="font-montserrat text-base font-semibold text-[#4C5534]">
+            {getPromoPriceLabel(card) ?? "Explore offer"}
           </span>
-          {card.regularPrice && (
-            <span className="font-montserrat text-xs text-[#80755F] line-through">
-              {card.regularPrice}
+          {getRegularPriceLabel(card) && (
+            <span className="font-montserrat text-xs text-[#80755F]">
+              {getRegularPriceLabel(card)}
             </span>
           )}
         </div>
 
-        {/* "View Details" hint */}
-        <div className="mt-3 flex items-center gap-1.5 font-montserrat text-[11px] font-semibold text-[#4f6442] transition-all group-hover:gap-2.5">
+        <div className="mt-3 flex items-center gap-1.5 font-montserrat text-[11px] font-semibold text-[#4f6442]">
           View full details
-          <ArrowUpRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          <ArrowUpRightIcon className="h-3.5 w-3.5" />
         </div>
       </div>
     </button>
@@ -293,12 +315,12 @@ function PricingTableBlock({ table }: { table: PricingTable }) {
           </thead>
           <tbody className="divide-y divide-[#80755F]/10">
             {table.rows.map((row) => (
-              <tr key={row.name} className="transition-colors hover:bg-[#FFFCF3]/60">
+              <tr key={row.name}>
                 <td className="px-6 py-4 font-semibold text-[#4C5534]">{row.name}</td>
-                <td className="px-6 py-4 text-[#80755F] line-through">{row.regular}</td>
-                <td className="px-6 py-4 font-medium text-[#4C5534]">{row.promo}</td>
-                <td className="px-6 py-4 font-bold text-[#4C5534]">{row.package}</td>
-                <td className="px-6 py-4 font-semibold text-[#4f6442]">{row.effective}</td>
+                <td className="px-6 py-4 text-[#80755F]">{formatPrice(row.regular)}</td>
+                <td className="px-6 py-4 font-medium text-[#4C5534]">{formatPrice(row.promo)}</td>
+                <td className="px-6 py-4 font-semibold text-[#4C5534]">{formatPrice(row.package)}</td>
+                <td className="px-6 py-4 font-semibold text-[#4f6442]">{formatPrice(row.effective)}</td>
               </tr>
             ))}
           </tbody>
@@ -427,10 +449,10 @@ export default function PromosList({ promos, pricingTables }: PromosListProps) {
                   key={tab}
                   type="button"
                   onClick={() => setActiveTableTab(tab)}
-                  className={`rounded-full px-6 py-2.5 font-montserrat text-xs font-semibold transition-all ${
+                  className={`rounded-full px-6 py-2.5 font-montserrat text-xs font-semibold ${
                     activeTableTab === tab
                       ? "bg-[#4C5534] text-white shadow-sm"
-                      : "text-[#4C5534] hover:text-[#80755F]"
+                      : "text-[#4C5534]"
                   }`}
                 >
                   {tab === "facials" ? "Facial Packages (5 + 1)" : "Aesthera Drips (10 + 2 & 5 + 1)"}
