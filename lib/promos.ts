@@ -1,29 +1,7 @@
 import type { PromoCard, PricingTable } from "@/types/promo";
 
 const MOCK_PROMOS: PromoCard[] = [
-  {
-    id: "summer-ready-skin",
-    title: "Your Summer-Ready Skin is Waiting",
-    category: "launch",
-    categoryLabel: "Summer Opening Special",
-    badge: "Starting April 24",
-    subtitle: "Feel and Look More Sculpted — Just in Time for Summer",
-    promoPriceLabel: "Up to 30% OFF",
-    regularPriceLabel: "Standard rates not supplied in source",
-    savings: "Pre-Launch Offer",
-    description:
-      "Get summer-ready before the grand opening! Enjoy exclusive pre-launch discounts on non-doctor's and doctor's procedures starting April 17–22, right before we officially open on April 24.",
-    inclusions: [
-      "Up to 30% discount on non-doctor's procedures",
-      "Up to 20% discount on doctor's procedures",
-      "Promotion valid April 17 – 22 only",
-      "Unit 3 No.4 Madison Square Pioneer St., Boni Ave., Mandaluyong City",
-    ],
-    image: "/images/promotions/summer-ready.jpg",
-    bonusText: "Pre-Opening Exclusive",
-    publishedAt: "2026-04-17T00:00:00Z",
-    isActive: true,
-  },
+
   {
     id: "ultraformer-mpt",
     title: "Ultraformer MPT Full Face & Neck (800 Shots)",
@@ -47,6 +25,16 @@ const MOCK_PROMOS: PromoCard[] = [
       "+ FREE 1 Session of Lemon Bottle Fat Dissolving",
       "+ FREE 1 Session of Thera Exilift 360 RF Tightening",
       "Comprehensive physician vector mapping & depth check",
+    ],
+    sessions: "800 shots · Full face and neck protocol",
+    validUntil: "2026-12-31",
+    validity: "Valid until December 31, 2026 (sample frontend offer).",
+    terms: [
+      "Sample offer and pricing are for frontend demonstration only.",
+      "Discount applies to the listed treatment or package only.",
+      "Treatment suitability, exact dosage or shot allocation, and final treatment plan are confirmed during consultation.",
+      "Offers cannot be combined with other discounts unless the clinic confirms otherwise.",
+      "Appointments are subject to clinic availability.",
     ],
     image: "/images/promotions/ultraformer-mpt.jpg",
     bonusText: "FREE Lemon Bottle + FREE Exilift 360",
@@ -77,6 +65,16 @@ const MOCK_PROMOS: PromoCard[] = [
       "RemeePro automated precision transdermal delivery",
       "Physician skin elasticity and recovery review",
     ],
+    sessions: "1 combined Juvelook + 20-unit MicroTox treatment package",
+    validUntil: "2026-12-31",
+    validity: "Valid until December 31, 2026 (sample frontend offer).",
+    terms: [
+      "Sample offer and pricing are for frontend demonstration only.",
+      "Discount applies to the listed treatment or package only.",
+      "Treatment suitability, exact dosage or shot allocation, and final treatment plan are confirmed during consultation.",
+      "Offers cannot be combined with other discounts unless the clinic confirms otherwise.",
+      "Appointments are subject to clinic availability.",
+    ],
     image: "/images/promotions/glass-skin-glow.jpg",
     bonusText: "Save ₱17,010 off regular price",
     publishedAt: "2026-04-25T00:00:00Z",
@@ -89,7 +87,7 @@ const MOCK_PROMOS: PromoCard[] = [
     categoryLabel: "Amino Acids & Peptide Complex",
     badge: "10% OFF",
     subtitle: "High & Low Molecular Weight Amino Acids + Peptides",
-    promoPriceLabel: "10% Discount",
+    promoPrice: 19791,
     regularPrice: 21990,
     savings: "Special 10% Off",
     description:
@@ -105,6 +103,16 @@ const MOCK_PROMOS: PromoCard[] = [
       "Intensive hydration booster with instant translucency",
       "Gentle non-traumatic skin barrier delivery",
       "Physician skin assessment and personalized aftercare",
+    ],
+    sessions: "1 Thera Luhilo Snow treatment session",
+    validUntil: "2026-12-31",
+    validity: "Valid until December 31, 2026 (sample frontend offer).",
+    terms: [
+      "Sample offer and pricing are for frontend demonstration only.",
+      "Discount applies to the listed treatment or package only.",
+      "Treatment suitability, exact dosage or shot allocation, and final treatment plan are confirmed during consultation.",
+      "Offers cannot be combined with other discounts unless the clinic confirms otherwise.",
+      "Appointments are subject to clinic availability.",
     ],
     image: "/images/promotions/luhilo-snow.jpg",
     publishedAt: "2026-04-25T00:00:00Z",
@@ -128,6 +136,16 @@ const MOCK_PROMOS: PromoCard[] = [
       "FREE Thera Exilift 360 RF tightening with every treatment",
       "Body contour assessment & localized mapping",
     ],
+    sessions: "4 + 1 package · 5 bottles total",
+    validUntil: "2026-12-31",
+    validity: "Valid until December 31, 2026 (sample frontend offer).",
+    terms: [
+      "Sample offer and pricing are for frontend demonstration only.",
+      "Discount applies to the listed treatment or package only.",
+      "Treatment suitability, exact dosage or shot allocation, and final treatment plan are confirmed during consultation.",
+      "Offers cannot be combined with other discounts unless the clinic confirms otherwise.",
+      "Appointments are subject to clinic availability.",
+    ],
     image: "/images/promotions/lemon-bottle.jpg",
     bonusText: "FREE Thera Exilift 360 Included",
     publishedAt: "2026-04-25T00:00:00Z",
@@ -140,9 +158,12 @@ const MOCK_PROMOS: PromoCard[] = [
     categoryLabel: "Facial Rejuvenation",
     badge: "Per Unit Promo",
     subtitle: "Nabota & Xeomin Medical Neuromodulators",
-    promoPriceLabel: "As low as ₱150 / unit",
+    promoPrice: 150,
+    regularPrice: 250,
+    promoPriceLabel: "From ₱150 / unit",
     regularPriceLabel: "₱250 – ₱450 / unit",
-    savings: "Per-Unit Special",
+    discountLabel: "UP TO 40% OFF",
+    savings: "Nabota from ₱150/unit; Xeomin from ₱350/unit",
     description:
       "Smooth fine expression lines, soften masseter bulk for jawline slimming, or balance facial symmetry with genuine neurotoxins administered by physicians.",
     inclusions: [
@@ -151,122 +172,25 @@ const MOCK_PROMOS: PromoCard[] = [
       "Targeted areas: Forehead, Crow's feet, Frown lines, Jawtox, Lip flip",
       "Physician facial dynamics assessment & touch-up review",
     ],
+    sessions: "Priced per unit; final unit count determined during physician consultation",
+    validUntil: "2026-12-31",
+    validity: "Valid until December 31, 2026 (sample frontend offer).",
+    terms: [
+      "Sample offer and pricing are for frontend demonstration only.",
+      "Discount applies to the listed treatment or package only.",
+      "Treatment suitability, exact dosage or shot allocation, and final treatment plan are confirmed during consultation.",
+      "Offers cannot be combined with other discounts unless the clinic confirms otherwise.",
+      "Appointments are subject to clinic availability.",
+    ],
     image: "/images/promotions/botox-promo.jpg",
     publishedAt: "2026-04-25T00:00:00Z",
     isActive: true,
   },
-  {
-    id: "grand-launch",
-    title: "Grand Launch Opening Offer",
-    category: "launch",
-    categoryLabel: "Grand Opening — April 25, 2026",
-    badge: "We Open April 25",
-    subtitle: "The Wait is Over — Unveil Your Best Form & Skin",
-    promoPriceLabel: "Up to 30% OFF",
-    regularPriceLabel: "Standard rates not supplied in source",
-    savings: "Grand Opening Discount",
-    description:
-      "The wait is over. Celebrate our official grand opening at Madison Square Pioneer on April 25, 2026! Enjoy exclusive tiered discounts across both aesthetician-led and doctor-led clinical procedures.",
-    inclusions: [
-      "Up to 30% discount on non-doctor's procedures",
-      "Up to 20% discount on doctor's procedures",
-      "Comprehensive skin analysis & consultation",
-      "Unit 3 No.4 Madison Square Pioneer St., Boni Ave., Mandaluyong City",
-    ],
-    image: "/images/promotions/grand-launch.jpg",
-    bonusText: "Official Grand Launch — April 25, 2026",
-    publishedAt: "2026-04-25T00:00:00Z",
-    isActive: true,
-  },
-  {
-    id: "midyear-clarity-peels",
-    title: "Midyear Promo — Medical Clarity Peels",
-    category: "facials",
-    categoryLabel: "Clinical Peels & Resurfacing",
-    badge: "Midyear Special",
-    subtitle: "Don't Miss These Limited-Time Offers!",
-    promoPriceLabel: "As low as ₱3,990",
-    regularPriceLabel: "Standard session rates not supplied in source",
-    savings: "Midyear Price Drop",
-    description:
-      "Deep chemical and enzyme resurfacing targeting chronic breakouts, back acne, post-inflammatory pigmentation, and rough skin texture. Limited-time midyear pricing on our most-requested clinical peel treatments.",
-    inclusions: [
-      "Korean Body Clarity Renewal Peel — As low as ₱3,990 (Back acne, blemishes & skin clarity)",
-      "Thera Biorenew Medical Peel — As low as ₱4,490 (Advanced medical-grade for acne & pigmentation)",
-      "Korean Face Clarity Renewal Peel — As low as ₱5,480 (Targets acne, unclogs pores & smooths texture)",
-      "Post-peel soothing application and clinical barrier advice",
-    ],
-    image: "/images/promotions/clarity-peels.jpg",
-    publishedAt: "2026-06-01T00:00:00Z",
-    isActive: true,
-  },
-  {
-    id: "diode-laser-summer",
-    title: "Diode Laser Hair-Free Summer Special",
-    category: "contour",
-    categoryLabel: "Laser Hair Removal",
-    badge: "Seasonal",
-    subtitle: "Painless Triple-Wavelength Diode Technology",
-    promoPriceLabel: "Up to 30% OFF",
-    regularPriceLabel: "Standard session rates not supplied in source",
-    savings: "Summer Ready Deal",
-    description:
-      "One step closer to permanently smooth, hair-free underarms, legs, or bikini line. Our medical-grade cooling diode laser provides maximum comfort and efficacy.",
-    inclusions: [
-      "Up to 30% off non-doctor laser hair removal protocols",
-      "Integrated contact crystal cooling for virtually painless sessions",
-      "Safe and effective across varied skin phototypes",
-      "Package bundles available for sustained hair reduction",
-    ],
-    image: "/images/promotions/diode-laser.jpg",
-    publishedAt: "2026-04-25T00:00:00Z",
-    isActive: true,
-  },
-  {
-    id: "rejuran-june-promo",
-    title: "Rejuran Cellular Skin Healer Special",
-    category: "injectables",
-    categoryLabel: "Polynucleotide Therapy",
-    badge: "10% OFF",
-    subtitle: "Revitalize Your Skin with Genuine Rejuran®",
-    promoPriceLabel: "10% Discount This Month",
-    regularPriceLabel: "Standard package price not supplied in source",
-    savings: "Exclusive 10% Off",
-    description:
-      "Medical-grade wild salmon DNA polynucleotides (PN) that biologically repair damaged skin barriers, improve elasticity, and reverse cellular aging.",
-    inclusions: [
-      "10% discount on all Rejuran services (Healer, Eye, Scar)",
-      "Deep micro-droplet dermal matrix delivery",
-      "Physician skin thickness and recovery protocol",
-      "Ideal for acne scars, enlarged pores, and sensitized skin",
-    ],
-    image: "/images/promotions/rejuran-discount.jpg",
-    publishedAt: "2026-06-01T00:00:00Z",
-    isActive: true,
-  },
-  {
-    id: "mothers-day-contest",
-    title: "The Glow She Gave — Mother's Day Special",
-    category: "launch",
-    categoryLabel: "Community Celebration",
-    badge: "Special Contest",
-    subtitle: "In Honor of Motherly Care & Grace",
-    promoPriceLabel: "FREE Pampering Prize",
-    regularPriceLabel: "Priceless Care",
-    savings: "Complimentary Service",
-    description:
-      "In tribute to our late mother who inspired Aesthera Mère, share a heartwarming photo and message dedicated to your mom on Facebook or Instagram for a chance to win a free pampering service.",
-    inclusions: [
-      "1. Follow @aestheramereph on Facebook and Instagram",
-      "2. Post a photo of your mom or mother figure on your feed",
-      "3. Share the most heartfelt caption celebrating her glow",
-      "Winner receives a complimentary Aesthera pampering experience",
-    ],
-    image: "/images/promotions/mothers-day.jpg",
-    bonusText: "Tribute to Motherhood",
-    publishedAt: "2026-05-11T00:00:00Z",
-    isActive: true,
-  },
+
+
+
+
+
 ];
 
 const MOCK_PRICING_TABLES: PricingTable[] = [
@@ -322,8 +246,17 @@ const MOCK_PRICING_TABLES: PricingTable[] = [
 ];
 
 export async function getPromos(): Promise<PromoCard[]> {
+  // The Philippines uses UTC+08:00 year-round. Build the local calendar
+  // date directly to avoid relying on Intl locale formatting during prerender.
+  const manilaNow = new Date(Date.now() + 8 * 60 * 60 * 1000);
+  const todayInManila = manilaNow.toISOString().slice(0, 10);
+
   return MOCK_PROMOS
-    .filter((promo) => promo.isActive !== false)
+    .filter((promo) => {
+      if (promo.isActive === false) return false;
+      if (promo.validUntil && promo.validUntil < todayInManila) return false;
+      return true;
+    })
     .sort(
       (a, b) =>
         new Date(b.publishedAt ?? 0).getTime() -
