@@ -48,21 +48,19 @@ export default function FAQContent() {
 
   return (
     <>
-      <section className="border-b border-[#80755F]/15 px-6 py-16 md:px-10 md:py-24">
-        <div className="mx-auto max-w-[1180px]">
-          <div className="max-w-[790px]">
-            <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.24em] text-[#80755F]">
-              Aesthera Mère · Frequently Asked Questions
+      <section className="border-b border-[#80755F]/15 px-6 py-10 md:px-10 md:py-12">
+        <div className="mx-auto flex max-w-[1280px] flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.2em] text-[#80755F]">
+              Aesthera Mère · Help Centre
             </p>
-            <h1 className="font-seasons mt-4 text-[clamp(3rem,7vw,5.8rem)] leading-[0.94] text-[#4C5534]">
-              A little clarity,
-              <br />
-              before your visit.
+            <h1 className="font-seasons mt-2 text-[clamp(2.4rem,5vw,4rem)] leading-none text-[#4C5534]">
+              Questions, answered.
             </h1>
-            <p className="mt-6 max-w-[650px] font-montserrat text-sm leading-7 text-[#80755F] md:text-base">
-              Find helpful information about consultations, treatments, promotions, and caring for your skin. If you need guidance for your individual concerns, our team can help you take the next step.
-            </p>
           </div>
+          <p className="max-w-[420px] font-montserrat text-xs leading-6 text-[#80755F] sm:text-right">
+            A helpful guide to appointments, treatments, and your visit.
+          </p>
         </div>
       </section>
 
