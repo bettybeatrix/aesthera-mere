@@ -29,6 +29,12 @@ export interface PromoCard {
   inclusions: string[];
   image: string;
   bonusText?: string;
+  /** Display validity for the current frontend offer. */
+  validity?: string;
+  /** Offer conditions shown in the details view. */
+  terms?: string[];
+  /** ISO date after which the offer must not be displayed. */
+  validUntil?: string;
   publishedAt?: string;
   isActive?: boolean;
 }
