@@ -1,3 +1,13 @@
+# Aesthera Mère website
+
+## Website reference guide
+
+Use the [Aesthera Mère website guide](https://docs.google.com/document/d/1laKg3bsFZpcu_s-W54dj6KP0BMXRzCzo1_tuBpTzrS0/edit?usp=sharing) as the current reference for website planning and content. Check the live document before implementing a page or feature, since it may be updated.
+
+The guide's main goals are to help visitors compare treatments, build trust through doctor credentials and real results, and make consultation booking quick on mobile. Home page previews should lead to the relevant full pages. Before-and-after photos and patient feedback should be used with the permissions described in the guide.
+
+## Development
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
