@@ -40,11 +40,6 @@ const MOCK_PROMOS: PromoCard[] = [
     bonusText: "FREE Lemon Bottle + FREE Exilift 360",
     publishedAt: "2026-04-25T00:00:00Z",
     isActive: true,
-    terms: [
-      "Offer details and sample pricing are for frontend demonstration only.",
-      "Treatment suitability and final treatment plan are confirmed during consultation.",
-      "Availability and final pricing will be updated when the website backend is connected.",
-    ],
   },
   {
     id: "glass-skin-juvetox",
@@ -84,11 +79,6 @@ const MOCK_PROMOS: PromoCard[] = [
     bonusText: "Save ₱17,010 off regular price",
     publishedAt: "2026-04-25T00:00:00Z",
     isActive: true,
-    terms: [
-      "Offer details and sample pricing are for frontend demonstration only.",
-      "Treatment suitability and final treatment plan are confirmed during consultation.",
-      "Availability and final pricing will be updated when the website backend is connected.",
-    ],
   },
   {
     id: "thera-luhilo-snow",
@@ -127,11 +117,6 @@ const MOCK_PROMOS: PromoCard[] = [
     image: "/images/promotions/luhilo-snow.jpg",
     publishedAt: "2026-04-25T00:00:00Z",
     isActive: true,
-    terms: [
-      "Offer details and sample pricing are for frontend demonstration only.",
-      "Treatment suitability and final treatment plan are confirmed during consultation.",
-      "Availability and final pricing will be updated when the website backend is connected.",
-    ],
   },
   {
     id: "lemon-bottle-slimming",
@@ -165,11 +150,6 @@ const MOCK_PROMOS: PromoCard[] = [
     bonusText: "FREE Thera Exilift 360 Included",
     publishedAt: "2026-04-25T00:00:00Z",
     isActive: true,
-    terms: [
-      "Offer details and sample pricing are for frontend demonstration only.",
-      "Treatment suitability and final treatment plan are confirmed during consultation.",
-      "Availability and final pricing will be updated when the website backend is connected.",
-    ],
   },
   {
     id: "botox-theratox",
@@ -205,11 +185,6 @@ const MOCK_PROMOS: PromoCard[] = [
     image: "/images/promotions/botox-promo.jpg",
     publishedAt: "2026-04-25T00:00:00Z",
     isActive: true,
-    terms: [
-      "Offer details and sample pricing are for frontend demonstration only.",
-      "Treatment suitability and final treatment plan are confirmed during consultation.",
-      "Availability and final pricing will be updated when the website backend is connected.",
-    ],
   },
 
 
