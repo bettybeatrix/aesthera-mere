@@ -26,11 +26,20 @@ const MOCK_PROMOS: PromoCard[] = [
       "+ FREE 1 Session of Thera Exilift 360 RF Tightening",
       "Comprehensive physician vector mapping & depth check",
     ],
+    sessions: "800 shots · Full face and neck protocol",
+    validUntil: "2026-12-31",
+    validity: "Valid until December 31, 2026 (sample frontend offer).",
+    terms: [
+      "Sample offer and pricing are for frontend demonstration only.",
+      "Discount applies to the listed treatment or package only.",
+      "Treatment suitability, exact dosage or shot allocation, and final treatment plan are confirmed during consultation.",
+      "Offers cannot be combined with other discounts unless the clinic confirms otherwise.",
+      "Appointments are subject to clinic availability.",
+    ],
     image: "/images/promotions/ultraformer-mpt.jpg",
     bonusText: "FREE Lemon Bottle + FREE Exilift 360",
     publishedAt: "2026-04-25T00:00:00Z",
     isActive: true,
-    validity: "Current sample offer — confirm availability with the clinic.",
     terms: [
       "Offer details and sample pricing are for frontend demonstration only.",
       "Treatment suitability and final treatment plan are confirmed during consultation.",
@@ -61,11 +70,20 @@ const MOCK_PROMOS: PromoCard[] = [
       "RemeePro automated precision transdermal delivery",
       "Physician skin elasticity and recovery review",
     ],
+    sessions: "1 combined Juvelook + 20-unit MicroTox treatment package",
+    validUntil: "2026-12-31",
+    validity: "Valid until December 31, 2026 (sample frontend offer).",
+    terms: [
+      "Sample offer and pricing are for frontend demonstration only.",
+      "Discount applies to the listed treatment or package only.",
+      "Treatment suitability, exact dosage or shot allocation, and final treatment plan are confirmed during consultation.",
+      "Offers cannot be combined with other discounts unless the clinic confirms otherwise.",
+      "Appointments are subject to clinic availability.",
+    ],
     image: "/images/promotions/glass-skin-glow.jpg",
     bonusText: "Save ₱17,010 off regular price",
     publishedAt: "2026-04-25T00:00:00Z",
     isActive: true,
-    validity: "Current sample offer — confirm availability with the clinic.",
     terms: [
       "Offer details and sample pricing are for frontend demonstration only.",
       "Treatment suitability and final treatment plan are confirmed during consultation.",
@@ -96,10 +114,19 @@ const MOCK_PROMOS: PromoCard[] = [
       "Gentle non-traumatic skin barrier delivery",
       "Physician skin assessment and personalized aftercare",
     ],
+    sessions: "1 Thera Luhilo Snow treatment session",
+    validUntil: "2026-12-31",
+    validity: "Valid until December 31, 2026 (sample frontend offer).",
+    terms: [
+      "Sample offer and pricing are for frontend demonstration only.",
+      "Discount applies to the listed treatment or package only.",
+      "Treatment suitability, exact dosage or shot allocation, and final treatment plan are confirmed during consultation.",
+      "Offers cannot be combined with other discounts unless the clinic confirms otherwise.",
+      "Appointments are subject to clinic availability.",
+    ],
     image: "/images/promotions/luhilo-snow.jpg",
     publishedAt: "2026-04-25T00:00:00Z",
     isActive: true,
-    validity: "Current sample offer — confirm availability with the clinic.",
     terms: [
       "Offer details and sample pricing are for frontend demonstration only.",
       "Treatment suitability and final treatment plan are confirmed during consultation.",
@@ -124,11 +151,20 @@ const MOCK_PROMOS: PromoCard[] = [
       "FREE Thera Exilift 360 RF tightening with every treatment",
       "Body contour assessment & localized mapping",
     ],
+    sessions: "4 + 1 package · 5 bottles total",
+    validUntil: "2026-12-31",
+    validity: "Valid until December 31, 2026 (sample frontend offer).",
+    terms: [
+      "Sample offer and pricing are for frontend demonstration only.",
+      "Discount applies to the listed treatment or package only.",
+      "Treatment suitability, exact dosage or shot allocation, and final treatment plan are confirmed during consultation.",
+      "Offers cannot be combined with other discounts unless the clinic confirms otherwise.",
+      "Appointments are subject to clinic availability.",
+    ],
     image: "/images/promotions/lemon-bottle.jpg",
     bonusText: "FREE Thera Exilift 360 Included",
     publishedAt: "2026-04-25T00:00:00Z",
     isActive: true,
-    validity: "Current sample offer — confirm availability with the clinic.",
     terms: [
       "Offer details and sample pricing are for frontend demonstration only.",
       "Treatment suitability and final treatment plan are confirmed during consultation.",
@@ -142,9 +178,12 @@ const MOCK_PROMOS: PromoCard[] = [
     categoryLabel: "Facial Rejuvenation",
     badge: "Per Unit Promo",
     subtitle: "Nabota & Xeomin Medical Neuromodulators",
+    promoPrice: 150,
+    regularPrice: 250,
     promoPriceLabel: "From ₱150 / unit",
     regularPriceLabel: "₱250 – ₱450 / unit",
-    savings: "Per-Unit Special",
+    discountLabel: "UP TO 40% OFF",
+    savings: "Nabota from ₱150/unit; Xeomin from ₱350/unit",
     description:
       "Smooth fine expression lines, soften masseter bulk for jawline slimming, or balance facial symmetry with genuine neurotoxins administered by physicians.",
     inclusions: [
@@ -153,10 +192,19 @@ const MOCK_PROMOS: PromoCard[] = [
       "Targeted areas: Forehead, Crow's feet, Frown lines, Jawtox, Lip flip",
       "Physician facial dynamics assessment & touch-up review",
     ],
+    sessions: "Priced per unit; final unit count determined during physician consultation",
+    validUntil: "2026-12-31",
+    validity: "Valid until December 31, 2026 (sample frontend offer).",
+    terms: [
+      "Sample offer and pricing are for frontend demonstration only.",
+      "Discount applies to the listed treatment or package only.",
+      "Treatment suitability, exact dosage or shot allocation, and final treatment plan are confirmed during consultation.",
+      "Offers cannot be combined with other discounts unless the clinic confirms otherwise.",
+      "Appointments are subject to clinic availability.",
+    ],
     image: "/images/promotions/botox-promo.jpg",
     publishedAt: "2026-04-25T00:00:00Z",
     isActive: true,
-    validity: "Current sample offer — confirm availability with the clinic.",
     terms: [
       "Offer details and sample pricing are for frontend demonstration only.",
       "Treatment suitability and final treatment plan are confirmed during consultation.",
@@ -223,8 +271,19 @@ const MOCK_PRICING_TABLES: PricingTable[] = [
 ];
 
 export async function getPromos(): Promise<PromoCard[]> {
+  const todayInManila = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Manila",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+
   return MOCK_PROMOS
-    .filter((promo) => promo.isActive !== false)
+    .filter((promo) => {
+      if (promo.isActive === false) return false;
+      if (promo.validUntil && promo.validUntil < todayInManila) return false;
+      return true;
+    })
     .sort(
       (a, b) =>
         new Date(b.publishedAt ?? 0).getTime() -
