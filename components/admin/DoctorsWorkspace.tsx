@@ -17,7 +17,8 @@ const emptyForm: DoctorProfileInput = {
   expertise: [],
   credentials: [],
   affiliations: [],
-  isOnLeave: false,
+  leaveStartDate: null,
+  leaveEndDate: null,
   sortOrder: 99,
 };
 
@@ -43,6 +44,9 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
   const [imagePreview, setImagePreview] = useState("");
   const [notice, setNotice] = useState("");
   const [doctorPendingDelete, setDoctorPendingDelete] = useState<DoctorProfile | null>(null);
+  const [doctorPendingLeave, setDoctorPendingLeave] = useState<DoctorProfile | null>(null);
+  const [leaveStartDate, setLeaveStartDate] = useState("");
+  const [leaveEndDate, setLeaveEndDate] = useState("");
   const formSectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -54,11 +58,18 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
     }
   }, [isFormOpen, editingId]);
 
+  function isDoctorOnLeave(doctor: DoctorProfile) {
+    if (!doctor.leaveStartDate || !doctor.leaveEndDate) return false;
+    const today = new Date().toISOString().slice(0, 10);
+    return today >= doctor.leaveStartDate && today <= doctor.leaveEndDate;
+  }
+
   const visible = useMemo(() => {
     const term = query.trim().toLowerCase();
     return doctors.filter((doctor) => {
       const matchesText = !term || [doctor.name, doctor.title, doctor.tagline].some((value) => value.toLowerCase().includes(term));
-      const matchesFilter = filter === "all" || (filter === "available" ? !doctor.isOnLeave : doctor.isOnLeave);
+      const onLeave = isDoctorOnLeave(doctor);
+      const matchesFilter = filter === "all" || (filter === "available" ? !onLeave : onLeave);
       return matchesText && matchesFilter;
     });
   }, [doctors, filter, query]);
@@ -92,7 +103,8 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
       expertise: doctor.expertise,
       credentials: doctor.credentials,
       affiliations: doctor.affiliations,
-      isOnLeave: doctor.isOnLeave,
+      leaveStartDate: doctor.leaveStartDate,
+      leaveEndDate: doctor.leaveEndDate,
       sortOrder: doctor.sortOrder,
     });
     setImagePreview(doctor.image);
@@ -148,9 +160,30 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
     setIsFormOpen(false);
   }
 
-  function toggleOnLeave(doctor: DoctorProfile) {
-    setDoctors((current) => current.map((item) => item.id === doctor.id ? { ...item, isOnLeave: !item.isOnLeave, updatedAt: new Date().toISOString() } : item));
-    setNotice("Doctor availability changed in this preview session only.");
+  function openLeaveCalendar(doctor: DoctorProfile) {
+    setDoctorPendingLeave(doctor);
+    setLeaveStartDate(doctor.leaveStartDate ?? new Date().toISOString().slice(0, 10));
+    setLeaveEndDate(doctor.leaveEndDate ?? "");
+  }
+
+  function confirmLeaveDates() {
+    if (!doctorPendingLeave || !leaveStartDate || !leaveEndDate) return;
+    if (leaveEndDate < leaveStartDate) {
+      setNotice("The leave end date must be on or after the start date.");
+      return;
+    }
+    setDoctors((current) => current.map((item) => item.id === doctorPendingLeave.id
+      ? { ...item, leaveStartDate, leaveEndDate, updatedAt: new Date().toISOString() }
+      : item));
+    setDoctorPendingLeave(null);
+    setNotice("Leave dates saved in this preview session only.");
+  }
+
+  function clearLeaveDates(doctor: DoctorProfile) {
+    setDoctors((current) => current.map((item) => item.id === doctor.id
+      ? { ...item, leaveStartDate: null, leaveEndDate: null, updatedAt: new Date().toISOString() }
+      : item));
+    setNotice("Leave schedule cleared in this preview session only.");
   }
 
   function removeDoctor(doctor: DoctorProfile) {
@@ -179,7 +212,7 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
         </header>
 
         <section className="mt-7 grid gap-3 sm:grid-cols-3" aria-label="Doctor profile summary">
-          {[["Total profiles", doctors.length], ["Available", doctors.filter((doctor) => !doctor.isOnLeave).length], ["On leave", doctors.filter((doctor) => doctor.isOnLeave).length]].map(([label, value]) => (
+          {[["Total profiles", doctors.length], ["Available", doctors.filter((doctor) => !isDoctorOnLeave(doctor)).length], ["On leave", doctors.filter((doctor) => isDoctorOnLeave(doctor)).length]].map(([label, value]) => (
             <article key={String(label)} className="rounded-[20px] border border-[#334b39]/10 bg-white/75 p-5">
               <p className="font-seasons text-3xl text-[#4c5534]">{value}</p>
               <p className="mt-2 font-montserrat text-[10px] font-semibold text-[#80755f]">{label}</p>
@@ -208,11 +241,11 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
                   <div className="min-w-0 flex-1">
                     <h2 className="truncate font-montserrat text-[11px] font-semibold text-[#39473d]">{doctor.name}</h2>
                     <p className="mt-1 truncate font-montserrat text-[9px] text-[#80755f]">{doctor.title}</p>
-                    <span className={`mt-2 inline-flex rounded-full px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase ${doctor.isOnLeave ? "bg-[#f1eee6] text-[#80755f]" : "bg-[#e8eee3] text-[#4f6442]"}`}>{doctor.isOnLeave ? "On leave" : "Available"}</span>
+                    <span className={`mt-2 inline-flex rounded-full px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase ${isDoctorOnLeave(doctor) ? "bg-[#f1eee6] text-[#80755f]" : "bg-[#e8eee3] text-[#4f6442]"}`}>{isDoctorOnLeave(doctor) ? "On leave" : doctor.leaveStartDate && doctor.leaveStartDate > new Date().toISOString().slice(0, 10) ? "Leave scheduled" : "Available"}</span>
                   </div>
                   <div className="flex shrink-0 flex-col gap-1.5 sm:flex-row">
                     <button type="button" onClick={() => editDoctor(doctor)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#4c5534]">Edit</button>
-                    <button type="button" onClick={() => toggleOnLeave(doctor)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#4c5534]">{doctor.isOnLeave ? "Mark available" : "Mark on leave"}</button>
+                    <button type="button" onClick={() => isDoctorOnLeave(doctor) || doctor.leaveStartDate ? clearLeaveDates(doctor) : openLeaveCalendar(doctor)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#4c5534]">{isDoctorOnLeave(doctor) || doctor.leaveStartDate ? "Clear leave" : "Mark on leave"}</button>
                     <button type="button" onClick={() => removeDoctor(doctor)} aria-label={`Remove ${doctor.name}`} className="min-h-8 rounded-full border border-[#8a5148]/25 px-3 font-montserrat text-[8px] font-bold uppercase text-[#8a5148]">Remove</button>
                   </div>
                 </article>
@@ -256,7 +289,6 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
                 </div>
   
                 <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#334b39]/10 pt-4">
-                  <label className="flex items-center gap-2 font-montserrat text-[10px] text-[#536257]"><input type="checkbox" checked={form.isOnLeave} onChange={(event) => update("isOnLeave", event.target.checked)} className="h-4 w-4 accent-[#4c5534]" /> Mark as on leave (hide from public page)</label>
                   <button type="submit" className="min-h-11 rounded-full bg-[#4c5534] px-6 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white hover:bg-[#3d472a]">{editingId ? "Save changes" : "Add profile"}</button>
                 </div>
               </form>
@@ -264,6 +296,24 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
             </section>
           )}
         </div>
+      {doctorPendingLeave && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[#172119]/55 px-5 py-8 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setDoctorPendingLeave(null); }}>
+          <section role="dialog" aria-modal="true" aria-labelledby="doctor-leave-title" className="w-full max-w-[460px] rounded-[24px] border border-[#334b39]/10 bg-[#fffcf3] p-6 shadow-2xl sm:p-7">
+            <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#80755f]">Doctor availability</p>
+            <h2 id="doctor-leave-title" className="font-seasons mt-2 text-2xl text-[#4c5534]">Schedule leave</h2>
+            <p className="mt-2 font-montserrat text-xs leading-6 text-[#80755f]">{doctorPendingLeave.name} will be hidden from the public Doctors page during the selected dates.</p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <label className="block"><span className="mb-2 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#80755f]">Leave starts</span><input type="date" required value={leaveStartDate} onChange={(event) => setLeaveStartDate(event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-white px-3 font-montserrat text-xs text-[#4c5534]" /></label>
+              <label className="block"><span className="mb-2 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#80755f]">Leave ends</span><input type="date" required min={leaveStartDate || undefined} value={leaveEndDate} onChange={(event) => setLeaveEndDate(event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-white px-3 font-montserrat text-xs text-[#4c5534]" /></label>
+            </div>
+            <p className="mt-3 font-montserrat text-[9px] leading-5 text-[#80755f]">The profile automatically becomes available again after the leave end date.</p>
+            <div className="mt-7 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <button type="button" onClick={() => setDoctorPendingLeave(null)} className="min-h-11 rounded-full border border-[#334b39]/20 px-5 font-montserrat text-[9px] font-semibold uppercase text-[#526557]">Cancel</button>
+              <button type="button" disabled={!leaveStartDate || !leaveEndDate || leaveEndDate < leaveStartDate} onClick={confirmLeaveDates} className="min-h-11 rounded-full bg-[#4c5534] px-5 font-montserrat text-[9px] font-semibold uppercase text-white disabled:cursor-not-allowed disabled:opacity-40">Save leave dates</button>
+            </div>
+          </section>
+        </div>
+      )}
       {doctorPendingDelete && (
         <div
           className="fixed inset-0 z-[70] flex items-center justify-center bg-[#172119]/55 px-5 py-8 backdrop-blur-sm"
