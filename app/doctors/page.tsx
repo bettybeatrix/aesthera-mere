@@ -2,14 +2,18 @@
 "use client";
 
 import Image from "next/image";
-import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { useBooking } from "@/components/BookingProvider";
+
+// ======================================
+// DOCTORS DATA
+// ======================================
 
 const doctors = [
   {
     id: "dr-dan",
-    name: "Dr. John Daniel Co",
+    name: "Dr. Daniel ",
     shortName: "Dr. Dan",
     title: "Aesthetic Physician",
     tagline: "Regenerative • Wellness • Aesthetic Medicine",
@@ -75,7 +79,7 @@ const doctors = [
     tagline: "Aesthetic Medicine • Regenerative Care • Hair Restoration",
     image: "/images/doctors/dr-ian-profile.png",
     bio: [
-      "Dr. Ian takes a personalized approach to aesthetic medicine, with a focus on natural-looking results. His work includes neurotoxins, dermal fillers, biostimulators, PRP, and microneedling.",
+      "Dr. Ian Roces takes a personalized approach to aesthetic medicine, with a focus on natural-looking results. His work includes neurotoxins, dermal fillers, biostimulators, PRP, and microneedling.",
       "With fellowship training in cosmetic surgery, he also works with aesthetic technologies including Ulthera Prime, Vivace, and AlmaQ. He tailors treatment plans to each patient’s features and goals.",
     ],
     expertise: [
@@ -100,201 +104,239 @@ const doctors = [
   },
 ];
 
+// ======================================
+// DOCTORS PAGE
+// ======================================
+
 export default function DoctorsPage() {
   const { openBooking } = useBooking();
 
   return (
     <>
       <Navbar />
+
       <main className="min-h-screen bg-[#FFFCF3]">
-        {/* PAGE INTRODUCTION */}
-        <section className="mx-auto max-w-[1200px] px-6
-          pb-14 pt-20 text-center md:px-10 md:pb-20">
-          <p className="mb-4 font-montserrat text-[11px]
-            uppercase tracking-[0.25em] text-[#4C5534]">
-            AESTHERA MÈRE · OUR DOCTORS
-          </p>
 
-          <h1 className="font-bodoni text-5xl
-            text-[#4C5534] md:text-6xl">
-            Meet Our Experts
-          </h1>
 
-          <p className="mx-auto mt-5 max-w-[590px]
-            font-montserrat text-sm leading-7 text-[#777568]">
-            Discover the medical professionals behind our
-            personalized approach to aesthetic care.
-          </p>
+{/* PAGE INTRODUCTION */}
+<section className="mx-auto max-w-[1200px] px-6 pb-5 pt-14 text-center md:px-10 md:pb-8 md:pt-16">
 
-          <div className="mx-auto mt-8 h-px w-16
-            bg-[#4C5534]/40" />
-        </section>
+  <p className="mb-3 font-montserrat text-[10px] font-medium uppercase tracking-[0.25em] text-[#4C5534]">
+    AESTHERA MÈRE · OUR DOCTORS
+  </p>
+
+  <h1 className="font-seasons text-[44px] leading-[1.1] text-[#4C5534] sm:text-[50px] md:text-[56px]">
+    Meet Our Experts
+  </h1>
+
+  <div className="mx-auto my-5 h-px w-14 bg-[#B59A67]" />
+
+  <p className="mx-auto max-w-[650px] font-montserrat text-[13px] leading-7 text-[#666759] md:text-[14px]">
+    Get to know the medical professionals dedicated to personalized aesthetic care.
+  </p>
+
+</section>
+
 
         {/* DOCTOR PROFILES */}
-        <div className="mx-auto max-w-[1200px] px-6
-          pb-20 md:px-10">
-
+        <div>
           {doctors.map((doctor, index) => (
             <section
               key={doctor.id}
               id={doctor.id}
-              className="mb-20 scroll-mt-32
-                md:mb-28"
+              className="scroll-mt-32 bg-[#FFFCF3]"
             >
-              <div className="grid items-center gap-8
-                md:grid-cols-2 md:gap-14">
+              <div
+  className={`mx-auto max-w-[1200px] px-6 pb-16 md:px-10 md:pb-20 ${
+    index === 0
+      ? "pt-8 md:pt-10"
+      : "pt-16 md:pt-20"
+  }`}
+>
+                {/* MAIN DOCTOR PROFILE */}
+                <div className="grid items-center gap-10 md:grid-cols-2 md:gap-14 lg:gap-16">
 
-                {/* DOCTOR IMAGE */}
-                <div
-                  className={`relative overflow-hidden
-                    rounded-[22px] bg-[#E8E4DC]
-                    ${index % 2 === 1 ? "md:order-2" : ""}`}
-                >
-                  <div className="relative aspect-[4/5]">
-                    <Image
-                      src={doctor.image}
-                      alt={`Portrait of ${doctor.name}`}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      className={doctor.id === "dr-ian" ? "object-cover object-[50%_40%]" : "object-cover"}
-                    />
-                  </div>
-                </div>
-
-                {/* DOCTOR INFORMATION */}
-                <div
-                  className={`${
-                    index % 2 === 1 ? "md:order-1" : ""
-                  }`}
-                >
-                  <p className="mb-3 font-montserrat
-                    text-[11px] font-medium uppercase
-                    tracking-[0.2em] text-[#4F6442]">
-                    {doctor.title}
-                  </p>
-
-                  <h2 className="font-bodoni text-[42px]
-                    leading-tight text-[#4C5534]
-                    md:text-[52px]">
-                    {doctor.name}
-                  </h2>
-
-                  <p className="mt-3 font-montserrat
-                    text-[12px] tracking-wide
-                    text-[#777568]">
-                    {doctor.tagline}
-                  </p>
-
-                  <div className="my-7 h-px w-16
-                    bg-[#4C5534]/40" />
-
-                  {/* BIOGRAPHY */}
-                  <div className="space-y-4">
-                    {doctor.bio.map((paragraph, i) => (
-                      <p
-                        key={i}
-                        className="font-montserrat text-[13px]
-                          leading-[1.9] text-[#666759]"
-                      >
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
-
-                  {/* EXPERTISE */}
-                  <div className="mt-8">
-                    <h3 className="mb-4 font-bodoni
-                      text-[25px] text-[#4C5534]">
-                      Areas of Expertise
-                    </h3>
-
-                    <div className="flex flex-wrap gap-2">
-                      {doctor.expertise.map((item) => (
-                        <span
-                          key={item}
-                          className="rounded-full border
-                            border-[#4C5534]/20 bg-white
-                            px-4 py-2 font-montserrat
-                            text-[11px] text-[#4C5534]"
-                        >
-                          {item}
-                        </span>
-                      ))}
+                  {/* DOCTOR IMAGE */}
+                  <div
+                    className={`relative mx-auto w-full max-w-[480px] md:max-w-none ${
+                      index % 2 === 1 ? "md:order-2" : ""
+                    }`}
+                  >
+                    <div className="relative aspect-[4/5] overflow-hidden rounded-[20px] bg-[#E8E4DC] shadow-[0_18px_45px_rgba(60,50,30,0.09)]">
+                      <Image
+                        src={doctor.image}
+                        alt={`Portrait of ${doctor.name}`}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 45vw"
+                        priority={index === 0}
+                        className={`object-cover transition-transform duration-700 motion-reduce:transition-none hover:scale-[1.025] motion-reduce:hover:scale-100 ${
+                          doctor.id === "dr-ian"
+                            ? "object-[50%_40%]"
+                            : "object-center"
+                        }`}
+                      />
                     </div>
                   </div>
 
-                  {/* BOOKING BUTTON */}
-                  <button
-                    type="button"
-                    onClick={() => openBooking("", doctor.shortName)}
-                    className="mt-9 inline-flex items-center
-                      gap-3 rounded-full bg-[#4C5534]
-                      px-8 py-3.5 font-montserrat
-                      text-[12px] font-medium text-white
-                      transition hover:bg-[#39432D]"
+                  {/* DOCTOR INFORMATION */}
+                  <div
+                    className={`${
+                      index % 2 === 1 ? "md:order-1" : ""
+                    }`}
                   >
-                    Book a Consultation
-                    <span aria-hidden="true">↗</span>
-                  </button>
-                </div>
-              </div>
+                    <p className="mb-3 font-montserrat text-[11px] font-medium uppercase tracking-[0.2em] text-[#4F6442]">
+                      {doctor.title}
+                    </p>
 
-              {/* CREDENTIALS CARD */}
-              <div className="mt-8 rounded-[22px]
-                border border-[#E3DDD1] bg-white
-                p-6 shadow-[0_10px_30px_rgba(60,50,30,0.04)]
-                md:mt-10 md:p-8">
+                    <h2 className="font-bodoni text-[40px] leading-[1.12] text-[#4C5534] sm:text-[46px] lg:text-[52px]">
+                      {doctor.name}
+                    </h2>
 
-                <div className="grid gap-8 md:grid-cols-2">
-                  <div>
-                    <h3 className="mb-5 font-bodoni
-                      text-[25px] text-[#4C5534]">
-                      Education & Credentials
-                    </h3>
+                    <p className="mt-3 font-montserrat text-[12px] leading-6 tracking-wide text-[#777568]">
+                      {doctor.tagline}
+                    </p>
 
-                    <ul className="space-y-3">
-                      {doctor.credentials.map((item) => (
-                        <li
-                          key={item}
-                          className="flex gap-3 font-montserrat
-                            text-[12px] leading-6 text-[#666759]"
+                    <div className="my-6 h-px w-14 bg-[#B59A67]" />
+
+                    {/* BIOGRAPHY */}
+                    <div className="space-y-4">
+                      {doctor.bio.map((paragraph, i) => (
+                        <p
+                          key={i}
+                          className="font-montserrat text-[13px] leading-[1.9] text-[#666759] md:text-[14px]"
                         >
-                          <span className="mt-2 h-1.5 w-1.5
-                            shrink-0 rounded-full bg-[#4F6442]" />
-                          {item}
-                        </li>
+                          {paragraph}
+                        </p>
                       ))}
-                    </ul>
+                    </div>
+
+                    {/* AREAS OF EXPERTISE */}
+                    <div className="mt-7">
+                      <h3 className="mb-4 font-seasons font-bold text-[27px] text-[#4C5534]">
+                        Areas of Expertise
+                      </h3>
+
+                      <div className="flex flex-wrap gap-2">
+                        {doctor.expertise.map((item) => (
+                          <span
+                            key={item}
+                            className={`rounded-full border border-[#4C5534]/25 px-4 py-2 font-montserrat text-[11px] leading-5 text-[#4C5534] transition-colors duration-300 hover:border-[#4C5534] hover:bg-[#4C5534] hover:text-white ${
+                              index % 2 === 0
+                                ? "bg-white/60"
+                                : "bg-[#F6F3ED]/70"
+                            }`}
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* BOOKING BUTTON */}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        openBooking("", doctor.shortName)
+                      }
+                      className="mt-8 inline-flex items-center justify-center gap-3 rounded-full bg-[#4C5534] px-7 py-3.5 font-montserrat text-[12px] font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#39432D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4C5534] motion-reduce:transform-none"
+                    >
+                      <svg
+                        width="17"
+                        height="17"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.7"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <rect x="3" y="5" width="18" height="16" rx="2" />
+                        <path d="M7 3v4M17 3v4M3 10h18" />
+                      </svg>
+
+                      Book a Consultation
+                      <span aria-hidden="true">↗</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* PROFESSIONAL BACKGROUND */}
+                <div className="mt-14 md:mt-16">
+
+                  {/* SECTION EYEBROW */}
+                  <div className="mb-9 flex items-center gap-4 md:gap-7">
+                    <span className="h-px flex-1 bg-[#B59A67]/60" />
+
+                    <p className="text-center font-montserrat text-[10px] font-medium uppercase tracking-[0.16em] text-[#4C5534] sm:tracking-[0.22em]">
+                      Professional Background
+                    </p>
+
+                    <span className="h-px flex-1 bg-[#B59A67]/60" />
                   </div>
 
-                  <div>
-                    <h3 className="mb-5 font-bodoni
-                      text-[25px] text-[#4C5534]">
-                      Professional Affiliations
-                    </h3>
+                  {/* EDITORIAL TWO-COLUMN LAYOUT */}
+                  <div className="grid gap-10 md:grid-cols-2 md:gap-12">
 
-                    <ul className="space-y-3">
-                      {doctor.affiliations.map((item) => (
-                        <li
-                          key={item}
-                          className="flex gap-3 font-montserrat
-                            text-[12px] leading-6 text-[#666759]"
-                        >
-                          <span className="mt-2 h-1.5 w-1.5
-                            shrink-0 rounded-full bg-[#4F6442]" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
+                    {/* EDUCATION */}
+                    <div>
+                      <p className="mb-2 font-montserrat text-[10px] font-semibold uppercase tracking-[0.2em] text-[#B59A67]">
+                        01 / Education
+                      </p>
+
+                      <h3 className="font-seasons font-bold text-[27px] leading-tight text-[#4C5534] md:text-[30px]">
+                        Education & Credentials
+                      </h3>
+
+                      <div className="mb-5 mt-4 h-px w-full bg-[#B59A67]/40" />
+
+                      <ul className="space-y-4">
+                        {doctor.credentials.map((item) => (
+                          <li
+                            key={item}
+                            className="flex items-start gap-3 font-montserrat text-[13px] leading-[1.8] text-[#666759]"
+                          >
+                            <span className="mt-[11px] h-[5px] w-[5px] shrink-0 rounded-full bg-[#4F6442]" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* PROFESSIONAL AFFILIATIONS */}
+                    <div>
+                      <p className="mb-2 font-montserrat text-[10px] font-semibold uppercase tracking-[0.2em] text-[#B59A67]">
+                        02 / Affiliations
+                      </p>
+
+                      <h3 className="font-seasons font-bold text-[27px] leading-tight text-[#4C5534] md:text-[30px]">
+                        Professional Affiliations
+                      </h3>
+
+                      <div className="mb-5 mt-4 h-px w-full bg-[#B59A67]/40" />
+
+                      <ul className="space-y-4">
+                        {doctor.affiliations.map((item) => (
+                          <li
+                            key={item}
+                            className="flex items-start gap-3 font-montserrat text-[13px] leading-[1.8] text-[#666759]"
+                          >
+                            <span className="mt-[11px] h-[5px] w-[5px] shrink-0 rounded-full bg-[#4F6442]" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
                   </div>
                 </div>
+
               </div>
             </section>
           ))}
-
         </div>
-
       </main>
+
       <Footer />
     </>
   );
