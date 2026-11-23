@@ -6,7 +6,7 @@ export interface ManagedTreatment extends Treatment {
   categoryName: string;
   groupSlug: string;
   groupName: string;
-  isPublished: boolean;
+  isAvailable: boolean;
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
