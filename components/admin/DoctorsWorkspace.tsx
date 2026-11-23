@@ -47,7 +47,7 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
   const [doctorPendingDelete, setDoctorPendingDelete] = useState<DoctorProfile | null>(null);
   const [availabilityDoctor, setAvailabilityDoctor] = useState<DoctorProfile | null>(null);
   const [workingSchedule, setWorkingSchedule] = useState<DoctorProfile["weeklySchedule"]>([]);
-  const [calendarMonth, setCalendarMonth] = useState(() => new Date());
+  const [calendarMonth, setCalendarMonth] = useState(new Date(2026, 10, 1));
   const [leaveStartDate, setLeaveStartDate] = useState("");
   const [leaveEndDate, setLeaveEndDate] = useState("");
   const formSectionRef = useRef<HTMLElement>(null);
