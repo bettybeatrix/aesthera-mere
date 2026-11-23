@@ -288,7 +288,7 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
                   <p className="mt-2 font-montserrat text-[9px] leading-5 text-[#80755f]">Preview only for now. Persistent image upload will be connected to storage later.</p>
                 </div>
   
-                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#334b39]/10 pt-4">
+                <div className="flex flex-wrap items-center justify-end gap-3 border-t border-[#334b39]/10 pt-4">
                   <button type="submit" className="min-h-11 rounded-full bg-[#4c5534] px-6 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white hover:bg-[#3d472a]">{editingId ? "Save changes" : "Add profile"}</button>
                 </div>
               </form>
