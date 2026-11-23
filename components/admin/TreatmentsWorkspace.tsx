@@ -107,10 +107,6 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
     }
     closeForm();
   }
-  function toggleAvailability(item: ManagedTreatment) {
-    setItems((current) => current.map((entry) => entry.id === item.id ? { ...entry, isAvailable: !entry.isAvailable, updatedAt: new Date().toISOString() } : entry));
-    setNotice("Availability changed in this preview session only.");
-  }
   function confirmDelete() {
     if (!pendingDelete) return;
     setItems((current) => current.filter((item) => item.id !== pendingDelete.id));
@@ -145,7 +141,7 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
             {visible.map((item) => <article key={item.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:p-5">
               <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[#e8e4dc]">{item.image && item.image.startsWith("/") ? <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" /> : item.image ? <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" unoptimized /> : <span className="grid h-full w-full place-items-center font-seasons text-xl text-[#526b56]">{item.name.slice(0,1)}</span>}</div>
               <div className="min-w-0 flex-1"><h2 className="font-montserrat text-[11px] font-semibold text-[#39473d]">{item.name}</h2><p className="mt-1 font-montserrat text-[9px] text-[#92978f]">{item.categoryName} / {item.groupName}</p><p className="mt-1 font-montserrat text-[10px] font-semibold text-[#526b56]">{item.price}</p><span className={`mt-2 inline-flex rounded-full px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase ${item.isAvailable ? "bg-[#e7efe5] text-[#4d6e54]" : "bg-[#eceae6] text-[#77766f]"}`}>{item.isAvailable ? "Available" : "Unavailable"}</span></div>
-              <div className="flex shrink-0 flex-wrap gap-1.5"><button type="button" onClick={() => edit(item)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#405745]">Edit</button><button type="button" onClick={() => toggleAvailability(item)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#405745]">{item.isAvailable ? "Mark unavailable" : "Mark available"}</button><button type="button" onClick={() => setPendingDelete(item)} className="min-h-8 rounded-full border border-[#b77c70]/25 px-3 font-montserrat text-[8px] font-bold uppercase text-[#9b5e54]">Remove</button></div>
+              <div className="flex shrink-0 flex-wrap gap-1.5"><button type="button" onClick={() => edit(item)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#405745]">Edit</button><button type="button" onClick={() => setPendingDelete(item)} className="min-h-8 rounded-full border border-[#b77c70]/25 px-3 font-montserrat text-[8px] font-bold uppercase text-[#9b5e54]">Remove</button></div>
             </article>)}
             {!visible.length && <p className="p-12 text-center font-montserrat text-xs text-[#92978f]">No treatments match your filters.</p>}
           </div>
