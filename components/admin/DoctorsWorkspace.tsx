@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import type { DoctorProfile, DoctorProfileInput } from "@/types/doctor";
 
 type Props = { initialDoctors: DoctorProfile[] };
@@ -42,6 +42,16 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
   const [form, setForm] = useState<DoctorProfileInput>(emptyForm);
   const [imagePreview, setImagePreview] = useState("");
   const [notice, setNotice] = useState("");
+  const formSectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (isFormOpen) {
+      formSectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [isFormOpen, editingId]);
 
   const visible = useMemo(() => {
     const term = query.trim().toLowerCase();
@@ -87,7 +97,6 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
     setImagePreview(doctor.image);
     setNotice("");
     setIsFormOpen(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function update<K extends keyof DoctorProfileInput>(key: K, value: DoctorProfileInput[K]) {
@@ -208,7 +217,7 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
           </section>
 
           {isFormOpen && (
-            <section className="rounded-[24px] border border-[#334b39]/10 bg-white/80 p-5 sm:p-6">
+            <section ref={formSectionRef} className="scroll-mt-8 rounded-[24px] border border-[#334b39]/10 bg-white/80 p-5 sm:p-6">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.16em] text-[#7d857e]">{editingId ? "Edit profile" : "New profile"}</p>
