@@ -117,6 +117,15 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
     }
     closeForm();
   }
+  function toggleAvailability(item: ManagedTreatment) {
+    setItems((current) => current.map((entry) =>
+      entry.id === item.id
+        ? { ...entry, isAvailable: !entry.isAvailable, updatedAt: new Date().toISOString() }
+        : entry,
+    ));
+    setNotice(`${item.name} marked ${item.isAvailable ? "unavailable" : "available"} in this preview session only.`);
+  }
+
   function confirmDelete() {
     if (!pendingDelete) return;
     setItems((current) => current.filter((item) => item.id !== pendingDelete.id));
@@ -149,7 +158,7 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
             {visible.map((item) => <article key={item.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:p-5">
               <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[#e9e4d8]">{item.image && item.image.startsWith("/") ? <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" /> : item.image ? <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" unoptimized /> : <span className="grid h-full w-full place-items-center font-seasons text-xl text-[#4f6442]">{item.name.slice(0,1)}</span>}</div>
               <div className="min-w-0 flex-1"><h2 className="font-montserrat text-[11px] font-semibold text-[#39473d]">{item.name}</h2><p className="mt-1 font-montserrat text-[9px] text-[#80755f]">{item.categoryName} / {item.groupName}</p><p className="mt-1 font-montserrat text-[10px] font-semibold text-[#4f6442]">{item.price}</p><span className={`mt-2 inline-flex rounded-full px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase ${item.isAvailable ? "bg-[#e8eee3] text-[#4f6442]" : "bg-[#f1eee6] text-[#80755f]"}`}>{item.isAvailable ? "Available" : "Unavailable"}</span></div>
-              <div className="flex shrink-0 flex-wrap gap-1.5"><button type="button" onClick={() => edit(item)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#4c5534]">Edit</button><button type="button" onClick={() => setPendingDelete(item)} className="min-h-8 rounded-full border border-[#8a5148]/25 px-3 font-montserrat text-[8px] font-bold uppercase text-[#8a5148]">Remove</button></div>
+              <div className="flex shrink-0 flex-wrap gap-1.5"><button type="button" onClick={() => edit(item)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#4c5534]">Edit</button><button type="button" onClick={() => toggleAvailability(item)} className={`min-h-8 rounded-full border px-3 font-montserrat text-[8px] font-bold uppercase ${item.isAvailable ? "border-[#80755f]/25 text-[#80755f]" : "border-[#4f6442]/25 text-[#4f6442]"}`}>{item.isAvailable ? "Mark unavailable" : "Mark available"}</button><button type="button" onClick={() => setPendingDelete(item)} className="min-h-8 rounded-full border border-[#8a5148]/25 px-3 font-montserrat text-[8px] font-bold uppercase text-[#8a5148]">Remove</button></div>
             </article>)}
             {!visible.length && <p className="p-12 text-center font-montserrat text-xs text-[#80755f]">No treatments match your filters.</p>}
           </div>
@@ -173,7 +182,7 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
               <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755f]">Sessions</span><input value={form.sessions} onChange={(event) => update("sessions", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-[#fffcf3] px-3 font-montserrat text-xs" /></label>
               <label className="block md:col-span-2"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755f]">Downtime / recovery</span><input value={form.downtime} onChange={(event) => update("downtime", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-[#fffcf3] px-3 font-montserrat text-xs" /></label>
               <div className="md:col-span-2 rounded-2xl border border-dashed border-[#334b39]/20 bg-[#fffcf3] p-4"><p className="font-montserrat text-[9px] font-semibold uppercase text-[#80755f]">Treatment image</p>{imagePreview && <div className="relative mt-3 h-36 w-36 overflow-hidden rounded-xl"><Image src={imagePreview} alt="Treatment preview" fill sizes="144px" className="object-cover" unoptimized /></div>}<input type="file" accept="image/*" onChange={handleImage} className="mt-3 block w-full font-montserrat text-[10px] text-[#80755f] file:mr-3 file:rounded-full file:border-0 file:bg-[#4c5534] file:px-4 file:py-2 file:font-montserrat file:text-[9px] file:font-semibold file:text-white" /><p className="mt-2 font-montserrat text-[9px] text-[#80755f]">Preview only until persistent storage is connected.</p></div>
-              <div className="md:col-span-2 flex flex-wrap items-center justify-between gap-3 border-t border-[#334b39]/10 pt-4"><label className="flex items-center gap-2 font-montserrat text-[10px] text-[#536257]"><input type="checkbox" checked={form.isAvailable} onChange={(event) => update("isAvailable", event.target.checked)} className="h-4 w-4 accent-[#4c5534]" /> Available on website</label><button type="submit" className="min-h-11 rounded-full bg-[#4c5534] px-6 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white">{editingId ? "Save changes" : "Add treatment"}</button></div>
+              <div className="md:col-span-2 flex flex-wrap items-center justify-between gap-3 border-t border-[#334b39]/10 pt-4"><button type="submit" className="min-h-11 rounded-full bg-[#4c5534] px-6 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white">{editingId ? "Save changes" : "Add treatment"}</button></div>
             </form>
           </section>
         )}
