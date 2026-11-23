@@ -1,3 +1,10 @@
+export interface DoctorWorkingDay {
+  day: string;
+  enabled: boolean;
+  startTime: string;
+  endTime: string;
+}
+
 export interface DoctorProfile {
   id: string;
   slug: string;
@@ -12,6 +19,7 @@ export interface DoctorProfile {
   affiliations: string[];
   leaveStartDate: string | null;
   leaveEndDate: string | null;
+  weeklySchedule: DoctorWorkingDay[];
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
