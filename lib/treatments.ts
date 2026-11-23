@@ -18,7 +18,7 @@ const MOCK_TREATMENTS: ManagedTreatment[] = treatmentCategories.flatMap(
         categoryName: category.name,
         groupSlug: group.slug,
         groupName: group.title,
-        isPublished: true,
+        isAvailable: true,
         sortOrder: categoryIndex * 1000 + groupIndex * 100 + treatmentIndex,
         createdAt: now,
         updatedAt: now,
