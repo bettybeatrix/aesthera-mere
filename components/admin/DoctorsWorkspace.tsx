@@ -19,6 +19,7 @@ const emptyForm: DoctorProfileInput = {
   affiliations: [],
   leaveStartDate: null,
   leaveEndDate: null,
+  weeklySchedule: [],
   sortOrder: 99,
 };
 
@@ -45,6 +46,9 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
   const [notice, setNotice] = useState("");
   const [doctorPendingDelete, setDoctorPendingDelete] = useState<DoctorProfile | null>(null);
   const [doctorPendingLeave, setDoctorPendingLeave] = useState<DoctorProfile | null>(null);
+  const [availabilityDoctor, setAvailabilityDoctor] = useState<DoctorProfile | null>(null);
+  const [workingSchedule, setWorkingSchedule] = useState<DoctorProfile["weeklySchedule"]>([]);
+  const [calendarMonth, setCalendarMonth] = useState(() => new Date());
   const [leaveStartDate, setLeaveStartDate] = useState("");
   const [leaveEndDate, setLeaveEndDate] = useState("");
   const formSectionRef = useRef<HTMLElement>(null);
@@ -105,6 +109,7 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
       affiliations: doctor.affiliations,
       leaveStartDate: doctor.leaveStartDate,
       leaveEndDate: doctor.leaveEndDate,
+      weeklySchedule: doctor.weeklySchedule,
       sortOrder: doctor.sortOrder,
     });
     setImagePreview(doctor.image);
@@ -160,10 +165,29 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
     setIsFormOpen(false);
   }
 
-  function openLeaveCalendar(doctor: DoctorProfile) {
-    setDoctorPendingLeave(doctor);
-    setLeaveStartDate(doctor.leaveStartDate ?? new Date().toISOString().slice(0, 10));
+  function openAvailability(doctor: DoctorProfile) {
+    setAvailabilityDoctor(doctor);
+    setWorkingSchedule(doctor.weeklySchedule);
+    setLeaveStartDate(doctor.leaveStartDate ?? "");
     setLeaveEndDate(doctor.leaveEndDate ?? "");
+    setCalendarMonth(new Date());
+  }
+
+  function updateWorkingDay(day: string, changes: Partial<DoctorProfile["weeklySchedule"][number]>) {
+    setWorkingSchedule((current) => current.map((item) => item.day === day ? { ...item, ...changes } : item));
+  }
+
+  function saveAvailability() {
+    if (!availabilityDoctor) return;
+    if ((leaveStartDate && !leaveEndDate) || (!leaveStartDate && leaveEndDate) || (leaveStartDate && leaveEndDate && leaveEndDate < leaveStartDate)) {
+      setNotice("Please select a valid leave date range, or clear both dates.");
+      return;
+    }
+    setDoctors((current) => current.map((item) => item.id === availabilityDoctor.id
+      ? { ...item, weeklySchedule: workingSchedule, leaveStartDate: leaveStartDate || null, leaveEndDate: leaveEndDate || null, updatedAt: new Date().toISOString() }
+      : item));
+    setAvailabilityDoctor(null);
+    setNotice("Availability updated in this preview session only.");
   }
 
   function confirmLeaveDates() {
@@ -245,7 +269,7 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
                   </div>
                   <div className="flex shrink-0 flex-col gap-1.5 sm:flex-row">
                     <button type="button" onClick={() => editDoctor(doctor)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#4c5534]">Edit</button>
-                    <button type="button" onClick={() => isDoctorOnLeave(doctor) || doctor.leaveStartDate ? clearLeaveDates(doctor) : openLeaveCalendar(doctor)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#4c5534]">{isDoctorOnLeave(doctor) || doctor.leaveStartDate ? "Clear leave" : "Mark on leave"}</button>
+                    <button type="button" onClick={() => openAvailability(doctor)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#4c5534]">Availability</button>
                     <button type="button" onClick={() => removeDoctor(doctor)} aria-label={`Remove ${doctor.name}`} className="min-h-8 rounded-full border border-[#8a5148]/25 px-3 font-montserrat text-[8px] font-bold uppercase text-[#8a5148]">Remove</button>
                   </div>
                 </article>
@@ -296,20 +320,58 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
             </section>
           )}
         </div>
-      {doctorPendingLeave && (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[#172119]/55 px-5 py-8 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setDoctorPendingLeave(null); }}>
-          <section role="dialog" aria-modal="true" aria-labelledby="doctor-leave-title" className="w-full max-w-[460px] rounded-[24px] border border-[#334b39]/10 bg-[#fffcf3] p-6 shadow-2xl sm:p-7">
-            <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#80755f]">Doctor availability</p>
-            <h2 id="doctor-leave-title" className="font-seasons mt-2 text-2xl text-[#4c5534]">Schedule leave</h2>
-            <p className="mt-2 font-montserrat text-xs leading-6 text-[#80755f]">{doctorPendingLeave.name} will be hidden from the public Doctors page during the selected dates.</p>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <label className="block"><span className="mb-2 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#80755f]">Leave starts</span><input type="date" required value={leaveStartDate} onChange={(event) => setLeaveStartDate(event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-white px-3 font-montserrat text-xs text-[#4c5534]" /></label>
-              <label className="block"><span className="mb-2 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#80755f]">Leave ends</span><input type="date" required min={leaveStartDate || undefined} value={leaveEndDate} onChange={(event) => setLeaveEndDate(event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-white px-3 font-montserrat text-xs text-[#4c5534]" /></label>
+      {availabilityDoctor && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-[#172119]/55 px-4 py-8 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setAvailabilityDoctor(null); }}>
+          <section role="dialog" aria-modal="true" aria-labelledby="doctor-availability-title" className="my-auto w-full max-w-[760px] rounded-[24px] border border-[#334b39]/10 bg-[#fffcf3] p-6 shadow-2xl sm:p-8">
+            <div className="flex items-start justify-between gap-4">
+              <div><p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#80755f]">Doctor schedule</p><h2 id="doctor-availability-title" className="font-seasons mt-2 text-2xl text-[#4c5534]">Availability</h2><p className="mt-2 font-montserrat text-xs text-[#80755f]">{availabilityDoctor.name}</p></div>
+              <button type="button" onClick={() => setAvailabilityDoctor(null)} className="font-montserrat text-[9px] font-bold uppercase text-[#4f6442]">Close</button>
             </div>
-            <p className="mt-3 font-montserrat text-[9px] leading-5 text-[#80755f]">The profile automatically becomes available again after the leave end date.</p>
+
+            <div className="mt-7">
+              <h3 className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.12em] text-[#4c5534]">Weekly working hours</h3>
+              <div className="mt-3 divide-y divide-[#334b39]/10 border-y border-[#334b39]/10">
+                {workingSchedule.map((day) => (
+                  <div key={day.day} className="grid items-center gap-3 py-3 sm:grid-cols-[110px_80px_1fr_1fr]">
+                    <span className="font-montserrat text-[11px] text-[#4c5534]">{day.day}</span>
+                    <label className="flex items-center gap-2 font-montserrat text-[9px] text-[#80755f]"><input type="checkbox" checked={day.enabled} onChange={(event) => updateWorkingDay(day.day, { enabled: event.target.checked })} className="h-4 w-4 accent-[#4c5534]" /> Working</label>
+                    <label className="flex items-center gap-2 font-montserrat text-[9px] text-[#80755f]">From <input aria-label={day.day + " start time"} type="time" disabled={!day.enabled} value={day.startTime} onChange={(event) => updateWorkingDay(day.day, { startTime: event.target.value })} className="min-h-9 min-w-0 rounded-lg border border-[#334b39]/15 bg-white px-2 text-[11px] text-[#4c5534] disabled:opacity-40" /></label>
+                    <label className="flex items-center gap-2 font-montserrat text-[9px] text-[#80755f]">To <input aria-label={day.day + " end time"} type="time" disabled={!day.enabled} value={day.endTime} onChange={(event) => updateWorkingDay(day.day, { endTime: event.target.value })} className="min-h-9 min-w-0 rounded-lg border border-[#334b39]/15 bg-white px-2 text-[11px] text-[#4c5534] disabled:opacity-40" /></label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-8">
+              <div className="flex items-center justify-between"><h3 className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.12em] text-[#4c5534]">Leave dates</h3><span className="font-montserrat text-[9px] text-[#80755f]">Select start, then end</span></div>
+              <div className="mt-3 rounded-2xl border border-[#334b39]/10 bg-white p-4 sm:p-5">
+                <div className="mb-4 flex items-center justify-between">
+                  <button type="button" aria-label="Previous month" onClick={() => setCalendarMonth((month) => new Date(month.getFullYear(), month.getMonth() - 1, 1))} className="grid h-9 w-9 place-items-center rounded-full text-[#4c5534] hover:bg-[#f5f1e7]">‹</button>
+                  <h4 className="font-montserrat text-xs font-semibold text-[#4c5534]">{calendarMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" })}</h4>
+                  <button type="button" aria-label="Next month" onClick={() => setCalendarMonth((month) => new Date(month.getFullYear(), month.getMonth() + 1, 1))} className="grid h-9 w-9 place-items-center rounded-full text-[#4c5534] hover:bg-[#f5f1e7]">›</button>
+                </div>
+                <div className="grid grid-cols-7 gap-1 text-center">
+                  {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => <span key={day} className="py-2 font-montserrat text-[9px] font-semibold text-[#80755f]">{day}</span>)}
+                  {Array.from({ length: new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1).getDay() }, (_, index) => <span key={"blank-" + index} />)}
+                  {Array.from({ length: new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 0).getDate() }, (_, index) => {
+                    const value = `${calendarMonth.getFullYear()}-${String(calendarMonth.getMonth() + 1).padStart(2, "0")}-${String(index + 1).padStart(2, "0")}`;
+                    const selected = value === leaveStartDate || value === leaveEndDate;
+                    const inRange = Boolean(leaveStartDate && leaveEndDate && value > leaveStartDate && value < leaveEndDate);
+                    return <button key={value} type="button" onClick={() => {
+                      if (!leaveStartDate || leaveEndDate || value < leaveStartDate) { setLeaveStartDate(value); setLeaveEndDate(""); }
+                      else setLeaveEndDate(value);
+                    }} className={`mx-auto grid h-9 w-9 place-items-center rounded-full font-montserrat text-[10px] ${selected ? "bg-[#4c5534] text-white" : inRange ? "bg-[#e8eee3] text-[#4c5534]" : "text-[#4c5534] hover:bg-[#f5f1e7]"}`}>{index + 1}</button>;
+                  })}
+                </div>
+                <div className="mt-4 grid grid-cols-2 gap-3 border-t border-[#334b39]/10 pt-4">
+                  <div><p className="font-montserrat text-[8px] font-semibold uppercase text-[#80755f]">Start date</p><p className="mt-1 font-montserrat text-[11px] text-[#4c5534]">{leaveStartDate || "Not selected"}</p></div>
+                  <div><p className="font-montserrat text-[8px] font-semibold uppercase text-[#80755f]">End date</p><p className="mt-1 font-montserrat text-[11px] text-[#4c5534]">{leaveEndDate || "Not selected"}</p></div>
+                </div>
+              </div>
+            </div>
             <div className="mt-7 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-              <button type="button" onClick={() => setDoctorPendingLeave(null)} className="min-h-11 rounded-full border border-[#334b39]/20 px-5 font-montserrat text-[9px] font-semibold uppercase text-[#526557]">Cancel</button>
-              <button type="button" disabled={!leaveStartDate || !leaveEndDate || leaveEndDate < leaveStartDate} onClick={confirmLeaveDates} className="min-h-11 rounded-full bg-[#4c5534] px-5 font-montserrat text-[9px] font-semibold uppercase text-white disabled:cursor-not-allowed disabled:opacity-40">Save leave dates</button>
+              <button type="button" onClick={() => { setLeaveStartDate(""); setLeaveEndDate(""); }} className="min-h-11 rounded-full border border-[#334b39]/20 px-5 font-montserrat text-[9px] font-semibold uppercase text-[#526557]">Clear leave</button>
+              <button type="button" onClick={saveAvailability} className="min-h-11 rounded-full bg-[#4c5534] px-6 font-montserrat text-[9px] font-semibold uppercase text-white">Save availability</button>
             </div>
           </section>
         </div>
