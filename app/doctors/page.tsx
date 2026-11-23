@@ -11,12 +11,16 @@ export const metadata: Metadata = {
 
 export default async function DoctorsPage() {
   const doctors = await getDoctorProfiles();
-  const publishedDoctors = doctors.filter((doctor) => !doctor.isOnLeave);
+  const today = new Date().toISOString().slice(0, 10);
+  const availableDoctors = doctors.filter((doctor) =>
+    !doctor.leaveStartDate || !doctor.leaveEndDate ||
+    today < doctor.leaveStartDate || today > doctor.leaveEndDate
+  );
 
   return (
     <>
       <Navbar />
-      <DoctorsDirectory doctors={publishedDoctors} />
+      <DoctorsDirectory doctors={availableDoctors} />
       <Footer />
     </>
   );
