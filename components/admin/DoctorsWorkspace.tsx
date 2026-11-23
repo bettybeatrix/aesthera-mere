@@ -38,6 +38,7 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<"all" | "published" | "draft">("all");
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [form, setForm] = useState<DoctorProfileInput>(emptyForm);
   const [imagePreview, setImagePreview] = useState("");
   const [notice, setNotice] = useState("");
@@ -52,6 +53,15 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
   }, [doctors, filter, query]);
 
   function startNew() {
+    setEditingId(null);
+    setForm(emptyForm);
+    setImagePreview("");
+    setNotice("");
+    setIsFormOpen(true);
+  }
+
+  function closeForm() {
+    setIsFormOpen(false);
     setEditingId(null);
     setForm(emptyForm);
     setImagePreview("");
@@ -76,6 +86,7 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
     });
     setImagePreview(doctor.image);
     setNotice("");
+    setIsFormOpen(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -124,6 +135,7 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
     setEditingId(null);
     setForm(emptyForm);
     setImagePreview("");
+    setIsFormOpen(false);
   }
 
   function togglePublished(doctor: DoctorProfile) {
@@ -195,46 +207,48 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
             </div>
           </section>
 
-          <section className="rounded-[24px] border border-[#334b39]/10 bg-white/80 p-5 sm:p-6">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.16em] text-[#7d857e]">{editingId ? "Edit profile" : "New profile"}</p>
-                <h2 className="font-seasons mt-2 text-2xl text-[#2e4433]">{editingId ? "Update doctor details" : "Add a doctor"}</h2>
+          {isFormOpen && (
+            <section className="rounded-[24px] border border-[#334b39]/10 bg-white/80 p-5 sm:p-6">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.16em] text-[#7d857e]">{editingId ? "Edit profile" : "New profile"}</p>
+                  <h2 className="font-seasons mt-2 text-2xl text-[#2e4433]">{editingId ? "Update doctor details" : "Add a doctor"}</h2>
+                </div>
+                <button type="button" onClick={closeForm} className="font-montserrat text-[9px] font-bold uppercase text-[#718071]">Close</button>
               </div>
-              {editingId && <button type="button" onClick={startNew} className="font-montserrat text-[9px] font-bold uppercase text-[#718071]">Cancel edit</button>}
-            </div>
-
-            <form onSubmit={saveDoctor} className="mt-5 space-y-4">
-              <div className="grid gap-3 sm:grid-cols-2">
-                <label className="block sm:col-span-2"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#788078]">Full name *</span><input required value={form.name} onChange={(event) => update("name", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-[#fbfaf7] px-3 font-montserrat text-xs outline-none focus:border-[#526b56]" placeholder="e.g. Dr. Jane Dela Cruz" /></label>
-                <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#788078]">Display name</span><input value={form.shortName} onChange={(event) => update("shortName", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-[#fbfaf7] px-3 font-montserrat text-xs outline-none focus:border-[#526b56]" placeholder="Dr. Jane" /></label>
-                <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#788078]">Professional title</span><input value={form.title} onChange={(event) => update("title", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-[#fbfaf7] px-3 font-montserrat text-xs outline-none focus:border-[#526b56]" placeholder="Aesthetic Physician" /></label>
-              </div>
-
-              <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#788078]">Tagline</span><input value={form.tagline} onChange={(event) => update("tagline", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-[#fbfaf7] px-3 font-montserrat text-xs outline-none focus:border-[#526b56]" placeholder="Specialties or professional focus" /></label>
-              <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#788078]">Biography (one paragraph per line)</span><textarea rows={4} value={lines(form.biography)} onChange={(event) => update("biography", parseLines(event.target.value))} className="w-full rounded-xl border border-[#334b39]/15 bg-[#fbfaf7] px-3 py-3 font-montserrat text-xs leading-6 outline-none focus:border-[#526b56]" placeholder="Doctor biography..." /></label>
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#788078]">Areas of expertise (one per line)</span><textarea rows={5} value={lines(form.expertise)} onChange={(event) => update("expertise", parseLines(event.target.value))} className="w-full rounded-xl border border-[#334b39]/15 bg-[#fbfaf7] px-3 py-3 font-montserrat text-xs leading-5 outline-none focus:border-[#526b56]" /></label>
-                <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#788078]">Education & credentials (one per line)</span><textarea rows={5} value={lines(form.credentials)} onChange={(event) => update("credentials", parseLines(event.target.value))} className="w-full rounded-xl border border-[#334b39]/15 bg-[#fbfaf7] px-3 py-3 font-montserrat text-xs leading-5 outline-none focus:border-[#526b56]" /></label>
-              </div>
-
-              <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#788078]">Professional affiliations (one per line)</span><textarea rows={3} value={lines(form.affiliations)} onChange={(event) => update("affiliations", parseLines(event.target.value))} className="w-full rounded-xl border border-[#334b39]/15 bg-[#fbfaf7] px-3 py-3 font-montserrat text-xs leading-5 outline-none focus:border-[#526b56]" /></label>
-
-              <div className="rounded-2xl border border-dashed border-[#334b39]/20 bg-[#f8f7f2] p-4">
-                <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#788078]">Doctor portrait</p>
-                {imagePreview && <div className="relative mt-3 h-40 w-32 overflow-hidden rounded-xl bg-[#e8e4dc]"><Image src={imagePreview} alt="Doctor portrait preview" fill sizes="128px" className="object-cover" unoptimized={imagePreview.startsWith("data:")} /></div>}
-                <input type="file" accept="image/*" onChange={handleImage} className="mt-3 block w-full font-montserrat text-[10px] text-[#667168] file:mr-3 file:rounded-full file:border-0 file:bg-[#344c38] file:px-4 file:py-2 file:font-montserrat file:text-[9px] file:font-semibold file:text-white" />
-                <p className="mt-2 font-montserrat text-[9px] leading-5 text-[#92978f]">Preview only for now. Persistent image upload will be connected to storage later.</p>
-              </div>
-
-              <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#334b39]/10 pt-4">
-                <label className="flex items-center gap-2 font-montserrat text-[10px] text-[#536257]"><input type="checkbox" checked={form.isPublished} onChange={(event) => update("isPublished", event.target.checked)} className="h-4 w-4 accent-[#344c38]" /> Publish profile</label>
-                <button type="submit" className="min-h-11 rounded-full bg-[#344c38] px-6 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white hover:bg-[#283e2c]">{editingId ? "Save changes" : "Add profile"}</button>
-              </div>
-            </form>
-            {notice && <p role="status" className="mt-4 rounded-xl bg-[#edf2ea] px-4 py-3 font-montserrat text-[9px] leading-5 text-[#526b56]">{notice}</p>}
-          </section>
+  
+              <form onSubmit={saveDoctor} className="mt-5 space-y-4">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <label className="block sm:col-span-2"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#788078]">Full name *</span><input required value={form.name} onChange={(event) => update("name", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-[#fbfaf7] px-3 font-montserrat text-xs outline-none focus:border-[#526b56]" placeholder="e.g. Dr. Jane Dela Cruz" /></label>
+                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#788078]">Display name</span><input value={form.shortName} onChange={(event) => update("shortName", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-[#fbfaf7] px-3 font-montserrat text-xs outline-none focus:border-[#526b56]" placeholder="Dr. Jane" /></label>
+                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#788078]">Professional title</span><input value={form.title} onChange={(event) => update("title", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-[#fbfaf7] px-3 font-montserrat text-xs outline-none focus:border-[#526b56]" placeholder="Aesthetic Physician" /></label>
+                </div>
+  
+                <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#788078]">Tagline</span><input value={form.tagline} onChange={(event) => update("tagline", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-[#fbfaf7] px-3 font-montserrat text-xs outline-none focus:border-[#526b56]" placeholder="Specialties or professional focus" /></label>
+                <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#788078]">Biography (one paragraph per line)</span><textarea rows={4} value={lines(form.biography)} onChange={(event) => update("biography", parseLines(event.target.value))} className="w-full rounded-xl border border-[#334b39]/15 bg-[#fbfaf7] px-3 py-3 font-montserrat text-xs leading-6 outline-none focus:border-[#526b56]" placeholder="Doctor biography..." /></label>
+  
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#788078]">Areas of expertise (one per line)</span><textarea rows={5} value={lines(form.expertise)} onChange={(event) => update("expertise", parseLines(event.target.value))} className="w-full rounded-xl border border-[#334b39]/15 bg-[#fbfaf7] px-3 py-3 font-montserrat text-xs leading-5 outline-none focus:border-[#526b56]" /></label>
+                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#788078]">Education & credentials (one per line)</span><textarea rows={5} value={lines(form.credentials)} onChange={(event) => update("credentials", parseLines(event.target.value))} className="w-full rounded-xl border border-[#334b39]/15 bg-[#fbfaf7] px-3 py-3 font-montserrat text-xs leading-5 outline-none focus:border-[#526b56]" /></label>
+                </div>
+  
+                <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#788078]">Professional affiliations (one per line)</span><textarea rows={3} value={lines(form.affiliations)} onChange={(event) => update("affiliations", parseLines(event.target.value))} className="w-full rounded-xl border border-[#334b39]/15 bg-[#fbfaf7] px-3 py-3 font-montserrat text-xs leading-5 outline-none focus:border-[#526b56]" /></label>
+  
+                <div className="rounded-2xl border border-dashed border-[#334b39]/20 bg-[#f8f7f2] p-4">
+                  <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#788078]">Doctor portrait</p>
+                  {imagePreview && <div className="relative mt-3 h-40 w-32 overflow-hidden rounded-xl bg-[#e8e4dc]"><Image src={imagePreview} alt="Doctor portrait preview" fill sizes="128px" className="object-cover" unoptimized={imagePreview.startsWith("data:")} /></div>}
+                  <input type="file" accept="image/*" onChange={handleImage} className="mt-3 block w-full font-montserrat text-[10px] text-[#667168] file:mr-3 file:rounded-full file:border-0 file:bg-[#344c38] file:px-4 file:py-2 file:font-montserrat file:text-[9px] file:font-semibold file:text-white" />
+                  <p className="mt-2 font-montserrat text-[9px] leading-5 text-[#92978f]">Preview only for now. Persistent image upload will be connected to storage later.</p>
+                </div>
+  
+                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#334b39]/10 pt-4">
+                  <label className="flex items-center gap-2 font-montserrat text-[10px] text-[#536257]"><input type="checkbox" checked={form.isPublished} onChange={(event) => update("isPublished", event.target.checked)} className="h-4 w-4 accent-[#344c38]" /> Publish profile</label>
+                  <button type="submit" className="min-h-11 rounded-full bg-[#344c38] px-6 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white hover:bg-[#283e2c]">{editingId ? "Save changes" : "Add profile"}</button>
+                </div>
+              </form>
+              {notice && <p role="status" className="mt-4 rounded-xl bg-[#edf2ea] px-4 py-3 font-montserrat text-[9px] leading-5 text-[#526b56]">{notice}</p>}
+            </section>
+          )}
         </div>
       </div>
     </main>
