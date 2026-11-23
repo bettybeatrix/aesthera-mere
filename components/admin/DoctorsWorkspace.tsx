@@ -172,7 +172,6 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
           <div>
             <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.2em] text-[#80755f]">Website management / Doctors</p>
             <h1 className="font-seasons mt-3 text-[clamp(2.4rem,4vw,3.7rem)] leading-none text-[#4c5534]">Doctor profiles</h1>
-            <p className="mt-3 max-w-xl font-montserrat text-xs leading-6 text-[#80755f]">Manage the professional profiles presented on the public Aesthera Mère website.</p>
           </div>
           <button type="button" onClick={startNew} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#4c5534] px-5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white hover:bg-[#3d472a]">
             <Icon><path d="M12 5v14M5 12h14" /></Icon> Add doctor
