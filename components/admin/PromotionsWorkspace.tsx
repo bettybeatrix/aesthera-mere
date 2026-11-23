@@ -22,12 +22,11 @@ const categories: { value: Exclude<PromoCategory, "all">; label: string }[] = [
   { value: "contour", label: "Lifting & Contouring" },
 ];
 
-const today = () => new Date().toISOString().slice(0, 10);
 const lines = (value: string[]) => (value ?? []).join("\n");
 const parseLines = (value: string) => value.split("\n").map((item) => item.trim()).filter(Boolean);
 
-function isExpired(promo: PromoCard) {
-  return Boolean(promo.validUntil && promo.validUntil < today());
+function isExpired(promo: PromoCard, todayDate: string | null) {
+  return Boolean(todayDate && promo.validUntil && promo.validUntil < todayDate);
 }
 
 function Icon({ children }: { children: React.ReactNode }) {
@@ -36,6 +35,7 @@ function Icon({ children }: { children: React.ReactNode }) {
 
 export default function PromotionsWorkspace({ initialPromos }: Props) {
   const [promos, setPromos] = useState(initialPromos);
+  const [todayDate, setTodayDate] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<"all" | "active" | "inactive" | "expired">("all");
   const [formOpen, setFormOpen] = useState(false);
@@ -47,6 +47,10 @@ export default function PromotionsWorkspace({ initialPromos }: Props) {
   const formRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    setTodayDate(new Date().toISOString().slice(0, 10));
+  }, []);
+
+  useEffect(() => {
     if (formOpen) formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [formOpen, editingId]);
 
@@ -54,11 +58,11 @@ export default function PromotionsWorkspace({ initialPromos }: Props) {
     const term = query.trim().toLowerCase();
     return promos.filter((promo) => {
       const matchesText = !term || [promo.title, promo.subtitle, promo.categoryLabel].some((value) => value.toLowerCase().includes(term));
-      const current = !isExpired(promo) && promo.isActive !== false;
-      const matchesStatus = status === "all" || (status === "active" ? current : status === "expired" ? isExpired(promo) : promo.isActive === false && !isExpired(promo));
+      const current = !isExpired(promo, todayDate) && promo.isActive !== false;
+      const matchesStatus = status === "all" || (status === "active" ? current : status === "expired" ? isExpired(promo, todayDate) : promo.isActive === false && !isExpired(promo, todayDate));
       return matchesText && matchesStatus;
     });
-  }, [promos, query, status]);
+  }, [promos, query, status, todayDate]);
 
   function openNew() {
     setEditingId(null);
@@ -139,9 +143,9 @@ export default function PromotionsWorkspace({ initialPromos }: Props) {
     setNotice("Promotion removed from this preview session only.");
   }
 
-  const activeCount = promos.filter((promo) => !isExpired(promo) && promo.isActive !== false).length;
-  const inactiveCount = promos.filter((promo) => promo.isActive === false && !isExpired(promo)).length;
-  const expiredCount = promos.filter(isExpired).length;
+  const activeCount = promos.filter((promo) => !isExpired(promo, todayDate) && promo.isActive !== false).length;
+  const inactiveCount = promos.filter((promo) => promo.isActive === false && !isExpired(promo, todayDate)).length;
+  const expiredCount = promos.filter((promo) => isExpired(promo, todayDate)).length;
 
   return (
     <main className="min-h-screen bg-[#FFFCF3] px-5 pb-16 pt-7 text-[#4C5534] sm:px-8 lg:px-10 lg:pt-10">
@@ -163,7 +167,7 @@ export default function PromotionsWorkspace({ initialPromos }: Props) {
 
           <div className="divide-y divide-[#80755F]/10">
             {visible.map((promo) => {
-              const expired = isExpired(promo);
+              const expired = isExpired(promo, todayDate);
               const active = !expired && promo.isActive !== false;
               const price = promo.promoPriceLabel ?? (typeof promo.promoPrice === "number" ? new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP", maximumFractionDigits: 0 }).format(promo.promoPrice) : "Price upon inquiry");
               return <article key={promo.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:p-5">
