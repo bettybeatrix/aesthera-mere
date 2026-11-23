@@ -7,6 +7,7 @@ import {
   useState,
   type FormEvent,
 } from "react";
+import Link from "next/link";
 import { ArrowRightIcon } from "@/components/Icons";
 import { treatmentCategories } from "@/data/treatments";
 
@@ -775,9 +776,11 @@ export default function BookingModal({
                   className="mt-1 accent-[#4C5534]"
                 />
                 <span>
-                  I agree to the collection and processing of
-                  my information for appointment booking,
-                  subject to the clinic&apos;s Privacy Policy.
+                  I understand this is an appointment preview and my details are
+                  not submitted. I have read the{" "}
+                  <Link href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[#4C5534] underline underline-offset-2">
+                    Privacy Policy
+                  </Link>.
                 </span>
               </label>
 
