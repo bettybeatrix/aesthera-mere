@@ -36,8 +36,8 @@ const navigationSections = [
     items: [
       { label: "Overview", href: "/admin", icon: dashboardIcon },
       { label: "Appointments", href: "/admin/appointments", icon: calendarIcon, count: "5" },
-      { label: "Calendar", href: "/admin#module-map", icon: calendarIcon },
-      { label: "Patients", href: "/admin#module-map", icon: peopleIcon },
+      { label: "Calendar", href: "/admin/calendar", icon: calendarIcon },
+      { label: "Patients", href: "/admin/patients", icon: peopleIcon },
     ],
   },
   {

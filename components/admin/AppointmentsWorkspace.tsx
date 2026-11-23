@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, type SVGProps } from "react";
+import AdminSelect from "@/components/admin/AdminSelect";
 
 type AppointmentStatus = "Pending" | "Confirmed" | "Completed" | "Cancelled";
 
@@ -78,7 +79,6 @@ export default function AppointmentsWorkspace() {
               <span className="rounded-full bg-[#e8eee6] px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase tracking-[0.1em] text-[#56715b]">Preview data</span>
             </div>
             <h1 className="font-seasons mt-3 text-[clamp(2.4rem,4vw,3.7rem)] leading-none tracking-[-0.025em] text-[#2e4433]">Appointments</h1>
-            <p className="mt-3 max-w-xl font-montserrat text-[11px] leading-6 text-[#778078]">Review the day, find bookings quickly, and keep confirmation status clear for the front desk.</p>
           </div>
           <button type="button" disabled title="Available when appointment creation is implemented" className="inline-flex w-fit cursor-not-allowed items-center gap-2 rounded-full bg-[#344c38] px-5 py-3 font-montserrat text-[10px] font-semibold uppercase tracking-[0.12em] text-white opacity-85 shadow-[0_10px_30px_-14px_rgba(42,66,47,0.75)]">
             <Icon className="h-4 w-4"><path d="M12 5v14M5 12h14" /></Icon>
@@ -88,15 +88,14 @@ export default function AppointmentsWorkspace() {
 
         <section aria-label="Appointment summary" className="mt-7 grid grid-cols-2 gap-3 lg:grid-cols-4">
           {[
-            ["06", "Bookings today", "All scheduled visits"],
-            ["02", "Awaiting confirmation", "Front-desk follow-up"],
-            ["03", "Confirmed", "Ready for arrival"],
-            ["07", "Open slots", "Across both doctors"],
-          ].map(([value, label, detail], index) => (
+            ["06", "Bookings today"],
+            ["02", "Awaiting confirmation"],
+            ["03", "Confirmed"],
+            ["07", "Open slots"],
+          ].map(([value, label], index) => (
             <article key={label} className={`rounded-2xl border p-4 sm:p-5 ${index === 1 ? "border-[#b89a6d]/20 bg-[#eee4d3]" : "border-[#334b39]/10 bg-white/70"}`}>
               <p className="font-seasons text-2xl leading-none text-[#334b38] sm:text-3xl">{value}</p>
               <p className="mt-2 font-montserrat text-[9px] font-semibold text-[#465349] sm:text-[10px]">{label}</p>
-              <p className="mt-1 hidden font-montserrat text-[8px] text-[#8b918b] sm:block">{detail}</p>
             </article>
           ))}
         </section>
@@ -132,17 +131,19 @@ export default function AppointmentsWorkspace() {
                   <span className="sr-only">Search appointments</span>
                   <input value={query} onChange={(event) => setQuery(event.target.value)} type="search" placeholder="Search patient, treatment, doctor…" className="w-full bg-transparent font-montserrat text-[10px] text-[#354239] outline-none placeholder:text-[#92978f]" />
                 </label>
-                <label className="flex min-h-10 items-center gap-2 rounded-xl border border-[#334b39]/10 bg-[#f7f6f1] px-3">
-                  <Icon className="h-4 w-4 shrink-0 text-[#778078]"><path d="M4 5h16M7 12h10M10 19h4" /></Icon>
-                  <span className="sr-only">Filter by status</span>
-                  <select value={status} onChange={(event) => setStatus(event.target.value as "All" | AppointmentStatus)} className="w-full bg-transparent font-montserrat text-[10px] font-medium text-[#536057] outline-none">
-                    <option value="All">All statuses</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Confirmed">Confirmed</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Cancelled">Cancelled</option>
-                  </select>
-                </label>
+                <AdminSelect
+                  label="Filter by status"
+                  value={status}
+                  onChange={setStatus}
+                  filterIcon
+                  options={[
+                    { value: "All", label: "All statuses" },
+                    { value: "Pending", label: "Pending" },
+                    { value: "Confirmed", label: "Confirmed" },
+                    { value: "Completed", label: "Completed" },
+                    { value: "Cancelled", label: "Cancelled" },
+                  ]}
+                />
               </div>
 
               {view === "list" ? (

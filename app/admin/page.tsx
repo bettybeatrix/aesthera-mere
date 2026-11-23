@@ -80,14 +80,13 @@ async function AdminDashboardContent() {
     (total, category) => total + category.groups.reduce((groupTotal, group) => groupTotal + group.treatments.length, 0),
     0,
   );
-  const categoryCount = treatmentCategories.length;
   const today = formatAdminDate();
 
   const metrics = [
-    { label: "Today's appointments", value: appointments.length.toString().padStart(2, "0"), detail: "2 awaiting confirmation", trend: "+2", icon: <Icon><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M8 3v4M16 3v4M3 10h18" /></Icon> },
-    { label: "Patients this month", value: "128", detail: "18 first-time patients", trend: "+12%", icon: <Icon><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /></Icon> },
-    { label: "Treatment catalog", value: treatmentCount.toString(), detail: `Across ${categoryCount} categories`, trend: "Live", icon: <Icon><path d="M12 3v18M3 12h18" /><circle cx="12" cy="12" r="9" /></Icon> },
-    { label: "Active promotions", value: promos.length.toString().padStart(2, "0"), detail: "Current website offers", trend: "Live", icon: <Icon><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7M2 7h20v5H2zM12 7v14" /></Icon> },
+    { label: "Today's appointments", value: appointments.length.toString().padStart(2, "0"), trend: "+2", icon: <Icon><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M8 3v4M16 3v4M3 10h18" /></Icon> },
+    { label: "Patients this month", value: "128", trend: "+12%", icon: <Icon><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /></Icon> },
+    { label: "Treatment catalog", value: treatmentCount.toString(), trend: "Live", icon: <Icon><path d="M12 3v18M3 12h18" /><circle cx="12" cy="12" r="9" /></Icon> },
+    { label: "Active promotions", value: promos.length.toString().padStart(2, "0"), trend: "Live", icon: <Icon><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7M2 7h20v5H2zM12 7v14" /></Icon> },
   ];
 
   return (
@@ -97,12 +96,11 @@ async function AdminDashboardContent() {
           <div>
             <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.2em] text-[#7a8079]">{today}</p>
             <h1 className="font-seasons mt-2 text-[clamp(2.25rem,4vw,3.5rem)] leading-none tracking-[-0.025em] text-[#2e4433]">Good morning, Aesthera.</h1>
-            <p className="mt-3 font-montserrat text-[12px] leading-6 text-[#778078]">Here’s what’s happening at the clinic today.</p>
           </div>
-          <button type="button" disabled title="Available when the appointments module is built" className="inline-flex w-fit cursor-not-allowed items-center gap-2 rounded-full bg-[#344c38] px-5 py-3 font-montserrat text-[10px] font-semibold uppercase tracking-[0.12em] text-white shadow-[0_10px_30px_-14px_rgba(42,66,47,0.75)] opacity-85">
+          <Link href="/admin/appointments" className="inline-flex w-fit items-center gap-2 rounded-full bg-[#344c38] px-5 py-3 font-montserrat text-[10px] font-semibold uppercase tracking-[0.12em] text-white shadow-[0_10px_30px_-14px_rgba(42,66,47,0.75)] transition-colors hover:bg-[#283e2c]">
             <Icon className="h-4 w-4"><path d="M12 5v14M5 12h14" /></Icon>
             New appointment
-          </button>
+          </Link>
         </section>
 
         <section aria-label="Clinic overview" className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -114,7 +112,6 @@ async function AdminDashboardContent() {
               </div>
               <p className="font-seasons mt-5 text-[38px] leading-none text-[#2e4433]">{metric.value}</p>
               <p className="mt-2 font-montserrat text-[11px] font-semibold text-[#3f4c42]">{metric.label}</p>
-              <p className="mt-1.5 font-montserrat text-[9px] text-[#899089]">{metric.detail}</p>
             </article>
           ))}
         </section>
@@ -126,7 +123,7 @@ async function AdminDashboardContent() {
                 <h2 className="font-seasons text-[25px] leading-none text-[#2e4433]">Today’s appointments</h2>
                 <p className="mt-2 font-montserrat text-[9px] uppercase tracking-[0.13em] text-[#8a9089]">Monday schedule · 5 bookings</p>
               </div>
-              <a href="#module-map" className="hidden items-center gap-2 font-montserrat text-[9px] font-bold uppercase tracking-[0.12em] text-[#526b56] sm:inline-flex">Calendar structure <Icon className="h-3.5 w-3.5"><path d="M5 12h14m-6-6 6 6-6 6" /></Icon></a>
+              <Link href="/admin/calendar" className="hidden items-center gap-2 font-montserrat text-[9px] font-bold uppercase tracking-[0.12em] text-[#526b56] sm:inline-flex">Open calendar <Icon className="h-3.5 w-3.5"><path d="M5 12h14m-6-6 6 6-6 6" /></Icon></Link>
             </div>
             <div className="divide-y divide-[#334b39]/7">
               {appointments.map((appointment) => (
@@ -191,7 +188,6 @@ async function AdminDashboardContent() {
               <h2 className="font-seasons text-[24px] text-[#2e4433]">Catalog health</h2>
               <span className="h-2 w-2 rounded-full bg-[#6c8a70]" />
             </div>
-            <p className="mt-2 font-montserrat text-[10px] leading-5 text-[#858c85]">Website treatment data is available to the admin workspace.</p>
             <div className="mt-6 space-y-4">
               <div className="flex items-center justify-between font-montserrat text-[10px]"><span className="text-[#6f786f]">Treatments</span><span className="font-bold text-[#3d5141]">{treatmentCount}</span></div>
               <div className="h-1.5 overflow-hidden rounded-full bg-[#e8e9e3]"><div className="h-full w-[92%] rounded-full bg-[#607963]" /></div>
@@ -205,7 +201,6 @@ async function AdminDashboardContent() {
               <h2 className="font-seasons text-[24px] text-[#2e4433]">Promotions</h2>
               <Link href="/promos" className="font-montserrat text-[9px] font-bold uppercase tracking-[0.1em] text-[#58705b]">View live</Link>
             </div>
-            <p className="mt-2 font-montserrat text-[10px] leading-5 text-[#858c85]">{promos.length} active offers are currently visible on the website.</p>
             <div className="mt-5 space-y-3">
               {promos.slice(0, 2).map((promo) => (
                 <div key={promo.id} className="flex items-center gap-3 rounded-xl bg-[#f5f3ed] p-3">
@@ -219,7 +214,6 @@ async function AdminDashboardContent() {
           <section id="content" className="rounded-[24px] border border-[#334b39]/10 bg-[#e8e1d4] p-6">
             <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.16em] text-[#82735f]">Design review</p>
             <h2 className="font-seasons mt-3 text-[27px] leading-[1.08] text-[#3f4f42]">Make the daily view feel effortless.</h2>
-            <p className="mt-3 font-montserrat text-[10px] leading-5 text-[#776f64]">Confirm the module names, priority information, and staff workflow before any database work begins.</p>
             <div className="mt-6 flex items-center gap-2 font-montserrat text-[9px] font-bold uppercase tracking-[0.1em] text-[#526557]">
               Design review in progress
               <Icon className="h-4 w-4"><path d="M5 12h14m-6-6 6 6-6 6" /></Icon>
@@ -231,7 +225,6 @@ async function AdminDashboardContent() {
           <div className="max-w-2xl">
             <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.16em] text-[#7d857e]">Dashboard structure</p>
             <h2 className="font-seasons mt-2 text-[28px] text-[#2e4433]">What the admin workspace will contain</h2>
-            <p className="mt-2 font-montserrat text-[10px] leading-5 text-[#858c85]">These are planning sections only. Separate module pages and database actions have not been created yet.</p>
           </div>
           <div className="mt-6 grid gap-4 lg:grid-cols-3">
             {moduleGroups.map((group) => (
