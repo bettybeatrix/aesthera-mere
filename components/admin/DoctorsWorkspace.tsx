@@ -42,6 +42,7 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
   const [form, setForm] = useState<DoctorProfileInput>(emptyForm);
   const [imagePreview, setImagePreview] = useState("");
   const [notice, setNotice] = useState("");
+  const [doctorPendingDelete, setDoctorPendingDelete] = useState<DoctorProfile | null>(null);
   const formSectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -153,9 +154,14 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
   }
 
   function removeDoctor(doctor: DoctorProfile) {
-    if (!window.confirm(`Remove ${doctor.name} from this preview list?`)) return;
-    setDoctors((current) => current.filter((item) => item.id !== doctor.id));
-    if (editingId === doctor.id) startNew();
+    setDoctorPendingDelete(doctor);
+  }
+
+  function confirmRemoveDoctor() {
+    if (!doctorPendingDelete) return;
+    setDoctors((current) => current.filter((item) => item.id !== doctorPendingDelete.id));
+    if (editingId === doctorPendingDelete.id) closeForm();
+    setDoctorPendingDelete(null);
     setNotice("Profile removed from this preview session only.");
   }
 
@@ -259,6 +265,52 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
             </section>
           )}
         </div>
+      {doctorPendingDelete && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-[#172119]/55 px-5 py-8 backdrop-blur-sm"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setDoctorPendingDelete(null);
+          }}
+        >
+          <section
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="delete-doctor-title"
+            aria-describedby="delete-doctor-description"
+            className="w-full max-w-[440px] rounded-[24px] border border-[#334b39]/10 bg-[#fbfaf7] p-6 shadow-2xl sm:p-7"
+          >
+            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#f5e9e5] text-[#9b5e54]">
+              <Icon><path d="M3 6h18M8 6V4h8v2m-9 0 1 14h8l1-14M10 10v6m4-6v6" /></Icon>
+            </div>
+            <p className="mt-5 font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#9b5e54]">
+              Remove doctor profile
+            </p>
+            <h2 id="delete-doctor-title" className="font-seasons mt-2 text-2xl text-[#2e4433]">
+              Are you sure?
+            </h2>
+            <p id="delete-doctor-description" className="mt-3 font-montserrat text-xs leading-6 text-[#7a8079]">
+              You are about to remove <strong className="font-semibold text-[#405745]">{doctorPendingDelete.name}</strong> from this preview list. This action only affects the current preview session and cannot be undone here.
+            </p>
+            <div className="mt-7 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={() => setDoctorPendingDelete(null)}
+                className="min-h-11 rounded-full border border-[#334b39]/20 px-5 font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#526557] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#526b56]"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmRemoveDoctor}
+                className="min-h-11 rounded-full bg-[#8d5148] px-5 font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-white hover:bg-[#754139] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8d5148]"
+              >
+                Yes, remove profile
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
       </div>
     </main>
   );
