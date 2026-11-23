@@ -45,7 +45,6 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
   const [imagePreview, setImagePreview] = useState("");
   const [notice, setNotice] = useState("");
   const [doctorPendingDelete, setDoctorPendingDelete] = useState<DoctorProfile | null>(null);
-  const [doctorPendingLeave, setDoctorPendingLeave] = useState<DoctorProfile | null>(null);
   const [availabilityDoctor, setAvailabilityDoctor] = useState<DoctorProfile | null>(null);
   const [workingSchedule, setWorkingSchedule] = useState<DoctorProfile["weeklySchedule"]>([]);
   const [calendarMonth, setCalendarMonth] = useState(() => new Date());
@@ -188,26 +187,6 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
       : item));
     setAvailabilityDoctor(null);
     setNotice("Availability updated in this preview session only.");
-  }
-
-  function confirmLeaveDates() {
-    if (!doctorPendingLeave || !leaveStartDate || !leaveEndDate) return;
-    if (leaveEndDate < leaveStartDate) {
-      setNotice("The leave end date must be on or after the start date.");
-      return;
-    }
-    setDoctors((current) => current.map((item) => item.id === doctorPendingLeave.id
-      ? { ...item, leaveStartDate, leaveEndDate, updatedAt: new Date().toISOString() }
-      : item));
-    setDoctorPendingLeave(null);
-    setNotice("Leave dates saved in this preview session only.");
-  }
-
-  function clearLeaveDates(doctor: DoctorProfile) {
-    setDoctors((current) => current.map((item) => item.id === doctor.id
-      ? { ...item, leaveStartDate: null, leaveEndDate: null, updatedAt: new Date().toISOString() }
-      : item));
-    setNotice("Leave schedule cleared in this preview session only.");
   }
 
   function removeDoctor(doctor: DoctorProfile) {
