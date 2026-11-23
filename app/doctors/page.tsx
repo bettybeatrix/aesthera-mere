@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default async function DoctorsPage() {
   const doctors = await getDoctorProfiles();
-  const publishedDoctors = doctors.filter((doctor) => doctor.isPublished);
+  const publishedDoctors = doctors.filter((doctor) => !doctor.isOnLeave);
 
   return (
     <>
