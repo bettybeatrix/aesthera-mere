@@ -10,7 +10,7 @@ export interface DoctorProfile {
   expertise: string[];
   credentials: string[];
   affiliations: string[];
-  isPublished: boolean;
+  isOnLeave: boolean;
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
