@@ -12,7 +12,7 @@ const blank: ManagedTreatmentInput = {
   benefits: [], duration: "Confirmed during consultation",
   sessions: "Personalized after assessment", downtime: "Discussed before treatment",
   categorySlug: "skin-radiance", categoryName: "Skin Radiance",
-  groupSlug: "", groupName: "", isPublished: false, sortOrder: 9999,
+  groupSlug: "", groupName: "", isAvailable: false, sortOrder: 9999,
 };
 
 const categories = [
@@ -36,7 +36,7 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
   const [items, setItems] = useState(initialTreatments);
   const [query, setQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState<"all" | "published" | "draft">("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "available" | "unavailable">("all");
   const [formOpen, setFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<ManagedTreatmentInput>(blank);
@@ -54,7 +54,7 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
     return items.filter((item) =>
       (!term || [item.name, item.description, item.groupName].some((value) => value.toLowerCase().includes(term))) &&
       (categoryFilter === "all" || item.categorySlug === categoryFilter) &&
-      (statusFilter === "all" || (statusFilter === "published" ? item.isPublished : !item.isPublished)),
+      (statusFilter === "all" || (statusFilter === "available" ? item.isAvailable : !item.isAvailable)),
     );
   }, [items, query, categoryFilter, statusFilter]);
 
@@ -107,9 +107,9 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
     }
     closeForm();
   }
-  function togglePublished(item: ManagedTreatment) {
-    setItems((current) => current.map((entry) => entry.id === item.id ? { ...entry, isPublished: !entry.isPublished, updatedAt: new Date().toISOString() } : entry));
-    setNotice("Publishing status changed in this preview session only.");
+  function toggleAvailability(item: ManagedTreatment) {
+    setItems((current) => current.map((entry) => entry.id === item.id ? { ...entry, isAvailable: !entry.isAvailable, updatedAt: new Date().toISOString() } : entry));
+    setNotice("Availability changed in this preview session only.");
   }
   function confirmDelete() {
     if (!pendingDelete) return;
@@ -132,20 +132,20 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
         </header>
 
         <section className="mt-7 grid gap-3 sm:grid-cols-3" aria-label="Treatment summary">
-          {[["Total treatments", items.length], ["Published", items.filter((item) => item.isPublished).length], ["Drafts", items.filter((item) => !item.isPublished).length]].map(([label, value]) => <article key={String(label)} className="rounded-[20px] border border-[#334b39]/10 bg-white/75 p-5"><p className="font-seasons text-3xl text-[#2e4433]">{value}</p><p className="mt-2 font-montserrat text-[10px] font-semibold text-[#667168]">{label}</p></article>)}
+          {[["Total treatments", items.length], ["Available", items.filter((item) => item.isAvailable).length], ["Unavailable", items.filter((item) => !item.isAvailable).length]].map(([label, value]) => <article key={String(label)} className="rounded-[20px] border border-[#334b39]/10 bg-white/75 p-5"><p className="font-seasons text-3xl text-[#2e4433]">{value}</p><p className="mt-2 font-montserrat text-[10px] font-semibold text-[#667168]">{label}</p></article>)}
         </section>
 
         <section className="mt-5 overflow-hidden rounded-[24px] border border-[#334b39]/10 bg-white/80">
           <div className="grid gap-3 border-b border-[#334b39]/10 p-4 lg:grid-cols-[1fr_220px_auto] lg:items-center sm:p-5">
             <label className="flex min-h-11 items-center gap-2 rounded-xl border border-[#334b39]/10 bg-[#f7f6f1] px-3"><Icon><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></Icon><span className="sr-only">Search treatments</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search treatments..." className="min-w-0 flex-1 bg-transparent font-montserrat text-[10px] outline-none" /></label>
             <select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)} className="min-h-11 rounded-xl border border-[#334b39]/10 bg-[#f7f6f1] px-3 font-montserrat text-[10px] text-[#405745] outline-none"><option value="all">All categories</option>{categories.map((category) => <option key={category.slug} value={category.slug}>{category.name}</option>)}</select>
-            <div className="flex rounded-full bg-[#f0f2ec] p-1">{(["all", "published", "draft"] as const).map((status) => <button key={status} type="button" onClick={() => setStatusFilter(status)} className={`min-h-9 rounded-full px-3 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] ${statusFilter === status ? "bg-white text-[#36513c] shadow-sm" : "text-[#858c85]"}`}>{status}</button>)}</div>
+            <div className="flex rounded-full bg-[#f0f2ec] p-1">{(["all", "available", "unavailable"] as const).map((status) => <button key={status} type="button" onClick={() => setStatusFilter(status)} className={`min-h-9 rounded-full px-3 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] ${statusFilter === status ? "bg-white text-[#36513c] shadow-sm" : "text-[#858c85]"}`}>{status}</button>)}</div>
           </div>
           <div className="divide-y divide-[#334b39]/8">
             {visible.map((item) => <article key={item.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:p-5">
               <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[#e8e4dc]">{item.image && item.image.startsWith("/") ? <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" /> : item.image ? <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" unoptimized /> : <span className="grid h-full w-full place-items-center font-seasons text-xl text-[#526b56]">{item.name.slice(0,1)}</span>}</div>
-              <div className="min-w-0 flex-1"><h2 className="font-montserrat text-[11px] font-semibold text-[#39473d]">{item.name}</h2><p className="mt-1 font-montserrat text-[9px] text-[#92978f]">{item.categoryName} / {item.groupName}</p><p className="mt-1 font-montserrat text-[10px] font-semibold text-[#526b56]">{item.price}</p><span className={`mt-2 inline-flex rounded-full px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase ${item.isPublished ? "bg-[#e7efe5] text-[#4d6e54]" : "bg-[#eceae6] text-[#77766f]"}`}>{item.isPublished ? "Published" : "Draft"}</span></div>
-              <div className="flex shrink-0 flex-wrap gap-1.5"><button type="button" onClick={() => edit(item)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#405745]">Edit</button><button type="button" onClick={() => togglePublished(item)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#405745]">{item.isPublished ? "Unpublish" : "Publish"}</button><button type="button" onClick={() => setPendingDelete(item)} className="min-h-8 rounded-full border border-[#b77c70]/25 px-3 font-montserrat text-[8px] font-bold uppercase text-[#9b5e54]">Remove</button></div>
+              <div className="min-w-0 flex-1"><h2 className="font-montserrat text-[11px] font-semibold text-[#39473d]">{item.name}</h2><p className="mt-1 font-montserrat text-[9px] text-[#92978f]">{item.categoryName} / {item.groupName}</p><p className="mt-1 font-montserrat text-[10px] font-semibold text-[#526b56]">{item.price}</p><span className={`mt-2 inline-flex rounded-full px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase ${item.isAvailable ? "bg-[#e7efe5] text-[#4d6e54]" : "bg-[#eceae6] text-[#77766f]"}`}>{item.isAvailable ? "Available" : "Unavailable"}</span></div>
+              <div className="flex shrink-0 flex-wrap gap-1.5"><button type="button" onClick={() => edit(item)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#405745]">Edit</button><button type="button" onClick={() => toggleAvailability(item)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#405745]">{item.isAvailable ? "Mark unavailable" : "Mark available"}</button><button type="button" onClick={() => setPendingDelete(item)} className="min-h-8 rounded-full border border-[#b77c70]/25 px-3 font-montserrat text-[8px] font-bold uppercase text-[#9b5e54]">Remove</button></div>
             </article>)}
             {!visible.length && <p className="p-12 text-center font-montserrat text-xs text-[#92978f]">No treatments match your filters.</p>}
           </div>
@@ -169,7 +169,7 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
               <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#788078]">Sessions</span><input value={form.sessions} onChange={(event) => update("sessions", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-[#fbfaf7] px-3 font-montserrat text-xs" /></label>
               <label className="block md:col-span-2"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#788078]">Downtime / recovery</span><input value={form.downtime} onChange={(event) => update("downtime", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-[#fbfaf7] px-3 font-montserrat text-xs" /></label>
               <div className="md:col-span-2 rounded-2xl border border-dashed border-[#334b39]/20 bg-[#f8f7f2] p-4"><p className="font-montserrat text-[9px] font-semibold uppercase text-[#788078]">Treatment image</p>{imagePreview && <div className="relative mt-3 h-36 w-36 overflow-hidden rounded-xl"><Image src={imagePreview} alt="Treatment preview" fill sizes="144px" className="object-cover" unoptimized /></div>}<input type="file" accept="image/*" onChange={handleImage} className="mt-3 block w-full font-montserrat text-[10px] text-[#667168] file:mr-3 file:rounded-full file:border-0 file:bg-[#344c38] file:px-4 file:py-2 file:font-montserrat file:text-[9px] file:font-semibold file:text-white" /><p className="mt-2 font-montserrat text-[9px] text-[#92978f]">Preview only until persistent storage is connected.</p></div>
-              <div className="md:col-span-2 flex flex-wrap items-center justify-between gap-3 border-t border-[#334b39]/10 pt-4"><label className="flex items-center gap-2 font-montserrat text-[10px] text-[#536257]"><input type="checkbox" checked={form.isPublished} onChange={(event) => update("isPublished", event.target.checked)} className="h-4 w-4 accent-[#344c38]" /> Publish treatment</label><button type="submit" className="min-h-11 rounded-full bg-[#344c38] px-6 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white">{editingId ? "Save changes" : "Add treatment"}</button></div>
+              <div className="md:col-span-2 flex flex-wrap items-center justify-between gap-3 border-t border-[#334b39]/10 pt-4"><label className="flex items-center gap-2 font-montserrat text-[10px] text-[#536257]"><input type="checkbox" checked={form.isAvailable} onChange={(event) => update("isAvailable", event.target.checked)} className="h-4 w-4 accent-[#344c38]" /> Available on website</label><button type="submit" className="min-h-11 rounded-full bg-[#344c38] px-6 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white">{editingId ? "Save changes" : "Add treatment"}</button></div>
             </form>
           </section>
         )}
