@@ -54,19 +54,19 @@ const doctorLedTreatments = new Set(
 );
 
 const fieldClass =
-  "w-full rounded-xl border border-[#E3DDD1] " +
-  "bg-white px-4 py-3 font-montserrat text-[13px] " +
+  "w-full min-h-[44px] rounded-xl border border-[#E3DDD1] " +
+  "bg-white px-3 py-2.5 font-montserrat text-[13px] " +
   "text-[#4C5534] outline-none transition-colors " +
   "placeholder:text-[#898779] " +
   "focus:border-[#4C5534] focus:ring-1 focus:ring-[#4C5534]/15";
 
 const labelClass =
-  "mb-2 block font-montserrat text-xs font-medium text-[#4C5534]";
+  "mb-1.5 block font-montserrat text-xs font-medium text-[#4C5534]";
 
 const cardClass =
-  "rounded-[22px] border border-[#E3DDD1] bg-white " +
-  "p-5 shadow-[0_10px_35px_rgba(60,50,30,0.05)] " +
-  "sm:p-7";
+  "rounded-[20px] border border-[#E3DDD1] bg-white " +
+  "p-4 shadow-[0_8px_28px_rgba(60,50,30,0.035)] " +
+  "sm:p-5";
 
 function getToday() {
   const parts = new Intl.DateTimeFormat("en-US", {
@@ -139,6 +139,7 @@ export default function BookingModal({
   const [notes, setNotes] = useState("");
   const [privacy, setPrivacy] = useState(false);
   const [preview, setPreview] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     const previousFocus = document.activeElement as HTMLElement | null;
@@ -243,17 +244,14 @@ export default function BookingModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="booking-title"
-        className="relative h-full w-full max-w-[1100px]
-          overflow-y-auto bg-[#F6F3ED]
-          shadow-[0_25px_80px_rgba(0,0,0,0.18)]
-          md:h-auto md:max-h-[92vh] md:rounded-[28px]"
+        className="relative flex h-full w-full max-w-[1120px] flex-col overflow-hidden bg-[#F6F3ED] shadow-[0_25px_80px_rgba(0,0,0,0.18)] md:h-[90vh] md:rounded-[26px]"
       >
         <button
           ref={closeRef}
           type="button"
           onClick={onClose}
           aria-label="Close appointment form"
-          className="absolute right-5 top-5 z-10 flex h-9 w-9
+          className="absolute right-4 top-4 z-10 flex h-9 w-9
             items-center justify-center rounded-full
             border border-[#DAD5C9] bg-white
             text-lg text-[#4C5534] transition
@@ -263,7 +261,7 @@ export default function BookingModal({
         </button>
 
         {/* HEADER */}
-        <header className="px-6 pb-7 pt-9 text-center md:px-10">
+        <header className="shrink-0 px-12 pb-3 pt-5 text-center md:px-10 md:pb-4 md:pt-5">
           <p className="font-montserrat text-[10px] font-medium
             uppercase tracking-[0.3em] text-[#4C5534]">
             AESTHERA MÈRE
@@ -271,8 +269,7 @@ export default function BookingModal({
 
           <h2
             id="booking-title"
-            className="mt-2 font-bodoni text-[36px]
-              leading-tight text-[#4C5534] md:text-[46px]"
+            className="mt-1 font-seasons font-bold text-[31px] leading-tight text-[#4C5534] md:text-[39px]"
           >
             Book Your Appointment
           </h2>
@@ -283,9 +280,32 @@ export default function BookingModal({
           </p>
         </header>
 
-        {preview ? (
+        {submitted ? (
+          <section className="mx-auto flex w-full max-w-[760px] min-h-0 flex-1 flex-col items-center overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-6 py-10 text-center">
+            <div className="mb-5 flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-[#4C5534]/30 bg-white text-[#4C5534]" aria-hidden="true">
+              <svg width="29" height="29" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m5 12 4 4L19 6" />
+              </svg>
+            </div>
+            <p className="font-montserrat text-[10px] uppercase tracking-[0.25em] text-[#4C5534]">AESTHERA MÈRE · DEMO</p>
+            <h3 className="mt-3 font-seasons font-bold text-[30px] leading-tight text-[#4C5534] md:text-[38px]">Request Preview Complete</h3>
+            <p className="mt-4 max-w-[520px] font-montserrat text-[13px] leading-7 text-[#777568]">
+              Your appointment request was simulated successfully. No information has been sent to the clinic or saved to a database.
+            </p>
+            <div className="mt-7 w-full rounded-[20px] border border-[#E3DDD1] bg-white p-6 text-left">
+              <p className="font-montserrat text-[10px] uppercase tracking-[0.2em] text-[#777568]">Appointment Summary</p>
+              <h4 className="mt-2 font-seasons font-bold text-[25px] text-[#4C5534]">{readableDate(date)}</h4>
+              <p className="mt-2 font-montserrat text-[13px] text-[#4C5534]">{time} · {service}</p>
+              {showDoctorField && doctor && (
+                <p className="mt-2 font-montserrat text-[12px] text-[#777568]">Preferred Doctor: {doctor}</p>
+              )}
+              <p className="mt-3 break-words font-montserrat text-[12px] text-[#777568]">{email.toLowerCase()}</p>
+            </div>
+            <button type="button" onClick={onClose} className="mt-7 rounded-full bg-[#4C5534] px-10 py-3 font-montserrat text-sm text-white transition hover:bg-[#39432D]">Done</button>
+          </section>
+        ) : preview ? (
           /* ELEGANT PREVIEW */
-          <section className="mx-auto max-w-[760px] px-6 pb-10">
+          <section className="mx-auto w-full max-w-[760px] flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-5 pb-6">
             <div className={cardClass}>
               <div className="border-b border-[#E3DDD1]
                 pb-6 text-center">
@@ -293,7 +313,7 @@ export default function BookingModal({
                   uppercase tracking-[0.2em] text-[#777568]">
                   Review Your Details
                 </p>
-                <h3 className="mt-2 font-bodoni text-3xl
+                <h3 className="mt-2 font-seasons font-bold text-3xl
                   text-[#4C5534]">
                   Appointment Preview
                 </h3>
@@ -310,7 +330,7 @@ export default function BookingModal({
                   uppercase tracking-[0.16em] text-[#777568]">
                   Selected Schedule
                 </p>
-                <h4 className="font-bodoni text-[26px]
+                <h4 className="font-seasons font-bold text-[26px]
                   text-[#4C5534]">
                   {readableDate(date)}
                 </h4>
@@ -340,7 +360,7 @@ export default function BookingModal({
                   ["Last Name", lastName],
                   ["Contact Number", phone],
                   ["Email Address", email],
-                  ["Appointment Type", appointmentType],
+                  ["Appointment Type", appointmentType === "treatment" ? "Treatment" : "Consultation"],
                 ].map(([label, value]) => (
                   <div key={label}>
                     <p className="mb-1 font-montserrat text-[10px]
@@ -348,8 +368,8 @@ export default function BookingModal({
                       {label}
                     </p>
                     <p className="break-words font-montserrat
-                      text-[13px] capitalize text-[#4C5534]">
-                      {value}
+                      text-[13px] text-[#4C5534]">
+                      {label === "Email Address" ? value.toLowerCase() : value}
                     </p>
                   </div>
                 ))}
@@ -370,7 +390,7 @@ export default function BookingModal({
 
               <p className="mt-6 text-center font-montserrat
                 text-xs text-[#777568]">
-                No appointment has been submitted or saved.
+                Demo mode: Submitting will show a confirmation screen. No appointment will be sent or saved.
               </p>
 
               <div className="mt-5 flex flex-col gap-3 sm:flex-row">
@@ -387,31 +407,30 @@ export default function BookingModal({
 
                 <button
                   type="button"
-                  onClick={onClose}
+                  onClick={() => setSubmitted(true)}
                   className="flex-1 rounded-full bg-[#4C5534]
                     px-5 py-3 font-montserrat text-sm
                     text-white transition hover:bg-[#39432D]"
                 >
-                  Close Preview
+                  Submit Appointment Request
                 </button>
               </div>
             </div>
           </section>
         ) : (
           <form
+            id="booking-form"
             onSubmit={handleSubmit}
-            className="grid items-start gap-5 px-5 pb-8
-              md:grid-cols-[0.9fr_1.1fr] md:gap-6
-              md:px-8 md:pb-9"
+            className="grid min-h-0 flex-1 items-start gap-4 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-4 pb-5 md:grid-cols-[0.92fr_1.08fr] md:gap-5 md:px-7 md:pb-6"
           >
             {/* LEFT WHITE CARD */}
             <section className={cardClass}>
-              <h3 className="mb-5 font-bodoni text-[27px]
+              <h3 className="mb-3 font-seasons font-bold text-[25px]
                 text-[#4C5534]">
                 Select Your Schedule
               </h3>
 
-              <div className="mb-5 flex items-center
+              <div className="mb-3 flex items-center
                 justify-between">
                 <button
                   type="button"
@@ -451,12 +470,12 @@ export default function BookingModal({
                 </button>
               </div>
 
-              <div className="grid grid-cols-7 gap-1 text-center">
+              <div className="mx-auto grid max-w-[390px] grid-cols-7 gap-0.5 text-center">
                 {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map(
                   (item) => (
                     <span
                       key={item}
-                      className="py-2 font-montserrat
+                      className="py-1 font-montserrat
                         text-[11px] text-[#777568]"
                     >
                       {item}
@@ -483,7 +502,7 @@ export default function BookingModal({
                         setDate(value);
                         setTime("");
                       }}
-                      className={`aspect-square rounded-full
+                      className={`mx-auto flex h-9 w-9 items-center justify-center rounded-full
                         font-montserrat text-[13px] transition
                         ${selected
                           ? "bg-[#4C5534] text-white"
@@ -497,14 +516,14 @@ export default function BookingModal({
                 })}
               </div>
 
-              <div className="my-6 h-px bg-[#E3DDD1]" />
+              <div className="my-4 h-px bg-[#E3DDD1]" />
 
               <h4 className="mb-3 font-montserrat text-sm
                 font-medium text-[#4C5534]">
                 Preferred Time
               </h4>
 
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-4">
                 {timeSlots.map((slot) => (
                   <button
                     key={slot}
@@ -513,7 +532,7 @@ export default function BookingModal({
                     aria-pressed={time === slot}
                     onClick={() => setTime(slot)}
                     className={`rounded-full border px-2
-                      py-2.5 font-montserrat text-[11px]
+                      py-2 font-montserrat text-[11px]
                       transition
                       ${time === slot
                         ? "border-[#4C5534] bg-[#4C5534] text-white"
@@ -525,7 +544,7 @@ export default function BookingModal({
                 ))}
               </div>
 
-              <p className="mt-5 text-center font-montserrat
+              <p className="mt-3 text-center font-montserrat
                 text-[11px] leading-5 text-[#777568]">
                 Philippine Time (GMT+8). Preferred times are
                 illustrative and not confirmed availability.
@@ -533,8 +552,8 @@ export default function BookingModal({
             </section>
 
             {/* RIGHT WHITE CARD */}
-            <section className={`${cardClass} space-y-4`}>
-              <h3 className="font-bodoni text-[27px]
+            <section className={`${cardClass} space-y-3`}>
+              <h3 className="font-seasons font-bold text-[25px]
                 text-[#4C5534]">
                 Appointment Details
               </h3>
@@ -660,7 +679,7 @@ export default function BookingModal({
                     required
                     autoComplete="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value.toLowerCase())}
                     placeholder="you@email.com"
                     className={fieldClass}
                   />
@@ -741,29 +760,6 @@ export default function BookingModal({
                 />
               </div>
 
-              {/* SUMMARY */}
-              <div className="rounded-xl border border-[#E3DDD1]
-                bg-[#F6F3ED] p-4">
-                <p className="mb-1 font-montserrat text-xs
-                  font-semibold text-[#4C5534]">
-                  Your Appointment
-                </p>
-                <p className="font-montserrat text-[13px]
-                  text-[#4C5534]">
-                  {readableDate(date)}
-                </p>
-                <p className="mt-1 font-montserrat text-xs
-                  text-[#777568]">
-                  {time || "Choose a time"} · {service}
-                </p>
-                {showDoctorField && doctor && (
-                  <p className="mt-1 font-montserrat text-xs
-                    text-[#777568]">
-                    Preferred Doctor: {doctor}
-                  </p>
-                )}
-              </div>
-
               {/* PRIVACY */}
               <label className="flex items-start gap-3
                 font-montserrat text-[11px] leading-5
@@ -776,32 +772,41 @@ export default function BookingModal({
                   className="mt-1 accent-[#4C5534]"
                 />
                 <span>
-                  I understand this is an appointment preview and my details are
-                  not submitted. I have read the{" "}
+                  I understand this is a demo appointment request and no details
+                  will be sent or saved. I have read the{" "}
                   <Link href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[#4C5534] underline underline-offset-2">
                     Privacy Policy
                   </Link>.
                 </span>
               </label>
 
-              <button
-                type="submit"
-                disabled={!date || !time || !privacy}
-                className="w-full rounded-full bg-[#4C5534]
-                  px-6 py-3.5 font-montserrat text-sm
-                  font-medium text-white transition
-                  hover:bg-[#39432D]
-                  disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                <span className="inline-flex items-center justify-center gap-2">Preview Appointment Request <ArrowRightIcon className="h-4 w-4" /></span>
-              </button>
-
-              <p className="text-center font-montserrat
-                text-[11px] text-[#777568]">
-                Frontend preview only. No booking is submitted.
-              </p>
             </section>
           </form>
+        )}
+
+        {!preview && (
+          <footer className="z-10 shrink-0 border-t border-[#E3DDD1] bg-white px-4 py-3 shadow-[0_-10px_22px_rgba(50,45,30,0.035)] md:px-7">
+            <div className="mx-auto flex max-w-[1064px] flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+              <div className="min-w-0 font-montserrat">
+                <p className="text-[11px] font-semibold text-[#4C5534]">Your Appointment</p>
+                <p className="text-[12px] leading-5 text-[#777568]">
+                  {date ? readableDate(date) : "Select a date"} · {time || "Select a time"} · {service}
+                </p>
+                {showDoctorField && doctor && (
+                  <p className="text-[11px] text-[#777568]">Preferred Doctor: {doctor}</p>
+                )}
+              </div>
+              <button
+                type="submit"
+                form="booking-form"
+                disabled={!date || !time || !privacy}
+                className="inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-full bg-[#4C5534] px-6 py-3 font-montserrat text-[12px] font-medium text-white transition hover:bg-[#39432D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4C5534] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                Preview Appointment Request <ArrowRightIcon className="h-4 w-4" />
+              </button>
+            </div>
+            <p className="mt-1 text-center font-montserrat text-[10px] text-[#777568] sm:text-left">Frontend preview only. No booking is submitted.</p>
+          </footer>
         )}
       </div>
     </div>

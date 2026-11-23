@@ -24,7 +24,9 @@ export default function TreatmentCard({
       </div>
       <div className="flex flex-1 flex-col p-6">
         <h3 className="font-seasons text-[28px] leading-tight text-[#4C5534]">{treatment.name}</h3>
-        <p className="mt-3 font-montserrat text-[13px] leading-6 text-[#80755F]">{treatment.description}</p>
+        <p className="mt-3 line-clamp-3 font-montserrat text-[13px] leading-6 text-[#80755F]">
+          {treatment.cardDescription ?? treatment.description}
+        </p>
         <div className="mt-auto pt-6">
           <div className="border-t border-[#80755F]/15 pt-4">
             <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.14em] text-[#80755F]">{treatment.priceLabel}</p>
