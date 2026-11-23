@@ -17,7 +17,7 @@ const emptyForm: DoctorProfileInput = {
   expertise: [],
   credentials: [],
   affiliations: [],
-  isPublished: false,
+  isOnLeave: false,
   sortOrder: 99,
 };
 
@@ -36,7 +36,7 @@ function parseLines(value: string) {
 export default function DoctorsWorkspace({ initialDoctors }: Props) {
   const [doctors, setDoctors] = useState(initialDoctors);
   const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState<"all" | "published" | "draft">("all");
+  const [filter, setFilter] = useState<"all" | "available" | "on-leave">("all");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [form, setForm] = useState<DoctorProfileInput>(emptyForm);
@@ -58,7 +58,7 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
     const term = query.trim().toLowerCase();
     return doctors.filter((doctor) => {
       const matchesText = !term || [doctor.name, doctor.title, doctor.tagline].some((value) => value.toLowerCase().includes(term));
-      const matchesFilter = filter === "all" || (filter === "published" ? doctor.isPublished : !doctor.isPublished);
+      const matchesFilter = filter === "all" || (filter === "available" ? !doctor.isOnLeave : doctor.isOnLeave);
       return matchesText && matchesFilter;
     });
   }, [doctors, filter, query]);
@@ -92,7 +92,7 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
       expertise: doctor.expertise,
       credentials: doctor.credentials,
       affiliations: doctor.affiliations,
-      isPublished: doctor.isPublished,
+      isOnLeave: doctor.isOnLeave,
       sortOrder: doctor.sortOrder,
     });
     setImagePreview(doctor.image);
@@ -148,9 +148,9 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
     setIsFormOpen(false);
   }
 
-  function togglePublished(doctor: DoctorProfile) {
-    setDoctors((current) => current.map((item) => item.id === doctor.id ? { ...item, isPublished: !item.isPublished, updatedAt: new Date().toISOString() } : item));
-    setNotice("Publishing status changed in this preview session only.");
+  function toggleOnLeave(doctor: DoctorProfile) {
+    setDoctors((current) => current.map((item) => item.id === doctor.id ? { ...item, isOnLeave: !item.isOnLeave, updatedAt: new Date().toISOString() } : item));
+    setNotice("Doctor availability changed in this preview session only.");
   }
 
   function removeDoctor(doctor: DoctorProfile) {
@@ -179,7 +179,7 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
         </header>
 
         <section className="mt-7 grid gap-3 sm:grid-cols-3" aria-label="Doctor profile summary">
-          {[["Total profiles", doctors.length], ["Published", doctors.filter((doctor) => doctor.isPublished).length], ["Drafts", doctors.filter((doctor) => !doctor.isPublished).length]].map(([label, value]) => (
+          {[["Total profiles", doctors.length], ["Available", doctors.filter((doctor) => !doctor.isOnLeave).length], ["On leave", doctors.filter((doctor) => doctor.isOnLeave).length]].map(([label, value]) => (
             <article key={String(label)} className="rounded-[20px] border border-[#334b39]/10 bg-white/75 p-5">
               <p className="font-seasons text-3xl text-[#4c5534]">{value}</p>
               <p className="mt-2 font-montserrat text-[10px] font-semibold text-[#80755f]">{label}</p>
@@ -196,7 +196,7 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
                 <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search doctor profiles..." className="min-w-0 flex-1 bg-transparent font-montserrat text-[10px] outline-none" />
               </label>
               <div className="flex rounded-full bg-[#edf0e8] p-1">
-                {(["all", "published", "draft"] as const).map((item) => <button key={item} type="button" onClick={() => setFilter(item)} className={`min-h-9 rounded-full px-3 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] ${filter === item ? "bg-white text-[#36513c] shadow-sm" : "text-[#858c85]"}`}>{item}</button>)}
+                {(["all", "available", "on-leave"] as const).map((item) => <button key={item} type="button" onClick={() => setFilter(item)} className={`min-h-9 rounded-full px-3 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] ${filter === item ? "bg-white text-[#36513c] shadow-sm" : "text-[#858c85]"}`}>{item}</button>)}
               </div>
             </div>
             <div className="divide-y divide-[#334b39]/8">
@@ -208,11 +208,11 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
                   <div className="min-w-0 flex-1">
                     <h2 className="truncate font-montserrat text-[11px] font-semibold text-[#39473d]">{doctor.name}</h2>
                     <p className="mt-1 truncate font-montserrat text-[9px] text-[#80755f]">{doctor.title}</p>
-                    <span className={`mt-2 inline-flex rounded-full px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase ${doctor.isPublished ? "bg-[#e8eee3] text-[#4f6442]" : "bg-[#f1eee6] text-[#80755f]"}`}>{doctor.isPublished ? "Published" : "Draft"}</span>
+                    <span className={`mt-2 inline-flex rounded-full px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase ${doctor.isOnLeave ? "bg-[#f1eee6] text-[#80755f]" : "bg-[#e8eee3] text-[#4f6442]"}`}>{doctor.isOnLeave ? "On leave" : "Available"}</span>
                   </div>
                   <div className="flex shrink-0 flex-col gap-1.5 sm:flex-row">
                     <button type="button" onClick={() => editDoctor(doctor)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#4c5534]">Edit</button>
-                    <button type="button" onClick={() => togglePublished(doctor)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#4c5534]">{doctor.isPublished ? "Unpublish" : "Publish"}</button>
+                    <button type="button" onClick={() => toggleOnLeave(doctor)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#4c5534]">{doctor.isOnLeave ? "Mark available" : "Mark on leave"}</button>
                     <button type="button" onClick={() => removeDoctor(doctor)} aria-label={`Remove ${doctor.name}`} className="min-h-8 rounded-full border border-[#8a5148]/25 px-3 font-montserrat text-[8px] font-bold uppercase text-[#8a5148]">Remove</button>
                   </div>
                 </article>
@@ -256,7 +256,7 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
                 </div>
   
                 <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#334b39]/10 pt-4">
-                  <label className="flex items-center gap-2 font-montserrat text-[10px] text-[#536257]"><input type="checkbox" checked={form.isPublished} onChange={(event) => update("isPublished", event.target.checked)} className="h-4 w-4 accent-[#4c5534]" /> Publish profile</label>
+                  <label className="flex items-center gap-2 font-montserrat text-[10px] text-[#536257]"><input type="checkbox" checked={form.isOnLeave} onChange={(event) => update("isOnLeave", event.target.checked)} className="h-4 w-4 accent-[#4c5534]" /> Mark as on leave (hide from public page)</label>
                   <button type="submit" className="min-h-11 rounded-full bg-[#4c5534] px-6 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white hover:bg-[#3d472a]">{editingId ? "Save changes" : "Add profile"}</button>
                 </div>
               </form>
