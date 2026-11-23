@@ -25,9 +25,10 @@ const doctors = [
   {
     id: "dr-ian",
     name: "Dr. Ian",
-    specialty: "",
-    credentials: "",
-    image: null,
+    specialty: "Aesthetic Physician",
+    credentials:
+      "Fellowship training in cosmetic surgery, with expertise in injectables, regenerative treatments, and aesthetic devices.",
+    image: "/images/doctors/dr_ian.png",
   },
 ];
 
@@ -81,7 +82,9 @@ export default function MeetOurDoctors() {
                     fill
                     quality={90}
                     sizes="(max-width: 767px) 100vw, 33vw"
-                    className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                    className={doctor.id === "dr-ian"
+                      ? "object-cover object-[50%_40%] transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                      : "object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.04]"}
                   />
                 ) : (
                   <div role="img" aria-label={`Portrait of ${doctor.name} coming soon`} className="flex h-full items-center justify-center bg-gradient-to-br from-[#FFFCF3] to-[#80755F]/20 font-seasons text-6xl text-[#4C5534]/35">DI</div>

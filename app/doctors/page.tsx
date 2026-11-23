@@ -67,6 +67,37 @@ const doctors = [
       "American Academy of Aesthetic Medicine",
     ],
   },
+  {
+    id: "dr-ian",
+    name: "Dr. Ian",
+    shortName: "Dr. Ian",
+    title: "Aesthetic Physician",
+    tagline: "Aesthetic Medicine • Regenerative Care • Hair Restoration",
+    image: "/images/doctors/dr-ian-profile.png",
+    bio: [
+      "Dr. Ian takes a personalized approach to aesthetic medicine, with a focus on natural-looking results. His work includes neurotoxins, dermal fillers, biostimulators, PRP, and microneedling.",
+      "With fellowship training in cosmetic surgery, he also works with aesthetic technologies including Ulthera Prime, Vivace, and AlmaQ. He tailors treatment plans to each patient’s features and goals.",
+    ],
+    expertise: [
+      "Neurotoxins",
+      "Dermal Fillers",
+      "Biostimulators",
+      "PRP",
+      "Microneedling",
+      "Energy-Based Aesthetic Treatments",
+    ],
+    credentials: [
+      "Fellowship Training in Cosmetic Surgery — Pan Pacific Aesthetic Institute (2024–2026)",
+      "Advanced Korean Aesthetic Medicine",
+      "Aesthetic Medicine (Level 5)",
+      "FUE Hair Transplantation Training",
+    ],
+    affiliations: [
+      "Philippine Society for Regenerative Medicine (PSGM)",
+      "Philippine Regenerative & Integrative Medical Association (PRIMA)",
+      "International Society of Aesthetics, Aging Control and Hair Transplantation (ISAAH)",
+    ],
+  },
 ];
 
 export default function DoctorsPage() {
@@ -75,7 +106,7 @@ export default function DoctorsPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-[#F6F3ED]">
+      <main className="min-h-screen bg-[#FFFCF3]">
         {/* PAGE INTRODUCTION */}
         <section className="mx-auto max-w-[1200px] px-6
           pb-14 pt-20 text-center md:px-10 md:pb-20">
@@ -125,7 +156,7 @@ export default function DoctorsPage() {
                       alt={`Portrait of ${doctor.name}`}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover"
+                      className={doctor.id === "dr-ian" ? "object-cover object-[50%_40%]" : "object-cover"}
                     />
                   </div>
                 </div>
@@ -261,18 +292,6 @@ export default function DoctorsPage() {
             </section>
           ))}
 
-          {/* DR. IAN — DETAILS PENDING */}
-          <section id="dr-ian" className="scroll-mt-32">
-            <div className="grid items-center gap-8 rounded-[22px] border border-[#E3DDD1] bg-white p-6 md:grid-cols-[0.72fr_1.28fr] md:gap-12 md:p-8">
-              <div role="img" aria-label="Portrait of Dr. Ian coming soon" className="flex aspect-[4/4.5] items-center justify-center overflow-hidden rounded-[18px] bg-gradient-to-br from-[#FFFCF3] to-[#80755F]/20 font-seasons text-7xl text-[#4C5534]/30">DI</div>
-              <div>
-                <p className="mb-3 font-montserrat text-[11px] uppercase tracking-[0.2em] text-[#4F6442]">Doctor Profile</p>
-                <h2 className="font-bodoni text-4xl text-[#4C5534]">Dr. Ian</h2>
-                <p className="mt-4 max-w-md font-montserrat text-sm leading-7 text-[#777568]">Full professional profile, specialty, credentials, and portrait will be added once verified clinic information is available.</p>
-                <button type="button" onClick={() => openBooking("", "Dr. Ian")} className="mt-7 inline-flex items-center gap-3 rounded-full bg-[#4C5534] px-8 py-3.5 font-montserrat text-[12px] font-medium text-white transition hover:bg-[#39432D]">Book a Consultation <span aria-hidden="true">↗</span></button>
-              </div>
-            </div>
-          </section>
         </div>
 
       </main>
