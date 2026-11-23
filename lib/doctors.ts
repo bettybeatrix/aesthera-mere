@@ -7,6 +7,16 @@ import type { DoctorProfile } from "@/types/doctor";
  *
  * Current limitation: updates made in the admin prototype are in-memory only.
  */
+const DEFAULT_WEEKLY_SCHEDULE = [
+  { day: "Monday", enabled: true, startTime: "09:00", endTime: "17:00" },
+  { day: "Tuesday", enabled: true, startTime: "09:00", endTime: "17:00" },
+  { day: "Wednesday", enabled: false, startTime: "09:00", endTime: "17:00" },
+  { day: "Thursday", enabled: true, startTime: "10:00", endTime: "18:00" },
+  { day: "Friday", enabled: true, startTime: "09:00", endTime: "17:00" },
+  { day: "Saturday", enabled: true, startTime: "09:00", endTime: "15:00" },
+  { day: "Sunday", enabled: false, startTime: "09:00", endTime: "17:00" },
+];
+
 const MOCK_DOCTORS: DoctorProfile[] = [
   {
     id: "dr-dan",
@@ -40,6 +50,7 @@ const MOCK_DOCTORS: DoctorProfile[] = [
     ],
     leaveStartDate: null,
     leaveEndDate: null,
+    weeklySchedule: DEFAULT_WEEKLY_SCHEDULE,
     sortOrder: 1,
     createdAt: "2026-11-23T00:00:00.000Z",
     updatedAt: "2026-11-23T00:00:00.000Z",
@@ -76,6 +87,7 @@ const MOCK_DOCTORS: DoctorProfile[] = [
     ],
     leaveStartDate: null,
     leaveEndDate: null,
+    weeklySchedule: DEFAULT_WEEKLY_SCHEDULE,
     sortOrder: 2,
     createdAt: "2026-11-23T00:00:00.000Z",
     updatedAt: "2026-11-23T00:00:00.000Z",
@@ -94,6 +106,7 @@ const MOCK_DOCTORS: DoctorProfile[] = [
     affiliations: [],
     leaveStartDate: null,
     leaveEndDate: null,
+    weeklySchedule: DEFAULT_WEEKLY_SCHEDULE,
     sortOrder: 3,
     createdAt: "2026-11-23T00:00:00.000Z",
     updatedAt: "2026-11-23T00:00:00.000Z",
