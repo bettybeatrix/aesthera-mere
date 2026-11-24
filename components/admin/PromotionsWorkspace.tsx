@@ -140,6 +140,38 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
     setNotice(`${promo.title} marked ${promo.isActive === false ? "active" : "inactive"} in this preview session only.`);
   }
 
+  function addPricingTable() {
+    const id = `${activeTableTab === "facials" ? "custom-facial" : "custom-drip"}-${Date.now()}`;
+    const next: PricingTable = {
+      id,
+      title: activeTableTab === "facials" ? "New Facial Package" : "New Drip Package",
+      subtitle: "Add a short package description",
+      packageType: activeTableTab === "facials" ? "5+1" : "10+2",
+      rows: [],
+    };
+    setPricingTables((current) => [...current, next]);
+    setNotice("New package added. Add its treatment rows and prices below.");
+  }
+
+  function removePricingTable(id: string) {
+    setPricingTables((current) => current.filter((table) => table.id !== id));
+    setNotice("Package removed from this editing session.");
+  }
+
+  function addPricingRow(id: string) {
+    setPricingTables((current) => current.map((table) => table.id === id ? {
+      ...table,
+      rows: [...table.rows, { name: "New treatment", regular: 0, promo: 0, package: 0, effective: 0 }],
+    } : table));
+  }
+
+  function removePricingRow(id: string, index: number) {
+    setPricingTables((current) => current.map((table) => table.id === id ? {
+      ...table,
+      rows: table.rows.filter((_, rowIndex) => rowIndex !== index),
+    } : table));
+  }
+
   function confirmDelete() {
     if (!pendingDelete) return;
     setPromos((current) => current.filter((item) => item.id !== pendingDelete.id));
@@ -349,9 +381,20 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
             </div>
           </div>
           <div className="mt-5 space-y-5">
-            {(activeTableTab === "facials" ? pricingTables.filter((table) => ["premium-facials", "elite-facials"].includes(table.id)) : pricingTables.filter((table) => ["hero-drips", "divine-drips"].includes(table.id))).map((table) => (
-              <PricingTableBlock key={table.id} table={table} adminMode onChange={(next) => setPricingTables((current) => current.map((item) => item.id === next.id ? next : item))} />
+            {(activeTableTab === "facials" ? pricingTables.filter((table) => table.packageType === "5+1") : pricingTables.filter((table) => table.packageType === "10+2")).map((table) => (
+              <PricingTableBlock
+                key={table.id}
+                table={table}
+                adminMode
+                onChange={(next) => setPricingTables((current) => current.map((item) => item.id === next.id ? next : item))}
+                onRemove={() => removePricingTable(table.id)}
+                onAddRow={() => addPricingRow(table.id)}
+                onRemoveRow={(index) => removePricingRow(table.id, index)}
+              />
             ))}
+            <div className="flex justify-end">
+              <button type="button" onClick={addPricingTable} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#4C5534]/25 px-5 font-montserrat text-[9px] font-semibold uppercase text-[#4C5534] hover:bg-[#F5F1E7]">+ Add package</button>
+            </div>
           </div>
         </section>
       </section>
