@@ -342,17 +342,18 @@ export function PromoCardItem({
 // ---------------------------------------------------------------------------
 // Pricing Table
 // ---------------------------------------------------------------------------
-export function PricingTableBlock({ table, adminMode = false, onChange }: { table: PricingTable; adminMode?: boolean; onChange?: (table: PricingTable) => void }) {
+export function PricingTableBlock({ table, adminMode = false, onChange, onRemove }: { table: PricingTable; adminMode?: boolean; onChange?: (table: PricingTable) => void; onRemove?: () => void }) {
   function updateRow(index: number, key: keyof PricingTable["rows"][number], value: string) {
     if (!onChange) return;
     const numeric = key !== "name";
     onChange({ ...table, rows: table.rows.map((row, rowIndex) => rowIndex === index ? { ...row, [key]: numeric ? (value === "" ? 0 : Number(value)) : value } : row) });
   }
   return (
-    <div className="overflow-hidden rounded-[20px] border border-[#80755F]/20 bg-white shadow-sm">
+    <div className={`overflow-hidden rounded-[20px] border border-[#80755F]/20 ${adminMode ? "bg-[#F8F4EB]" : "bg-white"} shadow-sm`}>
       <div className="border-b border-[#80755F]/15 bg-[#4C5534] px-6 py-4 text-white">
         {adminMode ? <input aria-label="Package table title" value={table.title} onChange={(event) => onChange?.({ ...table, title: event.target.value })} className="w-full bg-transparent font-seasons text-xl text-white outline-none" /> : <h3 className="font-seasons text-xl">{table.title}</h3>}
         {adminMode ? <input aria-label="Package table subtitle" value={table.subtitle} onChange={(event) => onChange?.({ ...table, subtitle: event.target.value })} className="mt-1 w-full bg-transparent font-montserrat text-xs text-white/80 outline-none" /> : <p className="font-montserrat text-xs text-white/80">{table.subtitle}</p>}
+        {adminMode && onRemove && <div className="mt-3 flex justify-end"><button type="button" onClick={onRemove} className="rounded-full border border-white/35 px-3 py-1.5 font-montserrat text-[8px] font-bold uppercase text-white/90 hover:bg-white/10">Delete package</button></div>}
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-left font-montserrat text-xs">
