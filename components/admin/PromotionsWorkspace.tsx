@@ -18,6 +18,8 @@ const blank: PromoForm = {
 const categories: { value: Exclude<PromoCategory, "all">; label: string }[] = [
   { value: "launch", label: "Launch Offers" },
   { value: "facials", label: "Facials & Skin" },
+  { value: "laser", label: "Laser Treatments" },
+  { value: "wellness", label: "Wellness" },
   { value: "injectables", label: "Injectables" },
   { value: "contour", label: "Lifting & Contouring" },
 ];
@@ -42,6 +44,7 @@ export default function PromotionsWorkspace({ initialPromos }: Props) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<PromoForm>(blank);
   const [imagePreview, setImagePreview] = useState("");
+  const [previewDetailsOpen, setPreviewDetailsOpen] = useState(false);
   const [notice, setNotice] = useState("");
   const [pendingDelete, setPendingDelete] = useState<PromoCard | null>(null);
 
@@ -142,7 +145,19 @@ export default function PromotionsWorkspace({ initialPromos }: Props) {
   const inactiveCount = promos.filter((promo) => promo.isActive === false && !isExpired(promo, todayDate)).length;
   const expiredCount = promos.filter((promo) => isExpired(promo, todayDate)).length;
 
-    const promotionForm = formOpen ? (
+    const previewPromo: PromoCard = {
+    ...form,
+    id: editingId ?? "promotion-preview",
+    title: form.title || "Your promotion title",
+    categoryLabel: form.categoryLabel || categories.find((item) => item.value === form.category)?.label || "Category",
+    badge: form.badge || "BEReady Holiday Deal",
+    subtitle: form.subtitle || "Your promotion subtitle",
+    description: form.description || "Your offer description will appear here.",
+    inclusions: form.inclusions?.length ? form.inclusions : ["Your offer inclusions will appear here."],
+    image: imagePreview || form.image || "/images/promotions/beready-holiday-deals.jpg",
+  };
+
+  const promotionForm = formOpen ? (
           <section className="promo-form-reveal rounded-[22px] border border-[#4C5534]/10 bg-[#fffefa] p-5 shadow-[0_10px_32px_rgba(51,75,57,0.055)] sm:p-7">
             <div className="flex items-start justify-between gap-3"><div><p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">{editingId ? "Edit promotion" : "New promotion"}</p><h2 className="font-seasons mt-2 text-2xl">{editingId ? "Update promotion details" : "Add a promotion"}</h2></div><button type="button" onClick={closeForm} className="font-montserrat text-[9px] font-bold uppercase text-[#4F6442]">Close</button></div>
             <form onSubmit={save} className="mt-6 space-y-6">
@@ -209,6 +224,18 @@ export default function PromotionsWorkspace({ initialPromos }: Props) {
             </form>
           </section>
   ) : null;
+
+  const livePreview = (
+    <aside className="min-w-0">
+      <div className="mb-3 flex items-center justify-between"><p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">Public page preview</p><span className="rounded-full bg-[#E8EEE3] px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase text-[#4F6442]">Live</span></div>
+      <article className="mx-auto flex w-full max-w-[390px] flex-col overflow-hidden rounded-[20px] border border-[#80755F]/20 bg-white text-left shadow-[0_8px_24px_-20px_rgba(30,58,42,0.28)]">
+        <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#E7E1D7]">{(imagePreview || form.image) && <Image src={imagePreview || form.image} alt={previewPromo.title} fill unoptimized sizes="390px" className="object-cover object-center" />}<div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" /><span className="absolute left-4 top-4 rounded-full bg-[#4C5534] px-3 py-1.5 font-montserrat text-[10px] text-white">{previewPromo.badge}</span>{previewPromo.discountLabel && <span className="absolute right-4 top-4 rounded-full bg-[#F4E9D7] px-3 py-1.5 font-montserrat text-[10px] font-bold text-[#4C5534]">{previewPromo.discountLabel}</span>}</div>
+        <div className="flex flex-1 flex-col p-5"><p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.14em] text-[#80755F]">{previewPromo.categoryLabel}</p><h3 className="mt-1.5 font-seasons text-xl leading-snug text-[#4C5534]">{previewPromo.title}</h3><p className="mt-2 font-montserrat text-xs leading-6 text-[#80755F]">{previewPromo.subtitle}</p><div className="mt-auto pt-5"><p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">Promo price</p><div className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1"><span className="font-seasons text-3xl leading-none text-[#4C5534]">{previewPromo.promoPriceLabel || (typeof previewPromo.promoPrice === "number" ? new Intl.NumberFormat("en-PH",{style:"currency",currency:"PHP",maximumFractionDigits:0}).format(previewPromo.promoPrice) : "Price upon inquiry")}</span>{(previewPromo.regularPriceLabel || previewPromo.regularPrice) && <span className="font-montserrat text-xs text-[#80755F] line-through">{previewPromo.regularPriceLabel || new Intl.NumberFormat("en-PH",{style:"currency",currency:"PHP",maximumFractionDigits:0}).format(previewPromo.regularPrice!)}</span>}</div>{previewPromo.savings && <p className="mt-2 font-montserrat text-[11px] font-semibold text-[#4F6442]">{previewPromo.savings}</p>}</div><div className="mt-4 flex items-center justify-between border-t border-[#80755F]/15 pt-3"><span className="font-montserrat text-[11px] font-semibold text-[#4F6442]">View full details</span><span aria-hidden="true">↗</span></div></div>
+      </article>
+      <button type="button" onClick={() => setPreviewDetailsOpen(true)} className="mx-auto mt-3 block min-h-10 rounded-full border border-[#4C5534]/25 px-5 font-montserrat text-[9px] font-semibold uppercase text-[#4C5534]">Preview details</button>
+      {previewDetailsOpen && <div className="fixed inset-0 z-[80] flex items-end justify-center bg-[#25291f]/45 p-0 backdrop-blur-sm sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-label="Promotion detail preview" onMouseDown={(event) => { if (event.target === event.currentTarget) setPreviewDetailsOpen(false); }}><div className="max-h-[90vh] w-full max-w-[700px] overflow-y-auto rounded-t-[24px] bg-[#FFFCF3] p-6 shadow-2xl sm:rounded-[24px]"><div className="flex items-start justify-between gap-4"><div><p className="font-montserrat text-[9px] uppercase tracking-[0.16em] text-[#80755F]">{previewPromo.categoryLabel}</p><h2 className="mt-2 font-seasons text-2xl text-[#4C5534]">{previewPromo.title}</h2><p className="mt-2 font-montserrat text-xs text-[#4F6442]">{previewPromo.subtitle}</p></div><button type="button" onClick={() => setPreviewDetailsOpen(false)} className="rounded-full border px-3 py-2 font-montserrat text-xs">Close</button></div><div className="mt-5 rounded-2xl border border-[#4F6442]/20 bg-white p-5"><p className="font-montserrat text-[9px] uppercase text-[#80755F]">Special promotional price</p><p className="mt-2 font-seasons text-4xl text-[#4C5534]">{previewPromo.promoPriceLabel || (previewPromo.promoPrice ? new Intl.NumberFormat("en-PH",{style:"currency",currency:"PHP",maximumFractionDigits:0}).format(previewPromo.promoPrice) : "Price upon inquiry")}</p>{previewPromo.discountLabel && <p className="mt-2 font-montserrat text-xs font-bold text-[#4F6442]">{previewPromo.discountLabel}</p>}</div><section className="mt-5"><h3 className="font-montserrat text-[10px] font-semibold uppercase text-[#80755F]">About this offer</h3><p className="mt-2 font-montserrat text-xs leading-6 text-[#4C5534]">{previewPromo.description}</p></section><section className="mt-5"><h3 className="font-montserrat text-[10px] font-semibold uppercase text-[#80755F]">Inclusions</h3><ul className="mt-2 space-y-2">{previewPromo.inclusions.map((item,index)=><li key={index} className="font-montserrat text-xs text-[#4C5534]">• {item}</li>)}</ul></section><section className="mt-5"><h3 className="font-montserrat text-[10px] font-semibold uppercase text-[#80755F]">Validity</h3><p className="mt-2 font-montserrat text-xs text-[#4C5534]">{previewPromo.validity || "Confirm current validity when booking."}</p></section>{previewPromo.terms?.length ? <section className="mt-5"><h3 className="font-montserrat text-[10px] font-semibold uppercase text-[#80755F]">Terms and conditions</h3><ul className="mt-2 space-y-2">{previewPromo.terms.map((item,index)=><li key={index} className="font-montserrat text-xs text-[#4C5534]">• {item}</li>)}</ul></section> : null}</div></div>}
+    </aside>
+  );
 
   return (
     <>
