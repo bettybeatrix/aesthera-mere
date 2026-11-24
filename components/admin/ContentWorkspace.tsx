@@ -169,87 +169,115 @@ export default function ContentWorkspace({ initialEntries }: Props) {
     </section>
   ) : null;
 
-  return (
-    <main className="min-h-screen bg-[#FFFCF3] pb-16 text-[#4C5534]">
-      <header className="border-b border-[#80755F]/15 bg-[#F1EBDD] px-6 py-7 md:px-10">
-        <div className="mx-auto flex max-w-[1280px] flex-col justify-between gap-5 sm:flex-row sm:items-end">
-          <div>
-            <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#80755F]">Website management</p>
-            <h1 className="mt-2 font-seasons text-[clamp(2.2rem,4vw,3.2rem)] leading-none text-[#4C5534]">Content</h1>
-          </div>
-        </div>
-      </header>
 
-      <div className="mx-auto max-w-[1280px] px-6 pt-7 md:px-10">
-        <section className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4" aria-label="Content summary">
+  return (
+    <main className="min-h-screen bg-[#FFFCF3] px-5 pb-16 pt-7 text-[#4C5534] sm:px-8 lg:px-10 lg:pt-8">
+      <div className="mx-auto max-w-[1460px]">
+        <header className="rounded-[22px] border border-[#80755F]/15 bg-[#F1EBDD] px-6 py-6 sm:px-8">
+          <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#80755F]">Website management</p>
+          <h1 className="mt-2 font-seasons text-[clamp(2.2rem,4vw,3.2rem)] leading-none text-[#4C5534]">Content</h1>
+        </header>
+
+        <section className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4" aria-label="Content summary">
           {[
             { label: "Total entries", value: counts.total },
             { label: "Published", value: counts.published },
             { label: "Drafts", value: counts.drafts },
             { label: "Content sections", value: counts.categories },
           ].map((stat) => (
-            <article key={stat.label} className="rounded-[20px] border border-[#334b39]/10 bg-white/75 p-5">
-              <p className="font-seasons text-3xl text-[#4c5534]">{stat.value.toString().padStart(2, "0")}</p>
-              <p className="mt-2 font-montserrat text-[10px] font-semibold text-[#80755f]">{stat.label}</p>
+            <article key={stat.label} className="rounded-[18px] border border-[#80755F]/15 bg-[#F7F2E8] px-5 py-4">
+              <p className="font-seasons text-3xl text-[#4C5534]">{stat.value.toString().padStart(2, "0")}</p>
+              <p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#80755F]">{stat.label}</p>
             </article>
           ))}
         </section>
 
-        <section>
-          <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-wrap gap-2">
-              <button type="button" onClick={() => setActiveCategory("All")} aria-pressed={activeCategory === "All"} className={`min-h-9 rounded-full border px-4 font-montserrat text-[9px] font-semibold uppercase tracking-[0.08em] transition-colors ${activeCategory === "All" ? "border-[#4C5534] bg-[#4C5534] text-white" : "border-[#80755F]/20 bg-white text-[#80755F] hover:bg-[#F1EBDD]"}`}>All</button>
-              {categories.map((category) => (
-                <button key={category} type="button" onClick={() => setActiveCategory(category)} aria-pressed={activeCategory === category} className={`min-h-9 rounded-full border px-4 font-montserrat text-[9px] font-semibold uppercase tracking-[0.08em] transition-colors ${activeCategory === category ? "border-[#4C5534] bg-[#4C5534] text-white" : "border-[#80755F]/20 bg-white text-[#80755F] hover:bg-[#F1EBDD]"}`}>{category}</button>
-              ))}
+        <section className="mt-5 overflow-hidden rounded-[24px] border border-[#80755F]/15 bg-[#F3F0E6]">
+          <div className="grid gap-3 border-b border-[#334b39]/10 p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
+            <div>
+              <h2 className="font-seasons text-2xl text-[#4C5534]">Website content</h2>
+              <p className="mt-1 font-montserrat text-[9px] text-[#80755F]">Choose a section, then edit the content shown on the website.</p>
             </div>
-            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
-              <label className="flex min-h-10 w-full items-center gap-2 rounded-full border border-[#80755F]/20 bg-[#F7F2E8] px-4 sm:w-[280px]">
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <label className="flex min-h-11 items-center gap-2 rounded-xl border border-[#80755F]/20 bg-[#F8F4EB] px-3 sm:w-[280px]">
                 <Icon><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></Icon>
                 <span className="sr-only">Search content</span>
                 <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search content..." className="min-w-0 flex-1 bg-transparent font-montserrat text-[10px] outline-none" />
               </label>
-              <button type="button" onClick={openAdd} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#4C5534] px-5 font-montserrat text-[9px] font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#35452F]">
+              <button type="button" onClick={openAdd} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#4C5534] px-5 font-montserrat text-[9px] font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#35452F]">
                 <Icon><path d="M12 5v14M5 12h14" /></Icon> Add content
               </button>
             </div>
           </div>
 
-          {visible.length ? (
-            <div className="grid items-start gap-4 xl:grid-cols-2">
-              {visible.map((item) => (
-                <article key={item.id} className="rounded-[20px] border border-[#80755F]/15 bg-white p-5 shadow-[0_12px_32px_-28px_rgba(35,54,40,0.55)] sm:p-6">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="font-montserrat text-[8px] font-bold uppercase tracking-[0.13em] text-[#80755F]">{item.category}</p>
-                      <h2 className="mt-1 font-seasons text-xl text-[#4C5534]">{item.title}</h2>
-                    </div>
-                    <span className={`rounded-full border px-3 py-1.5 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] ${statusClass(item.status)}`}>{item.status}</span>
-                  </div>
-                  <p className="mt-4 line-clamp-4 whitespace-pre-line font-montserrat text-[10px] leading-6 text-[#5F695A]">{item.body}</p>
-                  <div className="mt-4 flex items-center justify-between gap-3 border-t border-[#80755F]/12 pt-3">
-                    <p className="font-montserrat text-[8px] text-[#80755F]">Updated: {item.updatedAt}</p>
-                    <div className="flex flex-wrap justify-end gap-2">
-                      <button type="button" onClick={() => openEdit(item)} className="min-h-9 rounded-full border border-[#4C5534]/20 px-4 font-montserrat text-[8px] font-bold uppercase text-[#4C5534] transition-colors hover:bg-[#E8EEE3]">Edit</button>
-                      {item.status === "published" ? (
-                        <button type="button" onClick={() => setStatus(item, "draft")} className="min-h-9 rounded-full border border-[#80755F]/20 px-4 font-montserrat text-[8px] font-bold uppercase text-[#80755F] transition-colors hover:bg-[#F1EBDD]">Move to draft</button>
-                      ) : (
-                        <button type="button" onClick={() => setStatus(item, "published")} className="min-h-9 rounded-full bg-[#4C5534] px-4 font-montserrat text-[8px] font-bold uppercase text-white transition-colors hover:bg-[#35452F]">Publish</button>
-                      )}
-                      <button type="button" onClick={() => setPendingDelete(item)} aria-label={`Delete content: ${item.title}`} className="grid h-9 w-9 place-items-center rounded-full border border-[#8A5148]/20 text-[#8A5148] transition-colors hover:bg-[#F5E9E4]">
-                        <Icon><path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3" /></Icon>
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              ))}
+          <div className="grid lg:grid-cols-[260px_minmax(0,1fr)]">
+            <aside className="border-b border-[#334b39]/10 bg-[#F8F4EB] p-3 lg:border-b-0 lg:border-r">
+              <div className="px-3 pb-2 pt-1">
+                <p className="font-montserrat text-[8px] font-bold uppercase tracking-[0.16em] text-[#80755F]">Content sections</p>
+              </div>
+              <nav aria-label="Filter content by section" className="flex gap-1.5 overflow-x-auto lg:flex-col lg:overflow-visible">
+                <button type="button" onClick={() => setActiveCategory("All")} aria-pressed={activeCategory === "All"} className={`flex min-h-10 shrink-0 items-center justify-between gap-3 rounded-xl px-3 text-left font-montserrat text-[9px] font-semibold transition-colors lg:w-full ${activeCategory === "All" ? "bg-[#E8EEE3] text-[#40543A]" : "text-[#687260] hover:bg-[#F1EBDD]"}`}>
+                  <span>All content</span>
+                  <span className="rounded-full bg-white/80 px-2 py-1 text-[8px]">{items.length}</span>
+                </button>
+                {categories.map((category) => {
+                  const count = items.filter((item) => item.category === category).length;
+                  return (
+                    <button key={category} type="button" onClick={() => setActiveCategory(category)} aria-pressed={activeCategory === category} className={`flex min-h-10 shrink-0 items-center justify-between gap-3 rounded-xl px-3 text-left font-montserrat text-[9px] font-semibold transition-colors lg:w-full ${activeCategory === category ? "bg-[#E8EEE3] text-[#40543A]" : "text-[#687260] hover:bg-[#F1EBDD]"}`}>
+                      <span>{category}</span>
+                      <span className="rounded-full bg-white/80 px-2 py-1 text-[8px]">{count}</span>
+                    </button>
+                  );
+                })}
+              </nav>
+            </aside>
+
+            <div className="min-w-0 p-4 sm:p-5">
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <p className="font-montserrat text-[8px] font-bold uppercase tracking-[0.15em] text-[#80755F]">Showing section</p>
+                  <h3 className="mt-1 font-seasons text-xl text-[#4C5534]">{activeCategory === "All" ? "All content" : activeCategory}</h3>
+                </div>
+                <p className="font-montserrat text-[9px] text-[#80755F]">{visible.length} {visible.length === 1 ? "entry" : "entries"}</p>
+              </div>
+
+              {visible.length ? (
+                <div className="overflow-hidden rounded-[18px] border border-[#80755F]/15 bg-[#FFFCF3]">
+                  {visible.map((item, index) => (
+                    <article key={item.id} className={`p-4 sm:p-5 ${index > 0 ? "border-t border-[#80755F]/12" : ""}`}>
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-montserrat text-[8px] font-bold uppercase tracking-[0.13em] text-[#80755F]">{item.category}</span>
+                            <span className={`rounded-full border px-2.5 py-1 font-montserrat text-[7px] font-bold uppercase tracking-[0.08em] ${statusClass(item.status)}`}>{item.status}</span>
+                          </div>
+                          <h4 className="mt-2 font-seasons text-xl leading-tight text-[#4C5534]">{item.title}</h4>
+                          <p className="mt-2 line-clamp-3 whitespace-pre-line font-montserrat text-[10px] leading-6 text-[#687260]">{item.body}</p>
+                          <p className="mt-3 font-montserrat text-[8px] text-[#80755F]">Updated: {item.updatedAt}</p>
+                        </div>
+                        <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
+                          <button type="button" onClick={() => openEdit(item)} className="min-h-9 rounded-full border border-[#4C5534]/20 px-4 font-montserrat text-[8px] font-bold uppercase text-[#4C5534] transition-colors hover:bg-[#E8EEE3]">Edit</button>
+                          {item.status === "published" ? (
+                            <button type="button" onClick={() => setStatus(item, "draft")} className="min-h-9 rounded-full border border-[#80755F]/20 px-4 font-montserrat text-[8px] font-bold uppercase text-[#80755F] transition-colors hover:bg-[#F1EBDD]">Move to draft</button>
+                          ) : (
+                            <button type="button" onClick={() => setStatus(item, "published")} className="min-h-9 rounded-full bg-[#4C5534] px-4 font-montserrat text-[8px] font-bold uppercase text-white transition-colors hover:bg-[#35452F]">Publish</button>
+                          )}
+                          <button type="button" onClick={() => setPendingDelete(item)} aria-label={`Delete content: ${item.title}`} className="grid h-9 w-9 place-items-center rounded-full border border-[#8A5148]/20 text-[#8A5148] transition-colors hover:bg-[#F5E9E4]">
+                            <Icon><path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3" /></Icon>
+                          </button>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-[18px] border border-dashed border-[#80755F]/25 bg-[#F8F4EB] px-6 py-16 text-center">
+                  <p className="font-seasons text-2xl text-[#4C5534]">No content found</p>
+                  <p className="mt-2 font-montserrat text-[10px] text-[#80755F]">Try another section or search term.</p>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="rounded-[22px] border border-dashed border-[#80755F]/25 bg-[#F8F4EB] px-6 py-16 text-center">
-              <p className="font-seasons text-2xl text-[#4C5534]">No content found</p>
-              <p className="mt-2 font-montserrat text-[10px] text-[#80755F]">Try another section or add a content entry.</p>
-            </div>
-          )}
+          </div>
         </section>
       </div>
 
