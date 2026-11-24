@@ -23,10 +23,10 @@ const categories = treatmentCategories.map((category) => ({
 }));
 
 function splitLines(value: string) {
-  return value.split("\\n").map((line) => line.trim()).filter(Boolean);
+  return value.split("\n").map((line) => line.trim()).filter(Boolean);
 }
 function joinLines(value: string[]) {
-  return value.join("\\n");
+  return value.join("\n");
 }
 function Icon({ children }: { children: React.ReactNode }) {
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden="true">{children}</svg>;
