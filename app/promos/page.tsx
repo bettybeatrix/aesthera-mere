@@ -35,34 +35,15 @@ async function PromosContent() {
   // build-time prerendering.
   await connection();
 
-  const [promos, pricingTables] = await Promise.all([
+  const [promos, pricingTables, campaign] = await Promise.all([
     getPromos(),
     getPricingTables(),
+    getPromoCampaign(),
   ]);
 
   return (
     <>
-      <section className="border-b border-[#80755F]/15 px-6 py-16 md:px-10 md:py-24">
-        <div className="mx-auto max-w-[1180px]">
-          <div className="max-w-[820px]">
-            <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.24em] text-[#80755F]">
-              Aesthera Mère · Promos & Packages
-            </p>
-
-            <h1 className="font-seasons mt-4 text-[clamp(3rem,7vw,5.8rem)] leading-[0.94] text-[#4C5534]">
-              Offers worth
-              <br />
-              coming back for.
-            </h1>
-
-            <p className="mt-6 max-w-[700px] font-montserrat text-sm leading-7 text-[#80755F] md:text-base">
-              Explore our current treatment specials, seasonal offers, and
-              signature treatment passes designed around accessible,
-              medical-grade aesthetic care.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PromoCampaignHero campaign={campaign} />
 
       <PromosList promos={promos} pricingTables={pricingTables} />
 
