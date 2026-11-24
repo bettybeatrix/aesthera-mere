@@ -629,7 +629,7 @@ export default function PromosList({ promos, pricingTables, adminMode = false, o
           <div className="mt-10 space-y-8">
             {(activeTableTab === "facials" ? facialTables : dripTables).map(
               (table) => (
-                <PricingTableBlock key={table.id} table={table} adminMode={adminMode} onChange={onPricingTablesChange ? (nextTable) => onPricingTablesChange(pricingTables.map((item) => item.id === nextTable.id ? nextTable : item)) : undefined} />
+                <PricingTableBlock key={table.id} table={table} adminMode={adminMode} onSave={onPricingTablesChange ? (nextTable: PricingTable) => onPricingTablesChange(pricingTables.map((item) => item.id === nextTable.id ? nextTable : item)) : undefined} />
               )
             )}
           </div>
