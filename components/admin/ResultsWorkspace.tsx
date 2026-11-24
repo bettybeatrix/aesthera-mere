@@ -120,38 +120,56 @@ export default function ResultsWorkspace() {
   return (
     <main className="min-h-screen px-5 pb-16 pt-7 sm:px-8 lg:px-10 lg:pt-10">
       <div className="mx-auto max-w-[1460px]">
-        <header className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
-          <div><h1 className="font-seasons text-[clamp(2.4rem,4vw,3.7rem)] leading-none text-[#4c5534]">Results</h1><p className="mt-3 font-montserrat text-[11px] text-[#80755f]">Before-and-after gallery</p></div>
-          <button type="button" onClick={openAdd} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#4c5534] px-5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#3d472a]"><Icon><path d="M12 5v14M5 12h14" /></Icon> Add result</button>
-        </header>
-
-        <section className="mt-7 grid gap-3 sm:grid-cols-2">
-          <article className="rounded-[20px] border border-[#334b39]/10 bg-white/75 p-5"><p className="font-seasons text-3xl text-[#4c5534]">{items.length}</p><p className="mt-2 font-montserrat text-[10px] font-semibold text-[#80755f]">Comparisons</p></article>
-          <article className="rounded-[20px] border border-[#334b39]/10 bg-white/75 p-5"><p className="font-seasons text-3xl text-[#4c5534]">{new Set(items.map((item) => item.title)).size}</p><p className="mt-2 font-montserrat text-[10px] font-semibold text-[#80755f]">Treatments</p></article>
+        <section className="relative overflow-hidden rounded-[28px] bg-[#344b38] px-6 py-8 text-[#fffcf3] shadow-[0_18px_48px_-30px_rgba(30,55,35,0.75)] sm:px-9 sm:py-10">
+          <div className="pointer-events-none absolute -right-10 -top-16 h-64 w-64 rounded-full border border-white/10" />
+          <div className="pointer-events-none absolute -right-1 top-0 h-44 w-44 rounded-full border border-white/10" />
+          <div className="relative flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+            <div className="max-w-2xl">
+              <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.22em] text-white/55">Website management</p>
+              <h1 className="mt-3 font-seasons text-[clamp(2.5rem,5vw,4.2rem)] leading-[0.98]">Results gallery</h1>
+              <p className="mt-4 max-w-xl font-montserrat text-xs leading-6 text-white/65">Manage treatment comparisons shown in the public before-and-after gallery.</p>
+            </div>
+            <div className="flex flex-wrap items-end gap-6">
+              <div><p className="font-seasons text-4xl leading-none">{items.length.toString().padStart(2, "0")}</p><p className="mt-2 font-montserrat text-[8px] font-semibold uppercase tracking-[0.15em] text-white/55">Comparisons</p></div>
+              <div className="h-10 w-px bg-white/20" />
+              <div><p className="font-seasons text-4xl leading-none">{new Set(items.map((item) => item.title)).size.toString().padStart(2, "0")}</p><p className="mt-2 font-montserrat text-[8px] font-semibold uppercase tracking-[0.15em] text-white/55">Treatments</p></div>
+              <button type="button" onClick={openAdd} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#fffcf3] px-5 font-montserrat text-[9px] font-bold uppercase tracking-[0.1em] text-[#344b38] transition-colors hover:bg-white"><Icon><path d="M12 5v14M5 12h14" /></Icon> Add result</button>
+            </div>
+          </div>
         </section>
 
-        {!editingId && resultForm && <div className="mb-6 mt-6">{resultForm}</div>}
+        {!editingId && resultForm && <div className="mb-7 mt-7">{resultForm}</div>}
 
-        <section className="mt-6 overflow-hidden rounded-[24px] border border-[#334b39]/10 bg-white/80">
-          <div className="border-b border-[#334b39]/10 p-4 sm:p-5"><label className="flex min-h-11 max-w-xl items-center gap-2 rounded-xl border border-[#334b39]/10 bg-[#f5f1e7] px-3"><Icon><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></Icon><span className="sr-only">Search results</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search treatments..." className="min-w-0 flex-1 bg-transparent font-montserrat text-[10px] outline-none" /></label></div>
-          <div className="divide-y divide-[#334b39]/8">
-            {visible.map((item) => <article key={item.id} className="grid gap-4 p-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:p-5">
-              <div className="flex min-w-0 items-center gap-4">
-                <div className="grid w-28 shrink-0 grid-cols-2 gap-1">
-                  {[item.before, item.after].map((src, index) => <div key={index} className="relative aspect-[3/4] overflow-hidden rounded-lg bg-[#f5f1e7]"><Image src={src} alt={index ? "After" : "Before"} fill sizes="56px" className="object-cover" unoptimized /></div>)}
-                </div>
-                <div className="min-w-0"><h2 className="font-montserrat text-[11px] font-semibold text-[#39473d]">{item.title}</h2><p className="mt-1 font-montserrat text-[9px] text-[#80755f]">{item.view}</p><p className="mt-2 font-montserrat text-[9px] text-[#80755f]">Before & after comparison</p></div>
-              </div>
-              <div className="flex flex-wrap gap-2"><button type="button" onClick={() => openEdit(item)} className="min-h-9 rounded-full border border-[#334b39]/15 px-4 font-montserrat text-[9px] font-bold uppercase text-[#4c5534]">Edit</button><button type="button" onClick={() => setPendingDelete(item)} className="min-h-9 rounded-full border border-[#8a5148]/25 px-4 font-montserrat text-[9px] font-bold uppercase text-[#8a5148]">Remove</button></div>
-              {editingId === item.id && resultForm && <div className="sm:col-span-2 rounded-2xl bg-[#f8f7f1] p-4 sm:p-5">{resultForm}</div>}
-            </article>)}
-            {!visible.length && <p className="p-12 text-center font-montserrat text-xs text-[#80755f]">No results match your search.</p>}
+        <section className="mt-8">
+          <div className="mb-5 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+            <div><h2 className="font-seasons text-2xl text-[#4c5534]">Treatment comparisons</h2><p className="mt-1.5 font-montserrat text-[10px] text-[#80755f]">Before and after photographs, grouped by treatment.</p></div>
+            <label className="flex min-h-10 w-full items-center gap-2 rounded-full border border-[#334b39]/12 bg-white px-4 sm:max-w-[300px]"><Icon><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></Icon><span className="sr-only">Search results</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search treatment or view..." className="min-w-0 flex-1 bg-transparent font-montserrat text-[10px] outline-none" /></label>
           </div>
+
+          {visible.length > 0 ? (
+            <div className="grid items-start gap-5 md:grid-cols-2 xl:grid-cols-3">
+              {visible.map((item, index) => <article key={item.id} className="overflow-hidden rounded-[22px] border border-[#334b39]/10 bg-white shadow-[0_12px_32px_-28px_rgba(35,54,40,0.55)] transition-shadow hover:shadow-[0_18px_38px_-26px_rgba(35,54,40,0.45)]">
+                <div className="relative bg-[#f4f1e8] p-3">
+                  <div className="mb-3 flex items-center justify-between px-1"><span className="font-montserrat text-[8px] font-semibold uppercase tracking-[0.16em] text-[#8a8d7e]">Comparison {(index + 1).toString().padStart(2, "0")}</span><span className="rounded-full bg-white/80 px-2.5 py-1 font-montserrat text-[8px] font-semibold uppercase text-[#66745c]">{item.view}</span></div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[{src:item.before,label:"Before"},{src:item.after,label:"After"}].map((photo) => <figure key={photo.label} className="min-w-0">
+                      <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-[#e8e4dc]"><Image src={photo.src} alt={photo.label + " " + item.title} fill sizes="(max-width: 768px) 45vw, 25vw" className="object-cover" unoptimized /></div>
+                      <figcaption className="mt-2 text-center font-montserrat text-[8px] font-bold uppercase tracking-[0.15em] text-[#69745f]">{photo.label}</figcaption>
+                    </figure>)}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between gap-3 px-4 py-4">
+                  <div className="min-w-0"><h3 className="truncate font-seasons text-xl text-[#4c5534]">{item.title}</h3><p className="mt-1 font-montserrat text-[9px] text-[#80755f]">{item.view}</p></div>
+                  <div className="flex shrink-0 gap-2"><button type="button" onClick={() => openEdit(item)} className="min-h-9 rounded-full border border-[#334b39]/15 px-3.5 font-montserrat text-[8px] font-bold uppercase text-[#4c5534] transition-colors hover:bg-[#f5f1e7]">Edit</button><button type="button" onClick={() => setPendingDelete(item)} aria-label={"Remove " + item.title + " " + item.view} className="grid h-9 w-9 place-items-center rounded-full border border-[#8a5148]/20 text-[#8a5148] transition-colors hover:bg-[#fbefec]"><Icon><path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3" /></Icon></button></div>
+                </div>
+                {editingId === item.id && resultForm && <div className="border-t border-[#334b39]/10 bg-[#f8f7f1] p-4 sm:p-5">{resultForm}</div>}
+              </article>)}
+            </div>
+          ) : <div className="rounded-[22px] border border-dashed border-[#334b39]/20 bg-white/70 px-6 py-16 text-center"><p className="font-seasons text-2xl text-[#4c5534]">No matching results</p><p className="mt-2 font-montserrat text-[10px] text-[#80755f]">Try another treatment name or view.</p></div>}
         </section>
       </div>
 
       {pendingDelete && <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[#172119]/55 px-5 py-8 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setPendingDelete(null); }}><section role="alertdialog" aria-modal="true" aria-labelledby="delete-result-title" className="w-full max-w-[420px] rounded-[24px] bg-[#fffcf3] p-6 shadow-2xl"><h2 id="delete-result-title" className="font-seasons text-2xl text-[#4c5534]">Remove this result?</h2><p className="mt-3 font-montserrat text-xs leading-6 text-[#80755f]">{pendingDelete.title} · {pendingDelete.view}</p><div className="mt-6 flex justify-end gap-2"><button type="button" onClick={() => setPendingDelete(null)} className="min-h-10 rounded-full border border-[#334b39]/20 px-5 font-montserrat text-[9px] font-semibold uppercase">Cancel</button><button type="button" onClick={removeResult} className="min-h-10 rounded-full bg-[#8a5148] px-5 font-montserrat text-[9px] font-semibold uppercase text-white">Remove</button></div></section></div>}
       {notice && <div role="status" className="fixed bottom-5 right-5 z-[60] max-w-sm rounded-2xl bg-white px-5 py-4 font-montserrat text-[10px] leading-5 text-[#4f6442] shadow-xl">{notice}</div>}
     </main>
-  );
-}
+  );}
