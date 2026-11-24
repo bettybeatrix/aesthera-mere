@@ -147,10 +147,6 @@ export default function Testimonials() {
           >
             The Aesthera Experience
           </h2>
-
-          <p className="mx-auto mt-3 max-w-[480px] font-montserrat text-[13px] leading-relaxed text-[#80755F]">
-            Thoughtful care, shared through real experiences.
-          </p>
         </div>
 
         {/* FEATURED TESTIMONIAL */}
