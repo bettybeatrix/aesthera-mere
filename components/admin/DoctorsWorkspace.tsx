@@ -206,8 +206,7 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
       <div className="mx-auto max-w-[1460px]">
         <header className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
           <div>
-            <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.2em] text-[#80755f]">Website management / Doctors</p>
-            <h1 className="font-seasons mt-3 text-[clamp(2.4rem,4vw,3.7rem)] leading-none text-[#4c5534]">Doctor profiles</h1>
+            <h1 className="font-seasons text-[clamp(2.4rem,4vw,3.7rem)] leading-none text-[#4c5534]">Doctors</h1>
           </div>
           <button type="button" onClick={startNew} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#4c5534] px-5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white hover:bg-[#3d472a]">
             <Icon><path d="M12 5v14M5 12h14" /></Icon> Add doctor
@@ -288,7 +287,7 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
                   <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.1em] text-[#80755f]">Doctor portrait</p>
                   {imagePreview && <div className="relative mt-3 h-40 w-32 overflow-hidden rounded-xl bg-[#e9e4d8]"><Image src={imagePreview} alt="Doctor portrait preview" fill sizes="128px" className="object-cover" unoptimized={imagePreview.startsWith("data:")} /></div>}
                   <input type="file" accept="image/*" onChange={handleImage} className="mt-3 block w-full font-montserrat text-[10px] text-[#80755f] file:mr-3 file:rounded-full file:border-0 file:bg-[#4c5534] file:px-4 file:py-2 file:font-montserrat file:text-[9px] file:font-semibold file:text-white" />
-                  <p className="mt-2 font-montserrat text-[9px] leading-5 text-[#80755f]">Preview only for now. Persistent image upload will be connected to storage later.</p>
+                  
                 </div>
   
                 <div className="flex flex-wrap items-center justify-end gap-3 border-t border-[#334b39]/10 pt-4">
