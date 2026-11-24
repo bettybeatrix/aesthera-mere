@@ -142,7 +142,7 @@ export default function TestimonialsWorkspace({ initialTestimonials }: Props) {
     } else {
       setItems((current) => [
         ...current,
-        { ...nextForm, id: \`testimonial-\${Date.now()}\` },
+        { ...nextForm, id: `testimonial-${Date.now()}` },
       ]);
     }
 
@@ -297,7 +297,7 @@ export default function TestimonialsWorkspace({ initialTestimonials }: Props) {
                 ["approved", "Approved"],
                 ["hidden", "Hidden"],
               ] as const).map(([value, label]) => (
-                <button key={value} type="button" onClick={() => setStatusFilter(value)} aria-pressed={statusFilter === value} className={\`min-h-9 rounded-full border px-4 font-montserrat text-[9px] font-semibold uppercase tracking-[0.08em] transition-colors \${statusFilter === value ? "border-[#4C5534] bg-[#4C5534] text-white" : "border-[#80755F]/20 bg-white text-[#80755F] hover:bg-[#F1EBDD]"}\`}>{label}</button>
+                <button key={value} type="button" onClick={() => setStatusFilter(value)} aria-pressed={statusFilter === value} className={`min-h-9 rounded-full border px-4 font-montserrat text-[9px] font-semibold uppercase tracking-[0.08em] transition-colors ${statusFilter === value ? "border-[#4C5534] bg-[#4C5534] text-white" : "border-[#80755F]/20 bg-white text-[#80755F] hover:bg-[#F1EBDD]"}`}>{label}</button>
               ))}
             </div>
             <label className="flex min-h-10 w-full items-center gap-2 rounded-full border border-[#80755F]/20 bg-[#F7F2E8] px-4 sm:max-w-[340px]">
@@ -316,13 +316,13 @@ export default function TestimonialsWorkspace({ initialTestimonials }: Props) {
                       <h2 className="font-seasons text-xl text-[#4C5534]">{item.name}</h2>
                       <p className="mt-1 font-montserrat text-[9px] text-[#80755F]">{item.treatment} · {item.source}</p>
                     </div>
-                    <span className={\`rounded-full border px-3 py-1.5 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] \${statusClass(item.status)}\`}>{statusLabel(item)}</span>
+                    <span className={`rounded-full border px-3 py-1.5 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] ${statusClass(item.status)}`}>{statusLabel(item)}</span>
                   </div>
                   <blockquote className="mt-4 border-l-2 border-[#B59A67]/60 pl-4 font-montserrat text-[11px] leading-6 text-[#5F695A]">“{item.quote}”</blockquote>
                   <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-[#80755F]/12 pt-3">
                     <div>
                       <p className="font-montserrat text-[9px] font-semibold text-[#4C5534]">{hasPermissionRecord(item) ? "Permission record entered" : "Permission not recorded"}</p>
-                      <p className="mt-1 font-montserrat text-[8px] text-[#80755F]">{item.permissionDate || "No date"}{item.permissionReference ? \` · Ref: \${item.permissionReference}\` : ""}</p>
+                      <p className="mt-1 font-montserrat text-[8px] text-[#80755F]">{item.permissionDate || "No date"}{item.permissionReference ? ` · Ref: ${item.permissionReference}` : ""}</p>
                     </div>
                     {item.isFeatured && <span className="rounded-full bg-[#F1EBDD] px-3 py-1.5 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] text-[#806D52]">Featured</span>}
                   </div>
@@ -335,7 +335,7 @@ export default function TestimonialsWorkspace({ initialTestimonials }: Props) {
                     ) : (
                       <button type="button" disabled={!hasPermissionRecord(item)} onClick={() => approve(item)} title={!hasPermissionRecord(item) ? "Add a permission date and secure consent record reference first" : "Mark approved"} className="min-h-9 rounded-full bg-[#4C5534] px-4 font-montserrat text-[8px] font-bold uppercase text-white transition-colors hover:bg-[#35452F] disabled:cursor-not-allowed disabled:bg-[#A9AD9E]">Approve</button>
                     )}
-                    <button type="button" onClick={() => setPendingDelete(item)} aria-label={\`Delete testimonial from \${item.name}\`} className="grid h-9 w-9 place-items-center rounded-full border border-[#8A5148]/20 text-[#8A5148] transition-colors hover:bg-[#F5E9E4]">
+                    <button type="button" onClick={() => setPendingDelete(item)} aria-label={`Delete testimonial from ${item.name}`} className="grid h-9 w-9 place-items-center rounded-full border border-[#8A5148]/20 text-[#8A5148] transition-colors hover:bg-[#F5E9E4]">
                       <Icon><path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3" /></Icon>
                     </button>
                   </div>
