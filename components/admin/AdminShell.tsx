@@ -46,7 +46,7 @@ const navigationSections = [
       { label: "Doctors", href: "/admin#module-map", icon: peopleIcon },
       { label: "Treatments", href: "/admin#catalog", icon: <Icon><circle cx="12" cy="12" r="9" /><path d="M12 7v10M7 12h10" /></Icon> },
       { label: "Promotions", href: "/admin#promotions", icon: <Icon><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7M2 7h20v5H2zM12 7v14" /></Icon> },
-      { label: "Results", href: "/admin#content", icon: <Icon><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="m21 15-5-5L5 21" /></Icon> },
+      { label: "Results", href: "/admin/results", icon: <Icon><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="m21 15-5-5L5 21" /></Icon> },
       { label: "Testimonials", href: "/admin#module-map", icon: <Icon><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z" /></Icon> },
       { label: "Content", href: "/admin#module-map", icon: contentIcon },
     ],
