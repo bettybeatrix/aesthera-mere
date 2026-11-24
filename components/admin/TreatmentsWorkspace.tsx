@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import type { ManagedTreatment, ManagedTreatmentInput } from "@/types/managed-treatment";
 import { treatmentCategories } from "@/data/treatments";
 
@@ -43,12 +43,6 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
   const [imagePreview, setImagePreview] = useState("");
   const [notice, setNotice] = useState("");
   const [pendingDelete, setPendingDelete] = useState<ManagedTreatment | null>(null);
-  const formRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    if (formOpen) formRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }, [formOpen, editingId]);
-
   const visible = useMemo(() => {
     const term = query.trim().toLowerCase();
     return items.filter((item) =>
@@ -135,7 +129,7 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
   }
 
   const treatmentForm = formOpen ? (
-          <section ref={formRef} className="scroll-mt-8 rounded-[24px] border border-[#334b39]/10 bg-white/80 p-5 sm:p-7">
+          <section className="treatment-form-reveal rounded-[22px] border border-[#334b39]/12 bg-[#fffefa] p-5 shadow-[0_8px_28px_rgba(51,75,57,0.06)] sm:p-7">
             <div className="flex items-start justify-between gap-3"><div><p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.16em] text-[#80755f]">{editingId ? "Edit treatment" : "New treatment"}</p><h2 className="font-seasons mt-2 text-2xl text-[#4c5534]">{editingId ? "Update treatment details" : "Add a treatment"}</h2></div><button type="button" onClick={closeForm} className="font-montserrat text-[9px] font-bold uppercase text-[#718071]">Close</button></div>
             <form onSubmit={save} className="mt-5 grid gap-4 md:grid-cols-2">
               <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755f]">Treatment name *</span><input required value={form.name} onChange={(event) => update("name", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-[#fffcf3] px-3 font-montserrat text-xs outline-none" /></label>
@@ -158,6 +152,17 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
   ) : null;
 
   return (
+    <>
+      <style jsx>{`
+        @keyframes treatmentFormReveal {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .treatment-form-reveal { animation: treatmentFormReveal 220ms ease-out both; }
+        @media (prefers-reduced-motion: reduce) {
+          .treatment-form-reveal { animation: none; }
+        }
+      `}</style>
     <main className="min-h-screen px-5 pb-16 pt-7 sm:px-8 lg:px-10 lg:pt-10">
       <div className="mx-auto max-w-[1460px]">
         <header className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
@@ -171,7 +176,7 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
           {[["Total treatments", items.length], ["Available", items.filter((item) => item.isAvailable).length], ["Unavailable", items.filter((item) => !item.isAvailable).length]].map(([label, value]) => <article key={String(label)} className="rounded-[20px] border border-[#334b39]/10 bg-white/75 p-5"><p className="font-seasons text-3xl text-[#4c5534]">{value}</p><p className="mt-2 font-montserrat text-[10px] font-semibold text-[#80755f]">{label}</p></article>)}
         </section>
 
-        {!editingId && treatmentForm && <div className="mb-5">{treatmentForm}</div>}
+        {!editingId && treatmentForm && <div className="mb-6 mt-6">{treatmentForm}</div>}
 
         <section className="mt-5 overflow-hidden rounded-[24px] border border-[#334b39]/10 bg-white/80">
           <div className="grid gap-3 border-b border-[#334b39]/10 p-4 lg:grid-cols-[1fr_220px_auto] lg:items-center sm:p-5">
@@ -186,7 +191,7 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
               <div className="min-w-0 flex-1"><h2 className="font-montserrat text-[11px] font-semibold text-[#39473d]">{item.name}</h2><p className="mt-1 font-montserrat text-[9px] text-[#80755f]">{item.categoryName} / {item.groupName}</p><p className="mt-1 font-montserrat text-[10px] font-semibold text-[#4f6442]">{item.price}</p><span className={`mt-2 inline-flex rounded-full px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase ${item.isAvailable ? "bg-[#e8eee3] text-[#4f6442]" : "bg-[#f1eee6] text-[#80755f]"}`}>{item.isAvailable ? "Available" : "Unavailable"}</span></div>
               <div className="flex shrink-0 flex-wrap gap-1.5"><button type="button" onClick={() => edit(item)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#4c5534]">Edit</button><button type="button" onClick={() => toggleAvailability(item)} className={`min-h-8 rounded-full border px-3 font-montserrat text-[8px] font-bold uppercase ${item.isAvailable ? "border-[#80755f]/25 text-[#80755f]" : "border-[#4f6442]/25 text-[#4f6442]"}`}>{item.isAvailable ? "Mark unavailable" : "Mark available"}</button><button type="button" onClick={() => setPendingDelete(item)} className="min-h-8 rounded-full border border-[#8a5148]/25 px-3 font-montserrat text-[8px] font-bold uppercase text-[#8a5148]">Remove</button></div>
               </article>
-              {editingId === item.id && treatmentForm && <div className="border-t border-[#334b39]/10 bg-[#fffcf3] p-4 sm:p-5">{treatmentForm}</div>}
+              {editingId === item.id && treatmentForm && <div className="border-t border-[#334b39]/10 bg-[#faf8f1] px-4 py-5 sm:px-6 sm:py-6"><div className="mx-auto max-w-[1120px]">{treatmentForm}</div></div>}
             </div>)}
             {!visible.length && <p className="p-12 text-center font-montserrat text-xs text-[#80755f]">No treatments match your filters.</p>}
           </div>
@@ -208,5 +213,6 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
       )}
       {notice && <div role="status" className="fixed bottom-5 right-5 z-[60] max-w-sm rounded-2xl border border-[#334b39]/10 bg-white px-5 py-4 font-montserrat text-[10px] leading-5 text-[#4f6442] shadow-xl">{notice}</div>}
     </main>
+    </>
   );
 }
