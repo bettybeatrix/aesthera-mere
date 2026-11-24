@@ -51,7 +51,7 @@ export default function PromoCampaignHero({ campaign, editable = false, onChange
           {editable && <label className="mt-5 inline-flex cursor-pointer items-center gap-2 rounded-full border border-[#4C5534]/25 px-4 py-2 font-montserrat text-[9px] font-semibold uppercase text-[#4C5534]">Change campaign poster<input type="file" accept="image/*" onChange={uploadPoster} className="sr-only" /></label>}
         </div>
         <div className="relative mx-auto aspect-[4/5] w-full max-w-[390px] overflow-hidden rounded-[20px] border border-[#80755F]/15 bg-[#F4E9D7] shadow-[0_18px_45px_-32px_rgba(30,58,42,0.45)] md:max-w-[435px] lg:mr-0">
-          {campaign.heroImage && <Image src={campaign.heroImage} alt={campaign.heroImageAlt} fill priority sizes="(max-width: 1023px) 90vw, 32vw" className="object-cover" unoptimized={campaign.heroImage.startsWith("data:")} />}
+          {campaign.heroImage && <Image src={campaign.heroImage} alt={campaign.heroImageAlt} fill priority sizes="(max-width: 1023px) 90vw, 32vw" className="object-cover" unoptimized={!campaign.heroImage.startsWith("/")} />}
         </div>
       </div>
     </section>
