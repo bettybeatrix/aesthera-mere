@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import type { PromoCard, PromoCategory, PromoCampaignSettings } from "@/types/promo";
-import PromosList from "@/app/promos/PromosList";
+import { PricingTableBlock } from "@/app/promos/PromosList";
 import PromoCampaignHero from "@/components/promos/PromoCampaignHero";
 import type { PricingTable } from "@/types/promo";
 
@@ -41,6 +41,7 @@ function Icon({ children }: { children: React.ReactNode }) {
 export default function PromotionsWorkspace({ initialPromos, initialPricingTables, initialCampaign }: Props) {
   const [promos, setPromos] = useState(initialPromos);
   const [pricingTables, setPricingTables] = useState(initialPricingTables);
+  const [activeTableTab, setActiveTableTab] = useState<"facials" | "drips">("facials");
   const [campaign, setCampaign] = useState(initialCampaign);
   const [todayDate, setTodayDate] = useState<string | null>(null);
   const [query, setQuery] = useState("");
@@ -272,31 +273,89 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
         </div>
       </header>
       <PromoCampaignHero campaign={campaign} editable onChange={setCampaign} onSave={() => setNotice("Hero changes saved in this editing session. Permanent saving will be enabled with the backend.")} />
-      <section className="mx-auto grid max-w-[1280px] gap-3 px-6 py-7 sm:grid-cols-[repeat(3,minmax(0,1fr))_auto] sm:items-stretch md:px-10">
-        <article className="rounded-[18px] border border-[#4C5534]/10 bg-white px-5 py-4">
-          <p className="font-seasons text-3xl text-[#4C5534]">{promos.length}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#80755F]">Total offers</p>
-        </article>
-        <article className="rounded-[18px] border border-[#4C5534]/10 bg-white px-5 py-4">
-          <p className="font-seasons text-3xl text-[#4C5534]">{activeCount}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#80755F]">Active offers</p>
-        </article>
-        <article className="rounded-[18px] border border-[#4C5534]/10 bg-white px-5 py-4">
-          <p className="font-seasons text-3xl text-[#4C5534]">{expiredCount}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#80755F]">Expired offers</p>
-        </article>
-        <div className="flex items-center sm:pl-3">
-          <button type="button" onClick={openNew} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#4C5534] px-6 font-montserrat text-[9px] font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#35452F] sm:w-auto"><Icon><path d="M12 5v14M5 12h14" /></Icon> Add promotion</button>
+      <section className="mx-auto max-w-[1280px] px-6 py-7 md:px-10">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <article className="rounded-[18px] border border-[#4C5534]/10 bg-white px-5 py-4">
+            <p className="font-seasons text-3xl text-[#4C5534]">{promos.length}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#80755F]">Total offers</p>
+          </article>
+          <article className="rounded-[18px] border border-[#4C5534]/10 bg-white px-5 py-4">
+            <p className="font-seasons text-3xl text-[#4C5534]">{activeCount}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#80755F]">Active offers</p>
+          </article>
+          <article className="rounded-[18px] border border-[#4C5534]/10 bg-white px-5 py-4">
+            <p className="font-seasons text-3xl text-[#4C5534]">{inactiveCount}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#80755F]">Inactive offers</p>
+          </article>
+          <article className="rounded-[18px] border border-[#4C5534]/10 bg-white px-5 py-4">
+            <p className="font-seasons text-3xl text-[#4C5534]">{expiredCount}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#80755F]">Expired offers</p>
+          </article>
         </div>
-      </section>
-      {formOpen && promotionForm && <div className="mx-auto max-w-[1280px] px-6 pb-6 md:px-10">{promotionForm}</div>}
-      <PromosList
-        promos={previewPromos}
-        pricingTables={pricingTables}
-        adminMode
-        onEditPromo={edit}
-        onTogglePromo={toggleActive}
-        onRemovePromo={setPendingDelete}
-        onPricingTablesChange={setPricingTables}
-      />
 
+        <div className="mt-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+          <div className="flex flex-1 flex-col gap-2 sm:flex-row">
+            <label className="flex min-h-10 max-w-md flex-1 items-center gap-2 rounded-full border border-[#80755F]/20 bg-white px-4">
+              <Icon><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></Icon>
+              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search promotions..." className="min-w-0 flex-1 bg-transparent font-montserrat text-[10px] outline-none" />
+            </label>
+            <select value={status} onChange={(event) => setStatus(event.target.value as typeof status)} className="min-h-10 rounded-full border border-[#80755F]/20 bg-white px-4 font-montserrat text-[10px] text-[#4C5534]">
+              <option value="all">All statuses</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="expired">Expired</option>
+            </select>
+          </div>
+          <button type="button" onClick={openNew} className="inline-flex min-h-11 items-center justify-center gap-2 self-start rounded-full bg-[#4C5534] px-6 font-montserrat text-[9px] font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#35452F] sm:self-auto"><Icon><path d="M12 5v14M5 12h14" /></Icon> Add promotion</button>
+        </div>
+
+        {formOpen && promotionForm && <div className="mt-5">{promotionForm}</div>}
+
+        <div className="mt-5 overflow-hidden rounded-[20px] border border-[#4C5534]/10 bg-white">
+          {visible.length ? visible.map((promo) => {
+            const expired = isExpired(promo, todayDate);
+            const active = !expired && promo.isActive !== false;
+            const price = promo.promoPriceLabel || (typeof promo.promoPrice === "number" ? new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP", maximumFractionDigits: 0 }).format(promo.promoPrice) : "Price upon inquiry");
+            return (
+              <article key={promo.id} className="grid gap-4 border-b border-[#80755F]/12 p-4 last:border-b-0 sm:grid-cols-[92px_minmax(0,1fr)_auto] sm:items-center sm:p-5">
+                <div className="relative h-[104px] w-[92px] overflow-hidden rounded-xl bg-[#F5F1E7]">
+                  {promo.image && <Image src={promo.image} alt={promo.title} fill sizes="92px" className="object-cover" unoptimized={!promo.image.startsWith("/")} />}
+                </div>
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className={`rounded-full px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase tracking-wide ${expired ? "bg-[#F1EEE6] text-[#80755F]" : active ? "bg-[#E8EEE3] text-[#4F6442]" : "bg-[#F5EDE7] text-[#8A6653]"}`}>{expired ? "Expired" : active ? "Active" : "Inactive"}</span>
+                    <span className="font-montserrat text-[8px] font-semibold uppercase tracking-wide text-[#80755F]">{promo.categoryLabel}</span>
+                    {promo.badge && <span className="rounded-full bg-[#F5F1E7] px-2.5 py-1 font-montserrat text-[8px] font-semibold text-[#80755F]">{promo.badge}</span>}
+                  </div>
+                  <h2 className="mt-2 font-seasons text-xl leading-tight text-[#4C5534]">{promo.title}</h2>
+                  {promo.subtitle && <p className="mt-1 line-clamp-1 font-montserrat text-[10px] text-[#80755F]">{promo.subtitle}</p>}
+                  <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <span className="font-montserrat text-xs font-semibold text-[#4C5534]">{price}</span>
+                    {promo.regularPriceLabel && <span className="font-montserrat text-[10px] text-[#80755F] line-through">{promo.regularPriceLabel}</span>}
+                    {promo.validUntil && <span className="font-montserrat text-[9px] text-[#80755F]">Until {new Date(promo.validUntil + "T12:00:00").toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" })}</span>}
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+                  <button type="button" onClick={() => edit(promo)} className="min-h-9 rounded-full border border-[#4C5534]/20 px-4 font-montserrat text-[8px] font-bold uppercase text-[#4C5534] hover:bg-[#F5F1E7]">Edit details</button>
+                  <button type="button" onClick={() => toggleActive(promo)} disabled={expired} className="min-h-9 rounded-full border border-[#4C5534]/20 px-4 font-montserrat text-[8px] font-bold uppercase text-[#4C5534] hover:bg-[#F5F1E7] disabled:cursor-not-allowed disabled:opacity-40">{promo.isActive === false ? "Activate" : "Deactivate"}</button>
+                  <button type="button" onClick={() => setPendingDelete(promo)} className="min-h-9 rounded-full border border-[#8A5148]/20 px-4 font-montserrat text-[8px] font-bold uppercase text-[#8A5148] hover:bg-[#FBF0ED]">Remove</button>
+                </div>
+              </article>
+            );
+          }) : <p className="px-6 py-14 text-center font-montserrat text-xs text-[#80755F]">No promotions found for this search or status.</p>}
+        </div>
+
+        <section className="mt-12 border-t border-[#80755F]/15 pt-8">
+          <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+            <div><h2 className="font-seasons text-2xl text-[#4C5534]">Treatment packages</h2><p className="mt-1 font-montserrat text-[10px] text-[#80755F]">Edit the package names, descriptions and pricing shown on the public page.</p></div>
+            <div className="inline-flex rounded-full border border-[#80755F]/20 bg-white p-1">
+              <button type="button" onClick={() => setActiveTableTab("facials")} className={`rounded-full px-4 py-2 font-montserrat text-[9px] font-semibold ${activeTableTab === "facials" ? "bg-[#4C5534] text-white" : "text-[#4C5534]"}`}>Facial packages</button>
+              <button type="button" onClick={() => setActiveTableTab("drips")} className={`rounded-full px-4 py-2 font-montserrat text-[9px] font-semibold ${activeTableTab === "drips" ? "bg-[#4C5534] text-white" : "text-[#4C5534]"}`}>Aesthera drips</button>
+            </div>
+          </div>
+          <div className="mt-5 space-y-5">
+            {(activeTableTab === "facials" ? pricingTables.filter((table) => ["premium-facials", "elite-facials"].includes(table.id)) : pricingTables.filter((table) => ["hero-drips", "divine-drips"].includes(table.id))).map((table) => (
+              <PricingTableBlock key={table.id} table={table} adminMode onChange={(next) => setPricingTables((current) => current.map((item) => item.id === next.id ? next : item))} />
+            ))}
+          </div>
+        </section>
+      </section>
       {pendingDelete && <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[#172119]/55 px-5 py-8 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setPendingDelete(null); }}><section role="alertdialog" aria-modal="true" aria-labelledby="delete-promo-title" className="w-full max-w-[440px] rounded-[24px] border border-[#4C5534]/10 bg-[#FFFCF3] p-6 shadow-2xl"><p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#8A5148]">Remove promotion</p><h2 id="delete-promo-title" className="font-seasons mt-2 text-2xl">Are you sure?</h2><p className="mt-3 font-montserrat text-xs leading-6 text-[#80755F]">Remove <strong>{pendingDelete.title}</strong> from this editing session?</p><div className="mt-7 flex justify-end gap-2"><button type="button" onClick={() => setPendingDelete(null)} className="min-h-11 rounded-full border border-[#4C5534]/20 px-5 font-montserrat text-[9px] font-semibold uppercase">Cancel</button><button type="button" onClick={confirmDelete} className="min-h-11 rounded-full bg-[#8A5148] px-5 font-montserrat text-[9px] font-semibold uppercase text-white">Remove</button></div></section></div>}
       {notice && <div role="status" className="fixed bottom-5 right-5 z-[60] max-w-sm rounded-2xl border border-[#4C5534]/10 bg-white px-5 py-4 font-montserrat text-[10px] leading-5 text-[#4F6442] shadow-xl">{notice}</div>}
     </main>
