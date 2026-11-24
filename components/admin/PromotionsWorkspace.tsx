@@ -381,7 +381,7 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
             </div>
           </div>
           <div className="mt-5 space-y-5">
-            {(activeTableTab === "facials" ? pricingTables.filter((table) => table.packageType === "5+1") : pricingTables.filter((table) => table.packageType === "10+2")).map((table) => (
+            {(activeTableTab === "facials" ? pricingTables.filter((table) => table.id.includes("facial") || table.id.startsWith("custom-facial")) : pricingTables.filter((table) => table.id.includes("drip") || table.id.startsWith("custom-drip"))).map((table) => (
               <PricingTableBlock
                 key={table.id}
                 table={table}
