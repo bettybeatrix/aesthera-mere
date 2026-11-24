@@ -213,7 +213,7 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
       </header>
       <div className="mx-auto max-w-[1280px] px-6 pt-7 md:px-10">
 
-        <section className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Doctor profile summary">
+        <section className="mt-6 grid grid-cols-4 gap-3" aria-label="Doctor profile summary">
           {[["Total profiles", doctors.length], ["Available", doctors.filter((doctor) => !isDoctorOnLeave(doctor)).length], ["On leave", doctors.filter((doctor) => isDoctorOnLeave(doctor)).length]].map(([label, value]) => (
             <article key={String(label)} className="rounded-[20px] border border-[#334b39]/10 bg-white/75 p-5">
               <p className="font-seasons text-3xl text-[#4c5534]">{value}</p>
