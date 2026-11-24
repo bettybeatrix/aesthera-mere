@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import type { PromoCard, PromoCategory } from "@/types/promo";
+import type { PromoCard, PromoCategory, PromoCampaignSettings } from "@/types/promo";
 import PromosList from "@/app/promos/PromosList";
+import PromoCampaignHero from "@/components/promos/PromoCampaignHero";
 import type { PricingTable } from "@/types/promo";
 
-type Props = { initialPromos: PromoCard[]; initialPricingTables: PricingTable[] };
+type Props = { initialPromos: PromoCard[]; initialPricingTables: PricingTable[]; initialCampaign: PromoCampaignSettings };
 type PromoForm = Omit<PromoCard, "id">;
 
 const blank: PromoForm = {
@@ -37,8 +38,9 @@ function Icon({ children }: { children: React.ReactNode }) {
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden="true">{children}</svg>;
 }
 
-export default function PromotionsWorkspace({ initialPromos, initialPricingTables }: Props) {
+export default function PromotionsWorkspace({ initialPromos, initialPricingTables, initialCampaign }: Props) {
   const [promos, setPromos] = useState(initialPromos);
+  const [campaign, setCampaign] = useState(initialCampaign);
   const [todayDate, setTodayDate] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<"all" | "active" | "inactive" | "expired">("all");
@@ -245,17 +247,7 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
       : [...promos, previewItem];
   }, [promos, formOpen, form, editingId, imagePreview]);
 
-  const livePreview = (
-    <aside className="min-w-0">
-      <div className="mb-3 flex items-center justify-between">
-        <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">Public website preview</p>
-        <span className="rounded-full bg-[#E8EEE3] px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase text-[#4F6442]">Same public components</span>
-      </div>
-      <div className="max-h-[78vh] overflow-y-auto rounded-xl border border-[#80755F]/20 bg-[#FFFCF3]">
-        <PromosList promos={previewPromos} pricingTables={initialPricingTables} />
-      </div>
-    </aside>
-  );
+  
 
   return (
     <>
@@ -264,58 +256,18 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
         .promo-form-reveal { animation: promoFormReveal 220ms ease-out both; }
         @media (prefers-reduced-motion: reduce) { .promo-form-reveal { animation: none; } }
       `}</style>
-    <main className="min-h-screen bg-[#FFFCF3] px-5 pb-16 pt-7 text-[#4C5534] sm:px-8 lg:px-10 lg:pt-10">
-      <div className="mx-auto max-w-[1460px]">
-        <header className="flex flex-col justify-between gap-5 rounded-[24px] border border-[#4C5534]/10 bg-[#F5F1E7] px-6 py-7 sm:flex-row sm:items-center sm:px-8">
-          <div><p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#80755F]">Offers & packages</p><h1 className="mt-2 font-seasons text-[clamp(2.4rem,4vw,3.7rem)] leading-none">Promotions</h1></div>
-          <button type="button" onClick={openNew} className="inline-flex min-h-11 items-center justify-center gap-2 self-start rounded-full bg-[#4C5534] px-5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#3D472A] sm:self-auto"><Icon><path d="M12 5v14M5 12h14" /></Icon> Add promotion</button>
-        </header>
-
-        {!editingId && promotionForm && <div className="mb-7 mt-6 grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_390px]"><div>{promotionForm}</div><div className="xl:sticky xl:top-6">{livePreview}</div></div>}
-
-        <section className="mt-6 grid gap-3 sm:grid-cols-4" aria-label="Promotion summary">
-          {[["Total", promos.length], ["Active", activeCount], ["Inactive", inactiveCount], ["Expired", expiredCount]].map(([label, value]) => <article key={String(label)} className="rounded-[20px] border border-[#4C5534]/10 bg-white p-5"><p className="font-seasons text-3xl">{value}</p><p className="mt-2 font-montserrat text-[10px] font-semibold text-[#80755F]">{label}</p></article>)}
-        </section>
-
-        <section className="mt-5 overflow-hidden rounded-[24px] border border-[#4C5534]/10 bg-white">
-          <div className="grid gap-3 border-b border-[#80755F]/15 p-4 sm:grid-cols-[1fr_auto] sm:items-center sm:p-5">
-            <label className="flex min-h-11 items-center gap-2 rounded-xl border border-[#80755F]/20 bg-[#F5F1E7] px-3"><Icon><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></Icon><span className="sr-only">Search promotions</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search promotions..." className="min-w-0 flex-1 bg-transparent font-montserrat text-[10px] outline-none" /></label>
-            <div className="flex flex-wrap rounded-full bg-[#EDF0E8] p-1">{(["all", "active", "inactive", "expired"] as const).map((value) => <button key={value} type="button" onClick={() => setStatus(value)} className={`min-h-9 rounded-full px-3 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] ${status === value ? "bg-white text-[#4C5534] shadow-sm" : "text-[#80755F]"}`}>{value}</button>)}</div>
-          </div>
-
-          <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-5">
-            {visible.map((promo) => {
-              const expired = isExpired(promo, todayDate);
-              const active = !expired && promo.isActive !== false;
-              const price = promo.promoPriceLabel ?? (typeof promo.promoPrice === "number" ? new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP", maximumFractionDigits: 0 }).format(promo.promoPrice) : "Price upon inquiry");
-              return <article key={promo.id} className={`overflow-hidden rounded-[20px] border bg-[#FFFCF3] transition-all duration-200 ${editingId === promo.id ? "border-[#4C5534]/40 ring-2 ring-[#4C5534]/10 shadow-md" : "border-[#4C5534]/10 hover:border-[#4C5534]/25 hover:shadow-[0_12px_28px_-24px_rgba(35,54,40,0.55)]"}`}>
-                <div className="grid grid-cols-[112px_minmax(0,1fr)] gap-4 p-4">
-                  <div className="relative min-h-[132px] overflow-hidden rounded-xl bg-[#E8E4DC]">{promo.image && promo.image.startsWith("/") ? <Image src={promo.image} alt={promo.title} fill sizes="112px" className="object-cover" /> : promo.image ? <Image src={promo.image} alt={promo.title} fill sizes="112px" className="object-cover" unoptimized /> : <span className="grid h-full place-items-center font-seasons text-2xl">{promo.title.slice(0,1)}</span>}</div>
-                  <div className="min-w-0 py-1">
-                    <div className="flex flex-wrap items-center gap-2"><span className={`rounded-full px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] ${expired ? "bg-[#F1EEE6] text-[#80755F]" : active ? "bg-[#E8EEE3] text-[#4F6442]" : "bg-[#F1EEE6] text-[#80755F]"}`}>{expired ? "Expired" : active ? "Active" : "Inactive"}</span>{promo.badge && <span className="rounded-full bg-[#EDE5D5] px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] text-[#806A43]">{promo.badge}</span>}</div>
-                    <h2 className="mt-2 line-clamp-2 font-seasons text-lg leading-tight text-[#4C5534]">{promo.title}</h2>
-                    <p className="mt-1 line-clamp-1 font-montserrat text-[9px] text-[#80755F]">{promo.categoryLabel}</p>
-                    <p className="mt-3 font-montserrat text-[12px] font-bold text-[#4C5534]">{price}</p>
-                    {promo.validUntil && <p className="mt-1 font-montserrat text-[8px] text-[#80755F]">Until {new Date(promo.validUntil + "T12:00:00").toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" })}</p>}
-                  </div>
-                </div>
-                <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#80755F]/12 bg-white/70 px-4 py-3">
-                  <button type="button" onClick={() => edit(promo)} className="min-h-9 rounded-full border border-[#4C5534]/20 px-4 font-montserrat text-[8px] font-bold uppercase text-[#4C5534] transition-colors hover:bg-[#F5F1E7]">Edit details</button>
-                  <div className="flex flex-wrap gap-2">
-                    <button type="button" onClick={() => toggleActive(promo)} disabled={expired} className="min-h-9 rounded-full px-3 font-montserrat text-[8px] font-bold uppercase text-[#4C5534] transition-colors hover:bg-[#F5F1E7] disabled:cursor-not-allowed disabled:opacity-40">{promo.isActive === false ? "Activate" : "Deactivate"}</button>
-                    <button type="button" onClick={() => setPendingDelete(promo)} aria-label={"Remove " + promo.title} className="grid h-9 w-9 place-items-center rounded-full border border-[#8A5148]/20 text-[#8A5148] transition-colors hover:bg-[#FBF0ED]"><Icon><path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3" /></Icon></button>
-                  </div>
-                </div>
-                {editingId === promo.id && promotionForm && <div className="border-t border-[#4C5534]/10 bg-[#F5F1E7] p-4 sm:p-5"><div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_390px]"><div>{promotionForm}</div><div className="xl:sticky xl:top-6">{livePreview}</div></div></div>}
-              </article>;
-            })}
-            {!visible.length && <p className="col-span-full rounded-2xl border border-dashed border-[#4C5534]/15 p-12 text-center font-montserrat text-xs text-[#80755F]">No promotions match your search.</p>}
-          </div>        </section>
-
-
+    <main className="min-h-screen bg-[#FFFCF3] text-[#4C5534]">
+      <div className="border-b border-[#80755F]/15 bg-[#F5F1E7] px-6 py-3 md:px-10">
+        <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-3">
+          <span className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.14em] text-[#80755F]">Editing Promotions page</span>
+          <button type="button" onClick={openNew} className="inline-flex min-h-9 items-center gap-2 rounded-full bg-[#4C5534] px-4 font-montserrat text-[9px] font-semibold uppercase text-white"><Icon><path d="M12 5v14M5 12h14" /></Icon> Add promotion</button>
+        </div>
       </div>
-
-      {pendingDelete && <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[#172119]/55 px-5 py-8 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setPendingDelete(null); }}><section role="alertdialog" aria-modal="true" aria-labelledby="delete-promo-title" className="w-full max-w-[440px] rounded-[24px] border border-[#4C5534]/10 bg-[#FFFCF3] p-6 shadow-2xl"><p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#8A5148]">Remove promotion</p><h2 id="delete-promo-title" className="font-seasons mt-2 text-2xl">Are you sure?</h2><p className="mt-3 font-montserrat text-xs leading-6 text-[#80755F]">Remove <strong>{pendingDelete.title}</strong> from this preview list?</p><div className="mt-7 flex justify-end gap-2"><button type="button" onClick={() => setPendingDelete(null)} className="min-h-11 rounded-full border border-[#4C5534]/20 px-5 font-montserrat text-[9px] font-semibold uppercase">Cancel</button><button type="button" onClick={confirmDelete} className="min-h-11 rounded-full bg-[#8A5148] px-5 font-montserrat text-[9px] font-semibold uppercase text-white">Remove</button></div></section></div>}
+      <PromoCampaignHero campaign={campaign} editable onChange={setCampaign} />
+      {formOpen && promotionForm && <div className="mx-auto max-w-[1180px] px-6 py-6 md:px-10">{promotionForm}</div>}
+      <PromosList promos={previewPromos} pricingTables={initialPricingTables} adminMode onEditPromo={edit} />
+      <div className="mx-auto max-w-[1180px] px-6 pb-12 md:px-10"><div className="flex justify-end"><button type="button" onClick={() => setNotice("Campaign changes are currently held in this editing session. Persistent publishing will be connected to the backend.")} className="min-h-10 rounded-full border border-[#4C5534]/25 px-5 font-montserrat text-[9px] font-semibold uppercase text-[#4C5534]">Save campaign draft</button></div></div>
+      {pendingDelete && <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[#172119]/55 px-5 py-8 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setPendingDelete(null); }}><section role="alertdialog" aria-modal="true" aria-labelledby="delete-promo-title" className="w-full max-w-[440px] rounded-[24px] border border-[#4C5534]/10 bg-[#FFFCF3] p-6 shadow-2xl"><p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#8A5148]">Remove promotion</p><h2 id="delete-promo-title" className="font-seasons mt-2 text-2xl">Are you sure?</h2><p className="mt-3 font-montserrat text-xs leading-6 text-[#80755F]">Remove <strong>{pendingDelete.title}</strong> from this editing session?</p><div className="mt-7 flex justify-end gap-2"><button type="button" onClick={() => setPendingDelete(null)} className="min-h-11 rounded-full border border-[#4C5534]/20 px-5 font-montserrat text-[9px] font-semibold uppercase">Cancel</button><button type="button" onClick={confirmDelete} className="min-h-11 rounded-full bg-[#8A5148] px-5 font-montserrat text-[9px] font-semibold uppercase text-white">Remove</button></div></section></div>}
       {notice && <div role="status" className="fixed bottom-5 right-5 z-[60] max-w-sm rounded-2xl border border-[#4C5534]/10 bg-white px-5 py-4 font-montserrat text-[10px] leading-5 text-[#4F6442] shadow-xl">{notice}</div>}
     </main>
     </>
