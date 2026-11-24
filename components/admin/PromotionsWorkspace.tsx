@@ -271,14 +271,22 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
           </div>
         </div>
       </header>
-      <div className="border-b border-[#80755F]/15 bg-[#F5F1E7] px-6 py-3 md:px-10">
-        <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-3">
-          <span className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.14em] text-[#80755F]">Editing Promotions page</span>
-          <button type="button" onClick={openNew} className="inline-flex min-h-9 items-center gap-2 rounded-full bg-[#4C5534] px-4 font-montserrat text-[9px] font-semibold uppercase text-white"><Icon><path d="M12 5v14M5 12h14" /></Icon> Add promotion</button>
-        </div>
-      </div>
       <PromoCampaignHero campaign={campaign} editable onChange={setCampaign} onSave={() => setNotice("Hero changes saved in this editing session. Permanent saving will be enabled with the backend.")} />
-      {formOpen && promotionForm && <div className="mx-auto max-w-[1180px] px-6 py-6 md:px-10">{promotionForm}</div>}
+      <section className="mx-auto grid max-w-[1280px] gap-3 px-6 py-7 sm:grid-cols-[repeat(3,minmax(0,1fr))_auto] sm:items-stretch md:px-10">
+        <article className="rounded-[18px] border border-[#4C5534]/10 bg-white px-5 py-4">
+          <p className="font-seasons text-3xl text-[#4C5534]">{promos.length}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#80755F]">Total offers</p>
+        </article>
+        <article className="rounded-[18px] border border-[#4C5534]/10 bg-white px-5 py-4">
+          <p className="font-seasons text-3xl text-[#4C5534]">{activeCount}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#80755F]">Active offers</p>
+        </article>
+        <article className="rounded-[18px] border border-[#4C5534]/10 bg-white px-5 py-4">
+          <p className="font-seasons text-3xl text-[#4C5534]">{expiredCount}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#80755F]">Expired offers</p>
+        </article>
+        <div className="flex items-center sm:pl-3">
+          <button type="button" onClick={openNew} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#4C5534] px-6 font-montserrat text-[9px] font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#35452F] sm:w-auto"><Icon><path d="M12 5v14M5 12h14" /></Icon> Add promotion</button>
+        </div>
+      </section>
+      {formOpen && promotionForm && <div className="mx-auto max-w-[1280px] px-6 pb-6 md:px-10">{promotionForm}</div>}
       <PromosList
         promos={previewPromos}
         pricingTables={pricingTables}
@@ -288,7 +296,7 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
         onRemovePromo={setPendingDelete}
         onPricingTablesChange={setPricingTables}
       />
-      <div className="mx-auto max-w-[1180px] px-6 pb-12 md:px-10"><div className="flex justify-end"><button type="button" onClick={() => setNotice("Campaign changes are currently held in this editing session. Persistent publishing will be connected to the backend.")} className="min-h-10 rounded-full border border-[#4C5534]/25 px-5 font-montserrat text-[9px] font-semibold uppercase text-[#4C5534]">Save changes</button></div></div>
+
       {pendingDelete && <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[#172119]/55 px-5 py-8 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setPendingDelete(null); }}><section role="alertdialog" aria-modal="true" aria-labelledby="delete-promo-title" className="w-full max-w-[440px] rounded-[24px] border border-[#4C5534]/10 bg-[#FFFCF3] p-6 shadow-2xl"><p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#8A5148]">Remove promotion</p><h2 id="delete-promo-title" className="font-seasons mt-2 text-2xl">Are you sure?</h2><p className="mt-3 font-montserrat text-xs leading-6 text-[#80755F]">Remove <strong>{pendingDelete.title}</strong> from this editing session?</p><div className="mt-7 flex justify-end gap-2"><button type="button" onClick={() => setPendingDelete(null)} className="min-h-11 rounded-full border border-[#4C5534]/20 px-5 font-montserrat text-[9px] font-semibold uppercase">Cancel</button><button type="button" onClick={confirmDelete} className="min-h-11 rounded-full bg-[#8A5148] px-5 font-montserrat text-[9px] font-semibold uppercase text-white">Remove</button></div></section></div>}
       {notice && <div role="status" className="fixed bottom-5 right-5 z-[60] max-w-sm rounded-2xl border border-[#4C5534]/10 bg-white px-5 py-4 font-montserrat text-[10px] leading-5 text-[#4F6442] shadow-xl">{notice}</div>}
     </main>
