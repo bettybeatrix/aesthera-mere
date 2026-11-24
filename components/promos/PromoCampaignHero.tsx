@@ -7,9 +7,10 @@ type Props = {
   campaign: PromoCampaignSettings;
   editable?: boolean;
   onChange?: (next: PromoCampaignSettings) => void;
+  onSave?: () => void;
 };
 
-export default function PromoCampaignHero({ campaign, editable = false, onChange }: Props) {
+export default function PromoCampaignHero({ campaign, editable = false, onChange, onSave }: Props) {
   function update<K extends keyof PromoCampaignSettings>(key: K, value: PromoCampaignSettings[K]) {
     onChange?.({ ...campaign, [key]: value });
   }
@@ -54,6 +55,13 @@ export default function PromoCampaignHero({ campaign, editable = false, onChange
           {campaign.heroImage && <Image src={campaign.heroImage} alt={campaign.heroImageAlt} fill priority sizes="(max-width: 1023px) 90vw, 32vw" className="object-cover" unoptimized={!campaign.heroImage.startsWith("/")} />}
         </div>
       </div>
+      {editable && onSave && (
+        <div className="mx-auto mt-6 flex max-w-[1180px] justify-end">
+          <button type="button" onClick={onSave} className="min-h-11 rounded-full bg-[#4C5534] px-6 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#35452F]">
+            Save hero changes
+          </button>
+        </div>
+      )}
     </section>
   );
 }
