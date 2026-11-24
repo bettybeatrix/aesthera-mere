@@ -342,50 +342,97 @@ export function PromoCardItem({
 // ---------------------------------------------------------------------------
 // Pricing Table
 // ---------------------------------------------------------------------------
-export function PricingTableBlock({ table, adminMode = false, onChange, onRemove, onAddRow, onRemoveRow }: { table: PricingTable; adminMode?: boolean; onChange?: (table: PricingTable) => void; onRemove?: () => void; onAddRow?: () => void; onRemoveRow?: (index: number) => void }) {
+export function PricingTableBlock({
+  table,
+  adminMode = false,
+  onSave,
+  onRemove,
+  onAddRow,
+  onRemoveRow,
+}: {
+  table: PricingTable;
+  adminMode?: boolean;
+  onSave?: (table: PricingTable) => void;
+  onRemove?: () => void;
+  onAddRow?: () => void;
+  onRemoveRow?: (index: number) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(table);
+
+  useEffect(() => setDraft(table), [table]);
+
   function updateRow(index: number, key: keyof PricingTable["rows"][number], value: string) {
-    if (!onChange) return;
     const numeric = key !== "name";
-    onChange({ ...table, rows: table.rows.map((row, rowIndex) => rowIndex === index ? { ...row, [key]: numeric ? (value === "" ? 0 : Number(value)) : value } : row) });
+    setDraft((current) => ({
+      ...current,
+      rows: current.rows.map((row, rowIndex) => rowIndex === index
+        ? { ...row, [key]: numeric ? (value === "" ? 0 : Number(value)) : value }
+        : row),
+    }));
   }
+
+  function cancelEdit() {
+    setDraft(table);
+    setEditing(false);
+  }
+
+  function saveEdit() {
+    onSave?.(draft);
+    setEditing(false);
+  }
+
   return (
     <div className={`overflow-hidden rounded-[20px] border border-[#80755F]/20 ${adminMode ? "bg-[#F8F4EB]" : "bg-white"} shadow-sm`}>
       <div className="border-b border-[#80755F]/15 bg-[#4C5534] px-6 py-4 text-white">
-        {adminMode ? <input aria-label="Package table title" value={table.title} onChange={(event) => onChange?.({ ...table, title: event.target.value })} className="w-full bg-transparent font-seasons text-xl text-white outline-none" /> : <h3 className="font-seasons text-xl">{table.title}</h3>}
-        {adminMode ? <input aria-label="Package table subtitle" value={table.subtitle} onChange={(event) => onChange?.({ ...table, subtitle: event.target.value })} className="mt-1 w-full bg-transparent font-montserrat text-xs text-white/80 outline-none" /> : <p className="font-montserrat text-xs text-white/80">{table.subtitle}</p>}
-        {adminMode && onRemove && <div className="mt-3 flex justify-end"><button type="button" onClick={onRemove} className="rounded-full border border-white/35 px-3 py-1.5 font-montserrat text-[8px] font-bold uppercase text-white/90 hover:bg-white/10">Delete package</button></div>}
+        {adminMode && editing
+          ? <input aria-label="Package table title" value={draft.title} onChange={(event) => setDraft((current) => ({ ...current, title: event.target.value }))} className="w-full rounded-md border border-white/25 bg-white/10 px-2 py-1 font-seasons text-xl text-white outline-none" />
+          : <h3 className="font-seasons text-xl">{table.title}</h3>}
+        {adminMode && editing
+          ? <input aria-label="Package table subtitle" value={draft.subtitle} onChange={(event) => setDraft((current) => ({ ...current, subtitle: event.target.value }))} className="mt-2 w-full rounded-md border border-white/20 bg-white/10 px-2 py-1 font-montserrat text-xs text-white outline-none" />
+          : <p className="font-montserrat text-xs text-white/80">{table.subtitle}</p>}
+        {adminMode && (
+          <div className="mt-3 flex flex-wrap justify-end gap-2">
+            {editing ? <>
+              <button type="button" onClick={cancelEdit} className="rounded-full border border-white/35 px-4 py-2 font-montserrat text-[8px] font-bold uppercase text-white/90 hover:bg-white/10">Cancel</button>
+              <button type="button" onClick={saveEdit} className="rounded-full bg-[#D8C39A] px-4 py-2 font-montserrat text-[8px] font-bold uppercase text-[#3F4B32] hover:bg-[#E5D5B5]">Save changes</button>
+            </> : <>
+              <button type="button" onClick={() => setEditing(true)} className="rounded-full border border-white/35 px-4 py-2 font-montserrat text-[8px] font-bold uppercase text-white/90 hover:bg-white/10">Edit package</button>
+              {onRemove && <button type="button" onClick={onRemove} className="rounded-full border border-[#E8B9A9]/60 px-4 py-2 font-montserrat text-[8px] font-bold uppercase text-[#FFE0D6] hover:bg-white/10">Delete package</button>}
+            </>}
+          </div>
+        )}
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-left font-montserrat text-xs">
-          <thead className="border-b border-[#80755F]/15 bg-[#FFFCF3] text-[10px] uppercase tracking-wider text-[#80755F]">
+          <thead className="border-b border-[#80755F]/15 bg-[#E8EEE3] text-[10px] uppercase tracking-wider text-[#4C5534]">
             <tr>
               <th className="px-6 py-3.5">Treatment</th>
               <th className="px-6 py-3.5">Regular</th>
               <th className="px-6 py-3.5">Promo Single</th>
               <th className="px-6 py-3.5">{table.packageType} Package</th>
               <th className="px-6 py-3.5">Effective / Session</th>
-              {adminMode && <th className="px-4 py-3.5">Actions</th>}
+              {adminMode && editing && <th className="px-4 py-3.5">Actions</th>}
             </tr>
           </thead>
           <tbody className="divide-y divide-[#80755F]/10">
-            {table.rows.map((row, index) => (
-              <tr key={`${row.name}-${index}`}>
-                <td className="px-6 py-4 font-semibold text-[#4C5534]">{adminMode ? <input aria-label="name" type="text" value={row.name} onChange={(event) => updateRow(index, "name", event.target.value)} className="w-full min-w-[90px] rounded-md border border-[#80755F]/20 bg-[#FFFCF3] px-2 py-1.5 text-xs text-[#4C5534]" /> : row.name}</td>
-                <td className="px-6 py-4 text-[#80755F]">{adminMode ? <input aria-label="regular" type="number" min={0} step="0.01" value={row.regular} onChange={(event) => updateRow(index, "regular", event.target.value)} className="w-full min-w-[90px] rounded-md border border-[#80755F]/20 bg-[#FFFCF3] px-2 py-1.5 text-xs text-[#4C5534]" /> : formatPrice(row.regular)}</td>
-                <td className="px-6 py-4 font-medium text-[#4C5534]">{adminMode ? <input aria-label="promo" type="number" min={0} step="0.01" value={row.promo} onChange={(event) => updateRow(index, "promo", event.target.value)} className="w-full min-w-[90px] rounded-md border border-[#80755F]/20 bg-[#FFFCF3] px-2 py-1.5 text-xs text-[#4C5534]" /> : formatPrice(row.promo)}</td>
-                <td className="px-6 py-4 font-semibold text-[#4C5534]">{adminMode ? <input aria-label="package" type="number" min={0} step="0.01" value={row.package} onChange={(event) => updateRow(index, "package", event.target.value)} className="w-full min-w-[90px] rounded-md border border-[#80755F]/20 bg-[#FFFCF3] px-2 py-1.5 text-xs text-[#4C5534]" /> : formatPrice(row.package)}</td>
-                <td className="px-6 py-4 font-semibold text-[#4f6442]">{adminMode ? <input aria-label="effective" type="number" min={0} step="0.01" value={row.effective} onChange={(event) => updateRow(index, "effective", event.target.value)} className="w-full min-w-[90px] rounded-md border border-[#80755F]/20 bg-[#FFFCF3] px-2 py-1.5 text-xs text-[#4C5534]" /> : formatPrice(row.effective)}</td>
-                {adminMode && <td className="px-4 py-4"><button type="button" onClick={() => onRemoveRow?.(index)} className="font-montserrat text-[8px] font-bold uppercase text-[#8A5148]">Remove row</button></td>}
+            {(editing ? draft.rows : table.rows).map((row, index) => (
+              <tr key={`${row.name}-${index}`} className={index % 2 === 0 ? "bg-[#FBF8F1]" : "bg-[#F3F0E6]"}>
+                <td className="px-6 py-4 font-semibold text-[#4C5534]">{adminMode && editing ? <input aria-label="Treatment name" type="text" value={row.name} onChange={(event) => updateRow(index, "name", event.target.value)} className="w-full min-w-[110px] rounded-md border border-[#80755F]/20 bg-white px-2 py-1.5 text-xs text-[#4C5534]" /> : row.name}</td>
+                <td className="px-6 py-4 text-[#80755F]">{adminMode && editing ? <input aria-label="Regular price" type="number" min={0} step="0.01" value={row.regular} onChange={(event) => updateRow(index, "regular", event.target.value)} className="w-full min-w-[90px] rounded-md border border-[#80755F]/20 bg-white px-2 py-1.5 text-xs text-[#4C5534]" /> : formatPrice(row.regular)}</td>
+                <td className="px-6 py-4 font-medium text-[#4C5534]">{adminMode && editing ? <input aria-label="Promo single price" type="number" min={0} step="0.01" value={row.promo} onChange={(event) => updateRow(index, "promo", event.target.value)} className="w-full min-w-[90px] rounded-md border border-[#80755F]/20 bg-white px-2 py-1.5 text-xs text-[#4C5534]" /> : formatPrice(row.promo)}</td>
+                <td className="px-6 py-4 font-semibold text-[#4C5534]">{adminMode && editing ? <input aria-label="Package price" type="number" min={0} step="0.01" value={row.package} onChange={(event) => updateRow(index, "package", event.target.value)} className="w-full min-w-[90px] rounded-md border border-[#80755F]/20 bg-white px-2 py-1.5 text-xs text-[#4C5534]" /> : formatPrice(row.package)}</td>
+                <td className="px-6 py-4 font-semibold text-[#4f6442]">{adminMode && editing ? <input aria-label="Effective price per session" type="number" min={0} step="0.01" value={row.effective} onChange={(event) => updateRow(index, "effective", event.target.value)} className="w-full min-w-[90px] rounded-md border border-[#80755F]/20 bg-white px-2 py-1.5 text-xs text-[#4C5534]" /> : formatPrice(row.effective)}</td>
+                {adminMode && editing && <td className="px-4 py-4"><button type="button" onClick={() => onRemoveRow?.(index)} className="font-montserrat text-[8px] font-bold uppercase text-[#8A5148]">Remove row</button></td>}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      {adminMode && <div className="flex justify-end border-t border-[#80755F]/15 px-5 py-3"><button type="button" onClick={onAddRow} className="rounded-full border border-[#4C5534]/20 px-4 py-2 font-montserrat text-[8px] font-bold uppercase text-[#4C5534] hover:bg-[#F5F1E7]">+ Add treatment row</button></div>}
+      {adminMode && editing && <div className="flex justify-end border-t border-[#80755F]/15 bg-[#E8EEE3]/50 px-5 py-3"><button type="button" onClick={() => onAddRow?.()} className="rounded-full border border-[#4C5534]/25 bg-white px-4 py-2 font-montserrat text-[8px] font-bold uppercase text-[#4C5534] hover:bg-[#F5F1E7]">+ Add treatment row</button></div>}
     </div>
   );
 }
-
 // ---------------------------------------------------------------------------
 // Main exported client component
 // ---------------------------------------------------------------------------
