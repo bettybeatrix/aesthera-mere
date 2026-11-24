@@ -254,36 +254,26 @@ export default function TestimonialsWorkspace({ initialTestimonials }: Props) {
 
   return (
     <main className="min-h-screen bg-[#FFFCF3] px-5 pb-16 pt-7 text-[#4C5534] sm:px-8 lg:px-10 lg:pt-8">
-      <div className="mx-auto max-w-[1460px]">
-        <header className="mb-6 rounded-[22px] border border-[#80755F]/15 bg-[#F1EBDD] px-6 py-6 sm:px-8">
-          <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-            <div>
-              <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#80755F]">Website management</p>
-              <h1 className="mt-2 font-seasons text-[clamp(2.2rem,4vw,3.2rem)] leading-none text-[#4C5534]">Testimonials</h1>
-              <p className="mt-3 max-w-[620px] font-montserrat text-[11px] leading-6 text-[#80755F]">Review patient feedback, verify permission records, and manage approved social proof.</p>
-            </div>
-            <button type="button" onClick={openAdd} className="inline-flex min-h-10 items-center justify-center gap-2 self-start rounded-full bg-[#4C5534] px-5 font-montserrat text-[9px] font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#35452F] sm:self-auto">
-              <Icon><path d="M12 5v14M5 12h14" /></Icon> Add testimonial
-            </button>
+      </div>
+      <header className="border-b border-[#80755F]/15 bg-[#F1EBDD] px-6 py-7 md:px-10">
+        <div className="mx-auto flex max-w-[1280px] flex-col justify-between gap-5 sm:flex-row sm:items-end">
+          <div>
+            <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#80755F]">Website management</p>
+            <h1 className="mt-2 font-seasons text-[clamp(2.2rem,4vw,3.2rem)] leading-none text-[#4C5534]">Testimonials</h1>
           </div>
-        </header>
-
-        <div className="mb-5 rounded-2xl border border-[#B68D54]/25 bg-[#F8F3E8] px-5 py-4">
-          <p className="font-montserrat text-[10px] font-bold uppercase tracking-[0.12em] text-[#765B37]">Preview-only admin workspace</p>
-          <p className="mt-1 font-montserrat text-[10px] leading-5 text-[#806D52]">Changes currently stay in this browser session and do not update the live homepage or a database. Existing homepage reviews are flagged for permission/source verification because those records are not documented in the current site data. Do not approve a review until its permission record is verified.</p>
         </div>
-
-        <section className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      </header>
+      <div className="mx-auto max-w-[1280px] px-6 pt-7 md:px-10">
+        <section className="mb-6 grid grid-cols-4 gap-3">
           {[
             { label: "Total entries", value: counts.total, description: "All testimonial records" },
             { label: "Needs review", value: counts.pending, description: "Pending or legacy entries" },
             { label: "Approved", value: counts.approved, description: "Permission record required" },
             { label: "Hidden", value: counts.hidden, description: "Not approved for display" },
           ].map((stat) => (
-            <article key={stat.label} className="rounded-[18px] border border-[#80755F]/15 bg-white px-5 py-4">
-              <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.13em] text-[#80755F]">{stat.label}</p>
-              <p className="mt-2 font-seasons text-3xl leading-none text-[#4C5534]">{stat.value.toString().padStart(2, "0")}</p>
-              <p className="mt-2 font-montserrat text-[9px] text-[#80755F]">{stat.description}</p>
+            <article key={stat.label} className="rounded-[20px] border border-[#334b39]/10 bg-white/75 p-5">
+              <p className="font-seasons text-3xl text-[#4c5534]">{stat.value.toString().padStart(2, "0")}</p>
+              <p className="mt-2 font-montserrat text-[10px] font-semibold text-[#80755f]">{stat.label}</p>
             </article>
           ))}
         </section>
@@ -300,11 +290,16 @@ export default function TestimonialsWorkspace({ initialTestimonials }: Props) {
                 <button key={value} type="button" onClick={() => setStatusFilter(value)} aria-pressed={statusFilter === value} className={`min-h-9 rounded-full border px-4 font-montserrat text-[9px] font-semibold uppercase tracking-[0.08em] transition-colors ${statusFilter === value ? "border-[#4C5534] bg-[#4C5534] text-white" : "border-[#80755F]/20 bg-white text-[#80755F] hover:bg-[#F1EBDD]"}`}>{label}</button>
               ))}
             </div>
-            <label className="flex min-h-10 w-full items-center gap-2 rounded-full border border-[#80755F]/20 bg-[#F7F2E8] px-4 sm:max-w-[340px]">
-              <Icon><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></Icon>
-              <span className="sr-only">Search testimonials</span>
-              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search name, treatment or review..." className="min-w-0 flex-1 bg-transparent font-montserrat text-[10px] outline-none" />
-            </label>
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+              <label className="flex min-h-10 w-full items-center gap-2 rounded-full border border-[#80755F]/20 bg-[#F7F2E8] px-4 sm:w-[300px]">
+                <Icon><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></Icon>
+                <span className="sr-only">Search testimonials</span>
+                <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search name, treatment or review..." className="min-w-0 flex-1 bg-transparent font-montserrat text-[10px] outline-none" />
+              </label>
+              <button type="button" onClick={openAdd} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-[#4C5534] px-5 font-montserrat text-[9px] font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#35452F]">
+                <Icon><path d="M12 5v14M5 12h14" /></Icon> Add testimonial
+              </button>
+            </div>
           </div>
 
           {visible.length ? (
@@ -333,7 +328,7 @@ export default function TestimonialsWorkspace({ initialTestimonials }: Props) {
                     ) : item.status === "hidden" ? (
                       <button type="button" onClick={() => restore(item)} className="min-h-9 rounded-full border border-[#80755F]/20 px-4 font-montserrat text-[8px] font-bold uppercase text-[#80755F] transition-colors hover:bg-[#F1EBDD]">Return to review</button>
                     ) : (
-                      <button type="button" disabled={!hasPermissionRecord(item)} onClick={() => approve(item)} title={!hasPermissionRecord(item) ? "Add a permission date and secure consent record reference first" : "Mark approved"} className="min-h-9 rounded-full bg-[#4C5534] px-4 font-montserrat text-[8px] font-bold uppercase text-white transition-colors hover:bg-[#35452F] disabled:cursor-not-allowed disabled:bg-[#A9AD9E]">Approve</button>
+                      <button type="button" onClick={() => approve(item)} title={!hasPermissionRecord(item) ? "Approval requires a verified permission date and secure consent record reference" : "Mark approved"} className="min-h-9 rounded-full bg-[#4C5534] px-4 font-montserrat text-[8px] font-bold uppercase text-white transition-colors hover:bg-[#35452F]">Approve</button>
                     )}
                     <button type="button" onClick={() => setPendingDelete(item)} aria-label={`Delete testimonial from ${item.name}`} className="grid h-9 w-9 place-items-center rounded-full border border-[#8A5148]/20 text-[#8A5148] transition-colors hover:bg-[#F5E9E4]">
                       <Icon><path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3" /></Icon>
