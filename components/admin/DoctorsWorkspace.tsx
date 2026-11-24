@@ -202,17 +202,19 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
   }
 
   return (
-    <main className="min-h-screen px-5 pb-16 pt-7 sm:px-8 lg:px-10 lg:pt-10">
-      <div className="mx-auto max-w-[1460px]">
-        <header className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
+    <main className="min-h-screen bg-[#FFFCF3] pb-16 text-[#4C5534]">
+      <header className="border-b border-[#80755F]/15 bg-[#F1EBDD] px-6 py-7 md:px-10">
+        <div className="mx-auto flex max-w-[1280px] flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
-            <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.2em] text-[#80755f]">Website management / Doctors</p>
-            <h1 className="font-seasons mt-3 text-[clamp(2.4rem,4vw,3.7rem)] leading-none text-[#4c5534]">Doctor profiles</h1>
+            <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#80755F]">Website management</p>
+            <h1 className="mt-2 font-seasons text-[clamp(2.2rem,4vw,3.2rem)] leading-none text-[#4C5534]">Doctors</h1>
           </div>
-          <button type="button" onClick={startNew} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#4c5534] px-5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white hover:bg-[#3d472a]">
+          <button type="button" onClick={startNew} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#4C5534] px-5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#35452F]">
             <Icon><path d="M12 5v14M5 12h14" /></Icon> Add doctor
           </button>
-        </header>
+        </div>
+      </header>
+      <div className="mx-auto max-w-[1280px] px-6 pt-7 md:px-10">
 
         <section className="mt-7 grid gap-3 sm:grid-cols-3" aria-label="Doctor profile summary">
           {[["Total profiles", doctors.length], ["Available", doctors.filter((doctor) => !isDoctorOnLeave(doctor)).length], ["On leave", doctors.filter((doctor) => isDoctorOnLeave(doctor)).length]].map(([label, value]) => (
