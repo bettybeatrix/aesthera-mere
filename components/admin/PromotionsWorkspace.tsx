@@ -3,9 +3,10 @@
 import Image from "next/image";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import type { PromoCard, PromoCategory } from "@/types/promo";
-import { PromoCardItem, PromoModal } from "@/app/promos/PromosList";
+import PromosList from "@/app/promos/PromosList";
+import type { PricingTable } from "@/types/promo";
 
-type Props = { initialPromos: PromoCard[] };
+type Props = { initialPromos: PromoCard[]; initialPricingTables: PricingTable[] };
 type PromoForm = Omit<PromoCard, "id">;
 
 const blank: PromoForm = {
@@ -36,7 +37,7 @@ function Icon({ children }: { children: React.ReactNode }) {
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden="true">{children}</svg>;
 }
 
-export default function PromotionsWorkspace({ initialPromos }: Props) {
+export default function PromotionsWorkspace({ initialPromos, initialPricingTables }: Props) {
   const [promos, setPromos] = useState(initialPromos);
   const [todayDate, setTodayDate] = useState<string | null>(null);
   const [query, setQuery] = useState("");
@@ -226,17 +227,33 @@ export default function PromotionsWorkspace({ initialPromos }: Props) {
           </section>
   ) : null;
 
-  const [publicPreviewOpen, setPublicPreviewOpen] = useState(false);
+  const previewPromos = useMemo(() => {
+    if (!formOpen) return promos;
+    const previewItem: PromoCard = {
+      ...form,
+      id: editingId ?? "admin-promotion-preview",
+      title: form.title || "Your promotion title",
+      categoryLabel: form.categoryLabel || categories.find((item) => item.value === form.category)?.label || "Category",
+      badge: form.badge || "BEReady Holiday Deal",
+      subtitle: form.subtitle || "Your promotion subtitle",
+      description: form.description || "Your offer description will appear here.",
+      inclusions: form.inclusions?.length ? form.inclusions : ["Your offer inclusions will appear here."],
+      image: imagePreview || form.image || "/images/promotions/promo1.png",
+    };
+    return editingId
+      ? promos.map((item) => item.id === editingId ? previewItem : item)
+      : [...promos, previewItem];
+  }, [promos, formOpen, form, editingId, imagePreview]);
+
   const livePreview = (
     <aside className="min-w-0">
       <div className="mb-3 flex items-center justify-between">
-        <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">Exact public card preview</p>
-        <span className="rounded-full bg-[#E8EEE3] px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase text-[#4F6442]">Shared component</span>
+        <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">Public website preview</p>
+        <span className="rounded-full bg-[#E8EEE3] px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase text-[#4F6442]">Same public components</span>
       </div>
-      <div className="mx-auto max-w-[390px]">
-        <PromoCardItem card={previewPromo} onClick={() => setPublicPreviewOpen(true)} />
+      <div className="max-h-[78vh] overflow-y-auto rounded-xl border border-[#80755F]/20 bg-[#FFFCF3]">
+        <PromosList promos={previewPromos} pricingTables={initialPricingTables} />
       </div>
-      {publicPreviewOpen && <PromoModal card={previewPromo} onClose={() => setPublicPreviewOpen(false)} />}
     </aside>
   );
 
