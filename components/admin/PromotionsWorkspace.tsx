@@ -251,7 +251,7 @@ export default function PromotionsWorkspace({ initialPromos }: Props) {
           <button type="button" onClick={openNew} className="inline-flex min-h-11 items-center justify-center gap-2 self-start rounded-full bg-[#4C5534] px-5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#3D472A] sm:self-auto"><Icon><path d="M12 5v14M5 12h14" /></Icon> Add promotion</button>
         </header>
 
-        {!editingId && promotionForm && <div className="mb-6 mt-6">{promotionForm}</div>}
+        {!editingId && promotionForm && <div className="mb-7 mt-6 grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_390px]"><div>{promotionForm}</div><div className="xl:sticky xl:top-6">{livePreview}</div></div>}
 
         <section className="mt-6 grid gap-3 sm:grid-cols-4" aria-label="Promotion summary">
           {[["Total", promos.length], ["Active", activeCount], ["Inactive", inactiveCount], ["Expired", expiredCount]].map(([label, value]) => <article key={String(label)} className="rounded-[20px] border border-[#4C5534]/10 bg-white p-5"><p className="font-seasons text-3xl">{value}</p><p className="mt-2 font-montserrat text-[10px] font-semibold text-[#80755F]">{label}</p></article>)}
@@ -286,7 +286,7 @@ export default function PromotionsWorkspace({ initialPromos }: Props) {
                     <button type="button" onClick={() => setPendingDelete(promo)} aria-label={"Remove " + promo.title} className="grid h-9 w-9 place-items-center rounded-full border border-[#8A5148]/20 text-[#8A5148] transition-colors hover:bg-[#FBF0ED]"><Icon><path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3" /></Icon></button>
                   </div>
                 </div>
-                {editingId === promo.id && promotionForm && <div className="border-t border-[#4C5534]/10 bg-[#F5F1E7] p-4 sm:p-5">{promotionForm}</div>}
+                {editingId === promo.id && promotionForm && <div className="border-t border-[#4C5534]/10 bg-[#F5F1E7] p-4 sm:p-5"><div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_390px]"><div>{promotionForm}</div><div className="xl:sticky xl:top-6">{livePreview}</div></div></div>}
               </article>;
             })}
             {!visible.length && <p className="col-span-full rounded-2xl border border-dashed border-[#4C5534]/15 p-12 text-center font-montserrat text-xs text-[#80755F]">No promotions match your search.</p>}
