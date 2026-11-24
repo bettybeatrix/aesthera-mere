@@ -386,7 +386,7 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
                 key={table.id}
                 table={table}
                 adminMode
-                onChange={(next) => setPricingTables((current) => current.map((item) => item.id === next.id ? next : item))}
+                onSave={(next: PricingTable) => setPricingTables((current) => current.map((item) => item.id === next.id ? next : item))}
                 onRemove={() => removePricingTable(table.id)}
                 onAddRow={() => addPricingRow(table.id)}
                 onRemoveRow={(index) => removePricingRow(table.id, index)}
