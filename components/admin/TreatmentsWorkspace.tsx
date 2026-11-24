@@ -23,10 +23,12 @@ const categories = treatmentCategories.map((category) => ({
 }));
 
 function splitLines(value: string) {
-  return value.split("\n").map((line) => line.trim()).filter(Boolean);
+  return value.split("
+").map((line) => line.trim()).filter(Boolean);
 }
 function joinLines(value: string[]) {
-  return value.join("\n");
+  return value.join("
+");
 }
 function Icon({ children }: { children: React.ReactNode }) {
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden="true">{children}</svg>;
@@ -180,11 +182,14 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
             <div className="flex rounded-full bg-[#edf0e8] p-1">{(["all", "available", "unavailable"] as const).map((status) => <button key={status} type="button" onClick={() => setStatusFilter(status)} className={`min-h-9 rounded-full px-3 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] ${statusFilter === status ? "bg-white text-[#36513c] shadow-sm" : "text-[#858c85]"}`}>{status}</button>)}</div>
           </div>
           <div className="divide-y divide-[#334b39]/8">
-            {visible.map((item) => <div key={item.id}>\n              <article className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:p-5">
+            {visible.map((item) => <div key={item.id}>
+              <article className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:p-5">
               <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[#e9e4d8]">{item.image && item.image.startsWith("/") ? <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" /> : item.image ? <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" unoptimized /> : <span className="grid h-full w-full place-items-center font-seasons text-xl text-[#4f6442]">{item.name.slice(0,1)}</span>}</div>
               <div className="min-w-0 flex-1"><h2 className="font-montserrat text-[11px] font-semibold text-[#39473d]">{item.name}</h2><p className="mt-1 font-montserrat text-[9px] text-[#80755f]">{item.categoryName} / {item.groupName}</p><p className="mt-1 font-montserrat text-[10px] font-semibold text-[#4f6442]">{item.price}</p><span className={`mt-2 inline-flex rounded-full px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase ${item.isAvailable ? "bg-[#e8eee3] text-[#4f6442]" : "bg-[#f1eee6] text-[#80755f]"}`}>{item.isAvailable ? "Available" : "Unavailable"}</span></div>
               <div className="flex shrink-0 flex-wrap gap-1.5"><button type="button" onClick={() => edit(item)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#4c5534]">Edit</button><button type="button" onClick={() => toggleAvailability(item)} className={`min-h-8 rounded-full border px-3 font-montserrat text-[8px] font-bold uppercase ${item.isAvailable ? "border-[#80755f]/25 text-[#80755f]" : "border-[#4f6442]/25 text-[#4f6442]"}`}>{item.isAvailable ? "Mark unavailable" : "Mark available"}</button><button type="button" onClick={() => setPendingDelete(item)} className="min-h-8 rounded-full border border-[#8a5148]/25 px-3 font-montserrat text-[8px] font-bold uppercase text-[#8a5148]">Remove</button></div>
-              </article>\n              {editingId === item.id && treatmentForm && <div className="border-t border-[#334b39]/10 bg-[#fffcf3] p-4 sm:p-5">{treatmentForm}</div>}\n            </div>)}
+              </article>
+              {editingId === item.id && treatmentForm && <div className="border-t border-[#334b39]/10 bg-[#fffcf3] p-4 sm:p-5">{treatmentForm}</div>}
+            </div>)}
             {!visible.length && <p className="p-12 text-center font-montserrat text-xs text-[#80755f]">No treatments match your filters.</p>}
           </div>
         </section>
