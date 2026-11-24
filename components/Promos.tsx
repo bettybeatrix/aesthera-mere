@@ -1,22 +1,44 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import BookingTrigger from "@/components/BookingTrigger";
+import { PromoModal } from "@/app/promos/PromosList";
 import { ArrowUpRightIcon } from "@/components/Icons";
-import promo1Image from "@/public/images/promotions/promo1.png";
-import promo2Image from "@/public/images/promotions/promo2.png";
-import promo3Image from "@/public/images/promotions/promo3.png";
+import { PROMOTIONS } from "@/lib/promos";
 
-const offers = [
-  { name: "Facial Holiday Treat", treatment: "Selected premium facial", sessions: "1 session", promoPrice: "Starts at ₱999", regularPrice: "Inquire for regular price", validity: "Confirm current validity when booking", image: promo1Image },
-  { name: "Laser Holiday Treat", treatment: "Selected laser treatment", sessions: "1 session", promoPrice: "Starts at ₱999", regularPrice: "Inquire for regular price", validity: "Confirm current validity when booking", image: promo2Image },
-  { name: "Aesthera Drip Treat", treatment: "Selected wellness drip", sessions: "1 session", promoPrice: "Starts at ₱899", regularPrice: "Inquire for regular price", validity: "Confirm current validity when booking", image: promo3Image },
-];
+const offers = PROMOTIONS;
+
+const pesoFormatter = new Intl.NumberFormat("en-PH", {
+  style: "currency",
+  currency: "PHP",
+  maximumFractionDigits: 0,
+});
+
+function promoPrice(offer: (typeof PROMOTIONS)[number]) {
+  return offer.promoPriceLabel ??
+    (typeof offer.promoPrice === "number" ? pesoFormatter.format(offer.promoPrice) : "Inquire for price");
+}
+
+function regularPrice(offer: (typeof PROMOTIONS)[number]) {
+  return offer.regularPriceLabel ??
+    (typeof offer.regularPrice === "number" ? pesoFormatter.format(offer.regularPrice) : undefined);
+}
+
+function CampaignBadge({ label }: { label: string }) {
+  if (label !== "BEReady Holiday Deal") return label;
+
+  return (
+    <>
+      <span className="font-extrabold tracking-[0.14em]">BER</span>
+      <span className="font-semibold">eady Holiday Deal</span>
+    </>
+  );
+}
 
 export default function Promos() {
   const carouselRef = useRef<HTMLDivElement>(null);
+  const [selectedOffer, setSelectedOffer] = useState<(typeof PROMOTIONS)[number] | null>(null);
 
   function moveCarousel(direction: -1 | 1) {
     const carousel = carouselRef.current;
@@ -32,6 +54,7 @@ export default function Promos() {
   }
 
   return (
+    <>
     <section id="promos" aria-labelledby="promos-heading" className="relative isolate overflow-hidden bg-[#FFFCF3] px-6 py-10 md:px-10 md:py-12">
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#FFFCF3] to-transparent" />
       <div className="relative mx-auto max-w-[1280px]">
@@ -59,23 +82,29 @@ export default function Promos() {
 
           <div ref={carouselRef} role="region" aria-label="Current promotions" className="flex min-w-0 snap-x snap-mandatory gap-5 overflow-x-auto py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-6">
             {offers.map((offer) => (
-              <article key={offer.name} className="group flex h-auto w-[92%] shrink-0 snap-start flex-col overflow-hidden rounded-[22px] border border-[#80755F]/20 bg-white shadow-[0_18px_45px_-30px_rgba(30,58,42,0.45)] sm:w-[68%] lg:w-[42%]">
-              <div className="relative aspect-[16/10] overflow-hidden bg-[#E7E1D7]">
-                <Image src={offer.image} alt="" fill quality={90} sizes="(max-width: 1023px) 100vw, 33vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
-                <span className="absolute left-4 top-4 rounded-full bg-[#4C5534] px-3 py-2 font-montserrat text-[10px] font-semibold uppercase tracking-[0.12em] text-white">Current offer</span>
+              <article key={offer.id} className="group flex h-auto w-[92%] shrink-0 snap-start flex-col overflow-hidden rounded-[22px] border border-[#80755F]/20 bg-white shadow-[0_18px_45px_-30px_rgba(30,58,42,0.45)] sm:w-[68%] lg:w-[31.5%]">
+              <div className="relative aspect-[4/5] overflow-hidden bg-[#E7E1D7]">
+                <Image src={offer.image} alt={`${offer.title} holiday promotion`} fill quality={90} sizes="(max-width: 1023px) 100vw, 42vw" className="object-cover transition-transform duration-700 group-hover:scale-[1.02]" />
+                <span className="absolute left-4 top-4 rounded-full bg-[#4C5534] px-3 py-2 font-montserrat text-[10px] tracking-[0.06em] text-white"><CampaignBadge label={offer.badge} /></span>
               </div>
               <div className="flex flex-1 flex-col p-6">
-                <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">{offer.treatment}</p>
-                <h3 className="font-seasons mt-2 text-3xl leading-tight text-[#4C5534]">{offer.name}</h3>
+                <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">{offer.categoryLabel}</p>
+                <h3 className="font-seasons mt-2 text-3xl leading-tight text-[#4C5534]">{offer.title}</h3>
+                <p className="mt-2 font-montserrat text-xs leading-6 text-[#80755F]">{offer.subtitle}</p>
                 <dl className="mt-5 space-y-3 border-y border-[#80755F]/15 py-5 font-montserrat text-xs">
-                  <div className="flex justify-between gap-4"><dt className="text-[#80755F]">Package</dt><dd className="text-right font-semibold text-[#4C5534]">{offer.sessions}</dd></div>
-                  <div className="flex justify-between gap-4"><dt className="text-[#80755F]">Promo price</dt><dd className="text-right font-semibold text-[#4C5534]">{offer.promoPrice}</dd></div>
-                  <div className="flex justify-between gap-4"><dt className="text-[#80755F]">Regular price</dt><dd className="text-right text-[#4C5534]">{offer.regularPrice}</dd></div>
-                  <div className="flex justify-between gap-4"><dt className="text-[#80755F]">Validity</dt><dd className="max-w-[190px] text-right text-[#4C5534]">{offer.validity}</dd></div>
+                  <div className="flex justify-between gap-4"><dt className="text-[#80755F]">Package</dt><dd className="max-w-[230px] text-right font-semibold text-[#4C5534]">{offer.sessions}</dd></div>
+                  <div className="flex justify-between gap-4"><dt className="text-[#80755F]">Promo price</dt><dd className="text-right font-semibold text-[#4C5534]">{promoPrice(offer)}</dd></div>
+                  {regularPrice(offer) && <div className="flex justify-between gap-4"><dt className="text-[#80755F]">Regular price</dt><dd className="text-right text-[#4C5534] line-through">{regularPrice(offer)}</dd></div>}
+                  {offer.discountLabel && <div className="flex justify-between gap-4"><dt className="text-[#80755F]">Holiday savings</dt><dd className="text-right font-semibold text-[#4C5534]">{offer.discountLabel}</dd></div>}
+                  <div className="flex justify-between gap-4"><dt className="text-[#80755F]">Validity</dt><dd className="max-w-[230px] text-right text-[#4C5534]">{offer.validity}</dd></div>
                 </dl>
-                <BookingTrigger initialTreatment={offer.name} className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#4C5534] px-5 font-montserrat text-xs font-semibold text-white transition-colors hover:bg-[#35452F]">
-                  Book This Offer <ArrowUpRightIcon className="h-4 w-4" />
-                </BookingTrigger>
+                <button
+                  type="button"
+                  onClick={() => setSelectedOffer(offer)}
+                  className="mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#4C5534] px-5 font-montserrat text-xs font-semibold text-white transition-colors hover:bg-[#35452F] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#4C5534]"
+                >
+                  View Offer Details <ArrowUpRightIcon className="h-4 w-4" />
+                </button>
               </div>
               </article>
             ))}
@@ -87,5 +116,9 @@ export default function Promos() {
         </div>
       </div>
     </section>
+    {selectedOffer && (
+      <PromoModal card={selectedOffer} onClose={() => setSelectedOffer(null)} />
+    )}
+    </>
   );
 }
