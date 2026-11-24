@@ -265,11 +265,7 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
             <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#80755F]">Website management</p>
             <h1 className="mt-2 font-seasons text-[clamp(2.2rem,4vw,3.2rem)] leading-none text-[#4C5534]">Promotions</h1>
           </div>
-          <div className="flex flex-wrap gap-5">
-            <div><p className="font-seasons text-2xl text-[#4C5534]">{promos.length}</p><p className="font-montserrat text-[8px] font-semibold uppercase tracking-wide text-[#80755F]">Offers</p></div>
-            <div><p className="font-seasons text-2xl text-[#4C5534]">{activeCount}</p><p className="font-montserrat text-[8px] font-semibold uppercase tracking-wide text-[#80755F]">Active</p></div>
-            <div><p className="font-seasons text-2xl text-[#4C5534]">{expiredCount}</p><p className="font-montserrat text-[8px] font-semibold uppercase tracking-wide text-[#80755F]">Expired</p></div>
-          </div>
+
         </div>
       </header>
       <PromoCampaignHero campaign={campaign} editable onChange={setCampaign} onSave={() => setNotice("Hero changes saved in this editing session. Permanent saving will be enabled with the backend.")} />
