@@ -37,6 +37,7 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
   const [query, setQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState<"all" | "available" | "unavailable">("all");
+  const [showAll, setShowAll] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<ManagedTreatmentInput>(blank);
@@ -135,34 +136,56 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
   }
 
   return (
-    <main className="min-h-screen px-5 pb-16 pt-7 sm:px-8 lg:px-10 lg:pt-10">
+    <main className="min-h-screen bg-[#FFFCF3] px-5 pb-16 pt-7 text-[#4C5534] sm:px-8 lg:px-10 lg:pt-8">
       <div className="mx-auto max-w-[1460px]">
-        <header className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
-          <div>
-            <h1 className="font-seasons text-[clamp(2.4rem,4vw,3.7rem)] leading-none text-[#4c5534]">Treatments</h1>
-          </div>
-          <button type="button" onClick={openNew} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#4c5534] px-5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white hover:bg-[#3d472a]"><Icon><path d="M12 5v14M5 12h14" /></Icon> Add treatment</button>
+        <header className="rounded-[22px] border border-[#80755F]/15 bg-[#F1EBDD] px-6 py-6 sm:px-8">
+          <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#80755F]">Website management</p>
+          <h1 className="mt-2 font-seasons text-[clamp(2.2rem,4vw,3.2rem)] leading-none text-[#4C5534]">Treatments</h1>
         </header>
 
-        <section className="mt-7 grid gap-3 sm:grid-cols-3" aria-label="Treatment summary">
-          {[["Total treatments", items.length], ["Available", items.filter((item) => item.isAvailable).length], ["Unavailable", items.filter((item) => !item.isAvailable).length]].map(([label, value]) => <article key={String(label)} className="rounded-[20px] border border-[#334b39]/10 bg-white/75 p-5"><p className="font-seasons text-3xl text-[#4c5534]">{value}</p><p className="mt-2 font-montserrat text-[10px] font-semibold text-[#80755f]">{label}</p></article>)}
+        <section className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-[repeat(3,minmax(0,1fr))_auto]" aria-label="Treatment summary">
+          <article className="rounded-[18px] border border-[#80755F]/15 bg-[#F7F2E8] px-5 py-4"><p className="font-seasons text-3xl text-[#4C5534]">{items.length}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#80755F]">Total treatments</p></article>
+          <article className="rounded-[18px] border border-[#80755F]/15 bg-[#E8EEE3] px-5 py-4"><p className="font-seasons text-3xl text-[#4C5534]">{items.filter((item) => item.isAvailable).length}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#4F6442]">Available</p></article>
+          <article className="rounded-[18px] border border-[#80755F]/15 bg-[#F3EAE3] px-5 py-4"><p className="font-seasons text-3xl text-[#4C5534]">{items.filter((item) => !item.isAvailable).length}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#8A6653]">Unavailable</p></article>
+          <div className="flex items-center xl:justify-end"><button type="button" onClick={openNew} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#4C5534] px-6 font-montserrat text-[9px] font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#35452F] xl:w-auto"><Icon><path d="M12 5v14M5 12h14" /></Icon> Add treatment</button></div>
         </section>
 
-        <section className="mt-5 overflow-hidden rounded-[24px] border border-[#334b39]/10 bg-white/80">
+        <section className="mt-5 overflow-hidden rounded-[24px] border border-[#80755F]/15 bg-[#F3F0E6]">
           <div className="grid gap-3 border-b border-[#334b39]/10 p-4 lg:grid-cols-[1fr_220px_auto] lg:items-center sm:p-5">
-            <label className="flex min-h-11 items-center gap-2 rounded-xl border border-[#334b39]/10 bg-[#f5f1e7] px-3"><Icon><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></Icon><span className="sr-only">Search treatments</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search treatments..." className="min-w-0 flex-1 bg-transparent font-montserrat text-[10px] outline-none" /></label>
+            <label className="flex min-h-11 items-center gap-2 rounded-xl border border-[#80755F]/20 bg-[#F8F4EB] px-3"><Icon><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></Icon><span className="sr-only">Search treatments</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search treatments..." className="min-w-0 flex-1 bg-transparent font-montserrat text-[10px] outline-none" /></label>
             <select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)} className="min-h-11 rounded-xl border border-[#334b39]/10 bg-[#f5f1e7] px-3 font-montserrat text-[10px] text-[#4c5534] outline-none"><option value="all">All categories</option>{categories.map((category) => <option key={category.slug} value={category.slug}>{category.name}</option>)}</select>
             <div className="flex rounded-full bg-[#edf0e8] p-1">{(["all", "available", "unavailable"] as const).map((status) => <button key={status} type="button" onClick={() => setStatusFilter(status)} className={`min-h-9 rounded-full px-3 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] ${statusFilter === status ? "bg-white text-[#36513c] shadow-sm" : "text-[#858c85]"}`}>{status}</button>)}</div>
           </div>
-          <div className="divide-y divide-[#334b39]/8">
-            {visible.map((item) => <article key={item.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:p-5">
-              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[#e9e4d8]">{item.image && item.image.startsWith("/") ? <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" /> : item.image ? <Image src={item.image} alt={item.name} fill sizes="64px" className="object-cover" unoptimized /> : <span className="grid h-full w-full place-items-center font-seasons text-xl text-[#4f6442]">{item.name.slice(0,1)}</span>}</div>
-              <div className="min-w-0 flex-1"><h2 className="font-montserrat text-[11px] font-semibold text-[#39473d]">{item.name}</h2><p className="mt-1 font-montserrat text-[9px] text-[#80755f]">{item.categoryName} / {item.groupName}</p><p className="mt-1 font-montserrat text-[10px] font-semibold text-[#4f6442]">{item.price}</p><span className={`mt-2 inline-flex rounded-full px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase ${item.isAvailable ? "bg-[#e8eee3] text-[#4f6442]" : "bg-[#f1eee6] text-[#80755f]"}`}>{item.isAvailable ? "Available" : "Unavailable"}</span></div>
-              <div className="flex shrink-0 flex-wrap gap-1.5"><button type="button" onClick={() => edit(item)} className="min-h-8 rounded-full border border-[#334b39]/15 px-3 font-montserrat text-[8px] font-bold uppercase text-[#4c5534]">Edit</button><button type="button" onClick={() => toggleAvailability(item)} className={`min-h-8 rounded-full border px-3 font-montserrat text-[8px] font-bold uppercase ${item.isAvailable ? "border-[#80755f]/25 text-[#80755f]" : "border-[#4f6442]/25 text-[#4f6442]"}`}>{item.isAvailable ? "Mark unavailable" : "Mark available"}</button><button type="button" onClick={() => setPendingDelete(item)} className="min-h-8 rounded-full border border-[#8a5148]/25 px-3 font-montserrat text-[8px] font-bold uppercase text-[#8a5148]">Remove</button></div>
-            </article>)}
-            {!visible.length && <p className="p-12 text-center font-montserrat text-xs text-[#80755f]">No treatments match your filters.</p>}
-          </div>
-        </section>
+          <div className="p-4 sm:p-5">
+            {visible.length ? (
+              <>
+                <div className="grid items-start gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                  {visible.slice(0, showAll ? visible.length : 9).map((item) => (
+                    <article key={item.id} className="overflow-hidden rounded-[20px] border border-[#80755F]/15 bg-[#F8F4EB] shadow-[0_10px_28px_-24px_rgba(35,54,40,0.5)] transition-shadow hover:shadow-[0_16px_34px_-24px_rgba(35,54,40,0.45)]">
+                      <div className="relative aspect-[16/10] overflow-hidden bg-[#E8E4DC]">
+                        {item.image && item.image.startsWith("/") ? <Image src={item.image} alt={item.name} fill sizes="(max-width: 768px) 90vw, 30vw" className="object-cover" /> : item.image ? <Image src={item.image} alt={item.name} fill sizes="(max-width: 768px) 90vw, 30vw" className="object-cover" unoptimized /> : <div className="grid h-full place-items-center bg-[#E8EEE3] font-seasons text-4xl text-[#4C5534]">{item.name.slice(0,1)}</div>}
+                      </div>
+                      <div className="p-4">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span className={`rounded-full px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase tracking-wide ${item.isAvailable ? "bg-[#E8EEE3] text-[#4F6442]" : "bg-[#F3EAE3] text-[#8A6653]"}`}>{item.isAvailable ? "Available" : "Unavailable"}</span>
+                          <span className="font-montserrat text-[8px] font-semibold uppercase tracking-wide text-[#80755F]">{item.categoryName}</span>
+                        </div>
+                        <h2 className="mt-3 line-clamp-2 min-h-[2.8rem] font-seasons text-xl leading-tight text-[#4C5534]">{item.name}</h2>
+                        <p className="mt-1 line-clamp-1 font-montserrat text-[9px] text-[#80755F]">{item.groupName}</p>
+                        <p className="mt-3 font-montserrat text-xs font-semibold text-[#4F6442]">{item.price || "Price upon inquiry"}</p>
+                        <div className="mt-4 flex flex-wrap gap-2 border-t border-[#80755F]/15 pt-3">
+                          <button type="button" onClick={() => edit(item)} className="min-h-9 flex-1 rounded-full border border-[#4C5534]/20 px-3 font-montserrat text-[8px] font-bold uppercase text-[#4C5534] transition-colors hover:bg-[#E8EEE3]">Edit</button>
+                          <button type="button" onClick={() => toggleAvailability(item)} className="min-h-9 flex-1 rounded-full border border-[#80755F]/25 px-3 font-montserrat text-[8px] font-bold uppercase text-[#80755F] transition-colors hover:bg-[#F1EBDD]">{item.isAvailable ? "Mark unavailable" : "Mark available"}</button>
+                          <button type="button" onClick={() => setPendingDelete(item)} aria-label={"Remove " + item.name} className="grid h-9 w-9 place-items-center rounded-full border border-[#8A5148]/20 text-[#8A5148] transition-colors hover:bg-[#F3EAE3]"><Icon><path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3" /></Icon></button>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+                {visible.length > 9 && <div className="flex justify-center pt-6"><button type="button" onClick={() => setShowAll((current) => !current)} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#4C5534]/25 bg-[#F1EBDD] px-6 font-montserrat text-[9px] font-semibold uppercase tracking-[0.08em] text-[#4C5534] transition-colors hover:bg-[#E8EEE3]">{showAll ? "Show less" : `Show more (${visible.length - 9})`}<Icon><path d={showAll ? "m6 15 6-6 6 6" : "m6 9 6 6 6-6"} /></Icon></button></div>}
+              </>
+            ) : <p className="px-6 py-14 text-center font-montserrat text-xs text-[#80755F]">No treatments match your filters.</p>}
+          </div>        </section>
 
         {formOpen && (
           <section ref={formRef} className="mt-5 scroll-mt-8 rounded-[24px] border border-[#334b39]/10 bg-white/80 p-5 sm:p-7">
