@@ -164,17 +164,17 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
   };
 
   const promotionForm = formOpen ? (
-          <section className="promo-form-reveal rounded-[22px] border border-[#4C5534]/10 bg-[#fffefa] p-5 shadow-[0_10px_32px_rgba(51,75,57,0.055)] sm:p-7">
+          <section className="promo-form-reveal rounded-[22px] border border-[#80755F]/20 bg-[#F7F1E6] p-5 shadow-[0_10px_32px_rgba(51,75,57,0.055)] sm:p-7">
             <div className="flex items-start justify-between gap-3"><div><p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">{editingId ? "Edit promotion" : "New promotion"}</p><h2 className="font-seasons mt-2 text-2xl">{editingId ? "Update promotion details" : "Add a promotion"}</h2></div><button type="button" onClick={closeForm} className="font-montserrat text-[9px] font-bold uppercase text-[#4F6442]">Close</button></div>
             <form onSubmit={save} className="mt-6 space-y-6">
               <section className="space-y-4">
                 <h3 className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">Offer details</h3>
                 <div className="grid gap-4 md:grid-cols-2">
-                  <label className="block md:col-span-2"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Promotion title *</span><input required value={form.title} onChange={(event) => update("title", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FFFCF3] px-3 font-montserrat text-xs" /></label>
-                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Category</span><select value={form.category} onChange={(event) => update("category", event.target.value as PromoForm["category"])} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FFFCF3] px-3 font-montserrat text-xs">{categories.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select></label>
-                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Category label *</span><input required value={form.categoryLabel} onChange={(event) => update("categoryLabel", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FFFCF3] px-3 font-montserrat text-xs" /></label>
-                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Card badge *</span><input required value={form.badge} onChange={(event) => update("badge", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FFFCF3] px-3 font-montserrat text-xs" /></label>
-                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Subtitle</span><input value={form.subtitle} onChange={(event) => update("subtitle", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FFFCF3] px-3 font-montserrat text-xs" /></label>
+                  <label className="block md:col-span-2"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Promotion title *</span><input required value={form.title} onChange={(event) => update("title", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FBF7EF] px-3 font-montserrat text-xs" /></label>
+                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Category</span><select value={form.category} onChange={(event) => update("category", event.target.value as PromoForm["category"])} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FBF7EF] px-3 font-montserrat text-xs">{categories.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select></label>
+                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Category label *</span><input required value={form.categoryLabel} onChange={(event) => update("categoryLabel", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FBF7EF] px-3 font-montserrat text-xs" /></label>
+                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Card badge *</span><input required value={form.badge} onChange={(event) => update("badge", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FBF7EF] px-3 font-montserrat text-xs" /></label>
+                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Subtitle</span><input value={form.subtitle} onChange={(event) => update("subtitle", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FBF7EF] px-3 font-montserrat text-xs" /></label>
                 </div>
               </section>
 
@@ -184,30 +184,30 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
                   <div className="rounded-2xl bg-[#F5F1E7] p-4">
                     <p className="mb-3 font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Promotional price</p>
                     <div className="grid gap-3">
-                      <label><span className="mb-1.5 block font-montserrat text-[9px] text-[#80755F]">Numeric amount</span><input type="number" min="0" step="0.01" value={form.promoPrice ?? ""} onChange={(event) => update("promoPrice", event.target.value === "" ? undefined : Number(event.target.value))} className="min-h-10 w-full rounded-lg border border-[#80755F]/20 bg-white px-3 font-montserrat text-xs" /></label>
-                      <label><span className="mb-1.5 block font-montserrat text-[9px] text-[#80755F]">Display label (optional)</span><input value={form.promoPriceLabel ?? ""} onChange={(event) => update("promoPriceLabel", event.target.value || undefined)} className="min-h-10 w-full rounded-lg border border-[#80755F]/20 bg-white px-3 font-montserrat text-xs" placeholder="e.g. From ₱150 / unit" /></label>
+                      <label><span className="mb-1.5 block font-montserrat text-[9px] text-[#80755F]">Numeric amount</span><input type="number" min="0" step="0.01" value={form.promoPrice ?? ""} onChange={(event) => update("promoPrice", event.target.value === "" ? undefined : Number(event.target.value))} className="min-h-10 w-full rounded-lg border border-[#80755F]/20 bg-[#FBF7EF] px-3 font-montserrat text-xs" /></label>
+                      <label><span className="mb-1.5 block font-montserrat text-[9px] text-[#80755F]">Display label (optional)</span><input value={form.promoPriceLabel ?? ""} onChange={(event) => update("promoPriceLabel", event.target.value || undefined)} className="min-h-10 w-full rounded-lg border border-[#80755F]/20 bg-[#FBF7EF] px-3 font-montserrat text-xs" placeholder="e.g. From ₱150 / unit" /></label>
                     </div>
                   </div>
                   <div className="rounded-2xl bg-[#F5F1E7] p-4">
                     <p className="mb-3 font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Regular price</p>
                     <div className="grid gap-3">
-                      <label><span className="mb-1.5 block font-montserrat text-[9px] text-[#80755F]">Numeric amount</span><input type="number" min="0" step="0.01" value={form.regularPrice ?? ""} onChange={(event) => update("regularPrice", event.target.value === "" ? undefined : Number(event.target.value))} className="min-h-10 w-full rounded-lg border border-[#80755F]/20 bg-white px-3 font-montserrat text-xs" /></label>
-                      <label><span className="mb-1.5 block font-montserrat text-[9px] text-[#80755F]">Display label (optional)</span><input value={form.regularPriceLabel ?? ""} onChange={(event) => update("regularPriceLabel", event.target.value || undefined)} className="min-h-10 w-full rounded-lg border border-[#80755F]/20 bg-white px-3 font-montserrat text-xs" placeholder="e.g. ₱250–₱450 / unit" /></label>
+                      <label><span className="mb-1.5 block font-montserrat text-[9px] text-[#80755F]">Numeric amount</span><input type="number" min="0" step="0.01" value={form.regularPrice ?? ""} onChange={(event) => update("regularPrice", event.target.value === "" ? undefined : Number(event.target.value))} className="min-h-10 w-full rounded-lg border border-[#80755F]/20 bg-[#FBF7EF] px-3 font-montserrat text-xs" /></label>
+                      <label><span className="mb-1.5 block font-montserrat text-[9px] text-[#80755F]">Display label (optional)</span><input value={form.regularPriceLabel ?? ""} onChange={(event) => update("regularPriceLabel", event.target.value || undefined)} className="min-h-10 w-full rounded-lg border border-[#80755F]/20 bg-[#FBF7EF] px-3 font-montserrat text-xs" placeholder="e.g. ₱250–₱450 / unit" /></label>
                     </div>
                   </div>
-                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Discount label</span><input value={form.discountLabel ?? ""} onChange={(event) => update("discountLabel", event.target.value || undefined)} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FFFCF3] px-3 font-montserrat text-xs" placeholder="e.g. UP TO 40% OFF" /></label>
-                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Savings text</span><input value={form.savings ?? ""} onChange={(event) => update("savings", event.target.value || undefined)} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FFFCF3] px-3 font-montserrat text-xs" placeholder="e.g. Save ₱17,010" /></label>
+                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Discount label</span><input value={form.discountLabel ?? ""} onChange={(event) => update("discountLabel", event.target.value || undefined)} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FBF7EF] px-3 font-montserrat text-xs" placeholder="e.g. UP TO 40% OFF" /></label>
+                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Savings text</span><input value={form.savings ?? ""} onChange={(event) => update("savings", event.target.value || undefined)} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FBF7EF] px-3 font-montserrat text-xs" placeholder="e.g. Save ₱17,010" /></label>
                 </div>
               </section>
 
               <section className="space-y-4 border-t border-[#80755F]/15 pt-6">
                 <h3 className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">Offer information</h3>
                 <div className="grid gap-4 md:grid-cols-2">
-                  <label className="block md:col-span-2"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Description</span><textarea rows={3} value={form.description} onChange={(event) => update("description", event.target.value)} className="w-full rounded-xl border border-[#80755F]/20 bg-[#FFFCF3] px-3 py-3 font-montserrat text-xs leading-6" /></label>
-                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Package / sessions</span><input value={form.sessions ?? ""} onChange={(event) => update("sessions", event.target.value || undefined)} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FFFCF3] px-3 font-montserrat text-xs" /></label>
-                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Bonus / free inclusions summary</span><input value={form.bonusText ?? ""} onChange={(event) => update("bonusText", event.target.value || undefined)} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FFFCF3] px-3 font-montserrat text-xs" /></label>
-                  <label className="block md:col-span-2"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Recommended for (one per line)</span><textarea rows={3} value={lines(form.recommendedFor ?? [])} onChange={(event) => update("recommendedFor", parseLines(event.target.value))} className="w-full rounded-xl border border-[#80755F]/20 bg-[#FFFCF3] px-3 py-3 font-montserrat text-xs leading-6" /></label>
-                  <label className="block md:col-span-2"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Inclusions (one per line)</span><textarea required rows={4} value={lines(form.inclusions)} onChange={(event) => update("inclusions", parseLines(event.target.value))} className="w-full rounded-xl border border-[#80755F]/20 bg-[#FFFCF3] px-3 py-3 font-montserrat text-xs leading-6" /></label>
+                  <label className="block md:col-span-2"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Description</span><textarea rows={3} value={form.description} onChange={(event) => update("description", event.target.value)} className="w-full rounded-xl border border-[#80755F]/20 bg-[#FBF7EF] px-3 py-3 font-montserrat text-xs leading-6" /></label>
+                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Package / sessions</span><input value={form.sessions ?? ""} onChange={(event) => update("sessions", event.target.value || undefined)} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FBF7EF] px-3 font-montserrat text-xs" /></label>
+                  <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Bonus / free inclusions summary</span><input value={form.bonusText ?? ""} onChange={(event) => update("bonusText", event.target.value || undefined)} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FBF7EF] px-3 font-montserrat text-xs" /></label>
+                  <label className="block md:col-span-2"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Recommended for (one per line)</span><textarea rows={3} value={lines(form.recommendedFor ?? [])} onChange={(event) => update("recommendedFor", parseLines(event.target.value))} className="w-full rounded-xl border border-[#80755F]/20 bg-[#FBF7EF] px-3 py-3 font-montserrat text-xs leading-6" /></label>
+                  <label className="block md:col-span-2"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Inclusions (one per line)</span><textarea required rows={4} value={lines(form.inclusions)} onChange={(event) => update("inclusions", parseLines(event.target.value))} className="w-full rounded-xl border border-[#80755F]/20 bg-[#FBF7EF] px-3 py-3 font-montserrat text-xs leading-6" /></label>
                 </div>
               </section>
 
@@ -217,8 +217,8 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
                   const value = event.target.value || undefined;
                   update("validUntil", value);
                   update("validity", value ? `Valid until ${new Date(value + "T12:00:00").toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}.` : undefined);
-                }} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FFFCF3] px-3 font-montserrat text-xs" /></label>
-                <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Terms and conditions (one per line)</span><textarea rows={3} value={lines(form.terms ?? [])} onChange={(event) => update("terms", parseLines(event.target.value))} className="w-full rounded-xl border border-[#80755F]/20 bg-[#FFFCF3] px-3 py-3 font-montserrat text-xs leading-6" /></label>
+                }} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FBF7EF] px-3 font-montserrat text-xs" /></label>
+                <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Terms and conditions (one per line)</span><textarea rows={3} value={lines(form.terms ?? [])} onChange={(event) => update("terms", parseLines(event.target.value))} className="w-full rounded-xl border border-[#80755F]/20 bg-[#FBF7EF] px-3 py-3 font-montserrat text-xs leading-6" /></label>
               </section>
 
               <section className="space-y-4 border-t border-[#80755F]/15 pt-6">
@@ -259,7 +259,7 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
         @media (prefers-reduced-motion: reduce) { .promo-form-reveal { animation: none; } }
       `}</style>
     <main className="min-h-screen bg-[#FFFCF3] text-[#4C5534]">
-      <header className="border-b border-[#80755F]/15 bg-white px-6 py-7 md:px-10">
+      <header className="border-b border-[#80755F]/15 bg-[#F1EBDD] px-6 py-7 md:px-10">
         <div className="mx-auto flex max-w-[1280px] flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
             <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#80755F]">Website management</p>
@@ -271,27 +271,27 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
       <PromoCampaignHero campaign={campaign} editable onChange={setCampaign} onSave={() => setNotice("Hero changes saved in this editing session. Permanent saving will be enabled with the backend.")} />
       <section className="mx-auto max-w-[1280px] px-6 py-7 md:px-10">
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <article className="rounded-[18px] border border-[#4C5534]/10 bg-white px-5 py-4">
+          <article className="rounded-[18px] border border-[#80755F]/15 bg-[#F7F2E8] px-5 py-4">
             <p className="font-seasons text-3xl text-[#4C5534]">{promos.length}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#80755F]">Total offers</p>
           </article>
-          <article className="rounded-[18px] border border-[#4C5534]/10 bg-white px-5 py-4">
+          <article className="rounded-[18px] border border-[#80755F]/15 bg-[#F7F2E8] px-5 py-4">
             <p className="font-seasons text-3xl text-[#4C5534]">{activeCount}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#80755F]">Active offers</p>
           </article>
-          <article className="rounded-[18px] border border-[#4C5534]/10 bg-white px-5 py-4">
+          <article className="rounded-[18px] border border-[#80755F]/15 bg-[#F7F2E8] px-5 py-4">
             <p className="font-seasons text-3xl text-[#4C5534]">{inactiveCount}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#80755F]">Inactive offers</p>
           </article>
-          <article className="rounded-[18px] border border-[#4C5534]/10 bg-white px-5 py-4">
+          <article className="rounded-[18px] border border-[#80755F]/15 bg-[#F7F2E8] px-5 py-4">
             <p className="font-seasons text-3xl text-[#4C5534]">{expiredCount}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#80755F]">Expired offers</p>
           </article>
         </div>
 
         <div className="mt-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
           <div className="flex flex-1 flex-col gap-2 sm:flex-row">
-            <label className="flex min-h-10 max-w-md flex-1 items-center gap-2 rounded-full border border-[#80755F]/20 bg-white px-4">
+            <label className="flex min-h-10 max-w-md flex-1 items-center gap-2 rounded-full border border-[#80755F]/20 bg-[#F7F2E8] px-4">
               <Icon><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></Icon>
               <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search promotions..." className="min-w-0 flex-1 bg-transparent font-montserrat text-[10px] outline-none" />
             </label>
-            <select value={status} onChange={(event) => setStatus(event.target.value as typeof status)} className="min-h-10 rounded-full border border-[#80755F]/20 bg-white px-4 font-montserrat text-[10px] text-[#4C5534]">
+            <select value={status} onChange={(event) => setStatus(event.target.value as typeof status)} className="min-h-10 rounded-full border border-[#80755F]/20 bg-[#F7F2E8] px-4 font-montserrat text-[10px] text-[#4C5534]">
               <option value="all">All statuses</option>
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
@@ -301,15 +301,16 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
           <button type="button" onClick={openNew} className="inline-flex min-h-11 items-center justify-center gap-2 self-start rounded-full bg-[#4C5534] px-6 font-montserrat text-[9px] font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#35452F] sm:self-auto"><Icon><path d="M12 5v14M5 12h14" /></Icon> Add promotion</button>
         </div>
 
-        {formOpen && promotionForm && <div className="mt-5">{promotionForm}</div>}
+        {formOpen && !editingId && promotionForm && <div className="mt-5">{promotionForm}</div>}
 
-        <div className="mt-5 overflow-hidden rounded-[20px] border border-[#4C5534]/10 bg-white">
+        <div className="mt-5 overflow-hidden rounded-[20px] border border-[#80755F]/15 bg-[#F2EBDD]">
           {visible.length ? visible.map((promo) => {
             const expired = isExpired(promo, todayDate);
             const active = !expired && promo.isActive !== false;
             const price = promo.promoPriceLabel || (typeof promo.promoPrice === "number" ? new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP", maximumFractionDigits: 0 }).format(promo.promoPrice) : "Price upon inquiry");
             return (
-              <article key={promo.id} className="grid gap-4 border-b border-[#80755F]/12 p-4 last:border-b-0 sm:grid-cols-[92px_minmax(0,1fr)_auto] sm:items-center sm:p-5">
+              <div key={promo.id} className="border-b border-[#80755F]/15 last:border-b-0">
+              <article className="grid gap-4 bg-[#F8F4EB] p-4 sm:grid-cols-[92px_minmax(0,1fr)_auto] sm:items-center sm:p-5">
                 <div className="relative h-[104px] w-[92px] overflow-hidden rounded-xl bg-[#F5F1E7]">
                   {promo.image && <Image src={promo.image} alt={promo.title} fill sizes="92px" className="object-cover" unoptimized={!promo.image.startsWith("/")} />}
                 </div>
@@ -333,6 +334,8 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
                   <button type="button" onClick={() => setPendingDelete(promo)} className="min-h-9 rounded-full border border-[#8A5148]/20 px-4 font-montserrat text-[8px] font-bold uppercase text-[#8A5148] hover:bg-[#FBF0ED]">Remove</button>
                 </div>
               </article>
+              {editingId === promo.id && promotionForm && <div className="bg-[#F2EBDD] p-4 sm:p-5">{promotionForm}</div>}
+              </div>
             );
           }) : <p className="px-6 py-14 text-center font-montserrat text-xs text-[#80755F]">No promotions found for this search or status.</p>}
         </div>
@@ -353,7 +356,7 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
         </section>
       </section>
       {pendingDelete && <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[#172119]/55 px-5 py-8 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setPendingDelete(null); }}><section role="alertdialog" aria-modal="true" aria-labelledby="delete-promo-title" className="w-full max-w-[440px] rounded-[24px] border border-[#4C5534]/10 bg-[#FFFCF3] p-6 shadow-2xl"><p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#8A5148]">Remove promotion</p><h2 id="delete-promo-title" className="font-seasons mt-2 text-2xl">Are you sure?</h2><p className="mt-3 font-montserrat text-xs leading-6 text-[#80755F]">Remove <strong>{pendingDelete.title}</strong> from this editing session?</p><div className="mt-7 flex justify-end gap-2"><button type="button" onClick={() => setPendingDelete(null)} className="min-h-11 rounded-full border border-[#4C5534]/20 px-5 font-montserrat text-[9px] font-semibold uppercase">Cancel</button><button type="button" onClick={confirmDelete} className="min-h-11 rounded-full bg-[#8A5148] px-5 font-montserrat text-[9px] font-semibold uppercase text-white">Remove</button></div></section></div>}
-      {notice && <div role="status" className="fixed bottom-5 right-5 z-[60] max-w-sm rounded-2xl border border-[#4C5534]/10 bg-white px-5 py-4 font-montserrat text-[10px] leading-5 text-[#4F6442] shadow-xl">{notice}</div>}
+      {notice && <div role="status" className="fixed bottom-5 right-5 z-[60] max-w-sm rounded-2xl border border-[#80755F]/15 bg-[#F7F2E8] px-5 py-4 font-montserrat text-[10px] leading-5 text-[#4F6442] shadow-xl">{notice}</div>}
     </main>
     </>
   );
