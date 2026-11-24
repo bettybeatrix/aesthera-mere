@@ -49,7 +49,7 @@ function getRegularPriceLabel(card: PromoCard): string | undefined {
 // ---------------------------------------------------------------------------
 // Promo Detail Modal
 // ---------------------------------------------------------------------------
-function PromoModal({
+export function PromoModal({
   card,
   onClose,
 }: {
@@ -239,7 +239,7 @@ function PromoModal({
 // ---------------------------------------------------------------------------
 // Promo card — prominent discount and pricing, no hover-dependent content
 // ---------------------------------------------------------------------------
-function PromoCardItem({
+export function PromoCardItem({
   card,
   onClick,
 }: {
@@ -323,7 +323,7 @@ function PromoCardItem({
 // ---------------------------------------------------------------------------
 // Pricing Table
 // ---------------------------------------------------------------------------
-function PricingTableBlock({ table }: { table: PricingTable }) {
+export function PricingTableBlock({ table }: { table: PricingTable }) {
   return (
     <div className="overflow-hidden rounded-[20px] border border-[#80755F]/20 bg-white shadow-sm">
       <div className="border-b border-[#80755F]/15 bg-[#4C5534] px-6 py-4 text-white">
