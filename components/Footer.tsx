@@ -2,46 +2,43 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpIcon, ArrowUpRightIcon } from "@/components/Icons";
+import {
+  ArrowUpIcon,
+  ArrowUpRightIcon,
+} from "@/components/Icons";
 
 const GOOGLE_MAPS_URL =
   "https://www.google.com/maps/place/Aesthera+Mere+Beauty+Creations/@14.570535,121.0493446,17z/data=!4m8!3m7!1s0x3397c9ff0d4effff:0x8f90fb8a8325a1c2!8m2!3d14.5705298!4d121.0519195!9m1!1b1!16s%2Fg%2F11nb_t70wc";
 
-// Update these details with verified clinic information.
-const clinic = {
-  phoneDisplay: "+63 918 936 5679",
-  phoneHref: "tel:+639189365679",
-  email: "", // Add official clinic email
-  viber: "", // Add official Viber link
-  whatsapp: "", // Add official WhatsApp link
-  address:
-    "Unit 3 No. 4, Madison Square, Pioneer St., Mandaluyong City, Metro Manila",
-};
+const CONSENT_KEY = "aesthera-cookie-consent";
 
 const socialLinks = [
-  { name: "Facebook", url: "https://www.facebook.com/aestheramereph/" },
-  { name: "Instagram", url: "https://www.instagram.com/aestheramereph/" },
-  { name: "TikTok", url: "https://www.tiktok.com/@aestheramere" },
+  {
+    name: "Facebook",
+    url: "https://www.facebook.com/aestheramereph/",
+  },
+  {
+    name: "Instagram",
+    url: "https://www.instagram.com/aestheramereph/",
+  },
+  {
+    name: "TikTok",
+    url: "https://www.tiktok.com/@aestheramere",
+  },
 ];
-
-const menuLinks = [
-  { label: "Treatments", href: "/treatments" },
-  { label: "Our Doctors", href: "/doctors" },
-  { label: "Results", href: "/results" },
-  { label: "Promos", href: "/promos" },
-  { label: "About Us", href: "/about" },
-  { label: "FAQ", href: "/faq" },
-  { label: "Contact", href: "/contact" },
-];
-
-const CONSENT_KEY = "aesthera-cookie-consent";
 
 function SocialIcon({ name }: { name: string }) {
   if (name === "Facebook") {
     return (
-      <svg viewBox="0 0 24 24" fill="currentColor" className="h-[18px] w-[18px]" aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        className="h-[17px] w-[17px]"
+        aria-hidden="true"
+      >
         <path d="M22 12a10 10 0 1 0-11.56 9.88v-7H7.9V12h2.54V9.8c0-2.51 1.5-3.9 3.78-3.9 1.1 0 2.25.2 2.25.2v2.47H15.2c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.88h-2.34v7A10 10 0 0 0 22 12Z" />
       </svg>
     );
@@ -49,27 +46,46 @@ function SocialIcon({ name }: { name: string }) {
 
   if (name === "Instagram") {
     return (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" className="h-[18px] w-[18px]" aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        className="h-[17px] w-[17px]"
+        aria-hidden="true"
+      >
         <rect x="2" y="2" width="20" height="20" rx="5" />
         <circle cx="12" cy="12" r="4" />
-        <circle cx="18" cy="6" r="1" fill="currentColor" stroke="none" />
+        <circle
+          cx="18"
+          cy="6"
+          r="1"
+          fill="currentColor"
+          stroke="none"
+        />
       </svg>
     );
   }
 
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="h-[18px] w-[18px]" aria-hidden="true">
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className="h-[17px] w-[17px]"
+      aria-hidden="true"
+    >
       <path d="M16.7 2h-3.2v13.3a3.3 3.3 0 1 1-2.8-3.27V8.76a6.5 6.5 0 1 0 6 6.48V8.5a8.3 8.3 0 0 0 4.9 1.45V5.34A5.1 5.1 0 0 1 16.7 2Z" />
     </svg>
   );
 }
 
-function FooterHeading({ children }: { children: React.ReactNode }) {
+function FooterHeading({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return (
-    <h3
-      className="mb-2 text-[18px] leading-tight text-[#FFFCF3]"
-      style={{ fontFamily: "'Bodoni FLF', Georgia, serif" }}
-    >
+    <h3 className="font-seasons text-[22px] leading-tight text-[#4C5534] md:text-[24px]">
       {children}
     </h3>
   );
@@ -82,23 +98,30 @@ export default function Footer() {
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
-      setCookieVisible(!localStorage.getItem(CONSENT_KEY));
+      try {
+        setCookieVisible(
+          !localStorage.getItem(CONSENT_KEY)
+        );
+      } catch {
+        setCookieVisible(true);
+      }
+
       setCookieReady(true);
-    }, 0);
-
-    return () => window.clearTimeout(timeoutId);
-  }, []);
-
-  useEffect(() => {
-    const timeoutId = window.setTimeout(() => {
       setYear(new Date().getFullYear());
     }, 0);
 
     return () => window.clearTimeout(timeoutId);
   }, []);
 
-  const saveConsent = (choice: "accepted" | "rejected") => {
-    localStorage.setItem(CONSENT_KEY, choice);
+  const saveConsent = (
+    choice: "accepted" | "rejected"
+  ) => {
+    try {
+      localStorage.setItem(CONSENT_KEY, choice);
+    } catch {
+      // Browser storage may be unavailable.
+    }
+
     setCookieVisible(false);
 
     window.dispatchEvent(
@@ -108,262 +131,204 @@ export default function Footer() {
     );
   };
 
-  const backToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
   return (
     <>
-      <footer className="overflow-hidden rounded-t-[30px] bg-[#4C5534] text-[#FFFCF3]">
-        <div className="mx-auto max-w-[1280px] px-5 pb-3 pt-5 sm:px-6 sm:pb-4 sm:pt-6 md:px-10">
+      <footer className="relative isolate overflow-hidden bg-[#FFFCF3] text-[#4C5534]">
 
-          {/* MAIN FOOTER */}
-          <div className="grid grid-cols-2 gap-x-4 gap-y-3 sm:gap-x-6 lg:grid-cols-[1.2fr_0.65fr_1.2fr_1fr] lg:gap-x-8 lg:gap-y-0">
 
-            {/* BRAND + SOCIALS */}
-            <div>
-              <Link href="/" aria-label="Aesthera Mère homepage" className="inline-flex">
+{/* Ivory-to-olive gradient with overlapping circles */}
+<div
+  aria-hidden="true"
+  className="pointer-events-none absolute inset-0 -z-10"
+  style={{
+    background:
+      "linear-gradient(105deg, #FFFCF3 0%, #F6F3ED 28%, #E9EBDD 55%, #C7D2B5 100%)",
+  }}
+>
+  {/* Large circle at upper-right */}
+  <div
+    className="absolute -right-[6%] -top-[45%] h-[360px] w-[360px] rounded-full bg-[#DCE5CC]/35"
+  />
+
+  {/* Main olive circle */}
+  <div
+    className="absolute right-[7%] top-[4%] h-[280px] w-[280px] rounded-full bg-[#A9BB93]/20"
+  />
+
+
+</div>
+
+
+        {/* Footer content */}
+        <div className="relative z-10 mx-auto max-w-[1280px] px-6 pb-3 pt-8 md:px-10 md:pt-10">
+
+          {/* Four vertically aligned columns */}
+          <div className="grid items-start gap-x-8 gap-y-6 border-b border-[#4C5534]/15 pb-7 sm:grid-cols-2 lg:grid-cols-[1.25fr_1fr_1fr_1.25fr] lg:gap-x-10">
+
+            {/* Column 1: Branding */}
+            <div className="flex flex-col items-start">
+              <Link
+                href="/"
+                aria-label="Aesthera Mère homepage"
+                className="inline-block"
+              >
                 <Image
-                  src="/images/brand/logo.png"
-                  alt="Aesthera Mère"
-                  width={210}
-                  height={85}
+                  src="/images/brand/logo_name.png"
+                  alt="Aesthera Mère Beauty Creations"
+                  width={2048}
+                  height={342}
                   quality={90}
-                  className="h-auto w-[140px] max-w-full object-contain brightness-0 invert"
+                  className="h-auto w-[225px] max-w-full"
                 />
               </Link>
 
-              <p className="mt-1 max-w-[240px] font-montserrat text-[11px] leading-[1.45] text-[#FFFCF3]/85">
+              <p className="mt-2 font-montserrat text-[12px] leading-6 text-[#4C5534]/85">
                 Premium Aesthetic Care,
                 <br />
                 Made Accessible.
               </p>
+            </div>
 
-              <p className="mb-1.5 mt-2 font-montserrat text-[10px] font-medium uppercase tracking-[0.18em] text-[#FFFCF3]/75">
-                Follow Us
+            {/* Column 2: Contact Us */}
+            <div className="flex flex-col items-start">
+              <FooterHeading>Contact Us</FooterHeading>
+  {/* Social Media */}
+            <div className="mt-3 flex items-center gap-2.5">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Aesthera Mère on ${social.name}`}
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-[#4C5534]/35 text-[#4C5534] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#4C5534] hover:bg-[#4C5534] hover:text-white"
+                >
+                  <SocialIcon name={social.name} />
+                </a>
+              ))}
+            </div>
+              <p className="mt-3 font-montserrat text-[10px] font-semibold uppercase tracking-[0.17em] text-[#4C5534]/80">
+                Phone Number
               </p>
 
-              <div className="flex items-center gap-2.5">
-                {socialLinks.map((social) =>
-                  social.url ? (
-                    <a
-                      key={social.name}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`Follow us on ${social.name}`}
-                      title={social.name}
-                      className="flex h-8 w-8 items-center justify-center rounded-full border border-[#FFFCF3]/35 text-[#FFFCF3] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#FFFCF3] hover:text-[#4C5534] focus-visible:outline-2 focus-visible:outline-offset-2"
-                    >
-                      <SocialIcon name={social.name} />
-                    </a>
-                  ) : (
-                    <span
-                      key={social.name}
-                      title={`${social.name} link not yet configured`}
-                      className="flex h-8 w-8 items-center justify-center rounded-full border border-[#FFFCF3]/25 text-[#FFFCF3]/55"
-                    >
-                      <SocialIcon name={social.name} />
-                    </span>
-                  )
-                )}
-              </div>
+              <a
+                href="tel:+639189365679"
+                className="mt-2 inline-flex items-center gap-2 font-montserrat text-[13px] leading-6 transition-colors hover:text-[#80632F]"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 shrink-0" aria-hidden="true">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.84.58 2.8.7a2 2 0 0 1 1.73 2.03Z" />
+                </svg>
+                +63 918 936 5679
+              </a>
+
             </div>
 
-            {/* MENU LINKS */}
-            <div>
-              <FooterHeading>Explore</FooterHeading>
+            {/* Column 3: Opening Hours */}
+            <div className="flex flex-col items-start">
+              <FooterHeading>Opening Hours</FooterHeading>
 
-              <nav aria-label="Footer menu">
-                <ul className="grid gap-1">
-                  {menuLinks.map((item) => (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        className="font-montserrat text-[12px] text-[#FFFCF3]/85 transition-colors hover:text-white hover:underline hover:underline-offset-4"
-                      >
-                        {item.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
+              <p className="mt-3 font-montserrat text-[13px] leading-[1.9]">
+                Mon–Tue &amp; Thu–Sun
+                <br />
+                10:00 AM – 8:00 PM
+              </p>
+
+              <p className="mt-3 font-montserrat text-[13px] text-[#4C5534]/80">
+                Wednesday — Closed
+              </p>
             </div>
 
-            {/* CONTACT */}
-            <div>
-              <FooterHeading>Contact Us</FooterHeading>
-
-              <div className="space-y-2">
-                <div>
-                  <p className="mb-1 font-montserrat text-[10px] uppercase tracking-[0.14em] text-[#FFFCF3]/65">
-                    Clinic Address
-                  </p>
-                  <address className="max-w-[270px] font-montserrat text-[11px] not-italic leading-[1.45] text-[#FFFCF3]/85">
-                    {clinic.address}
-                  </address>
-                </div>
-
-                <div>
-                  <p className="mb-1 font-montserrat text-[10px] uppercase tracking-[0.14em] text-[#FFFCF3]/65">
-                    Phone
-                  </p>
-                  <a
-                    href={clinic.phoneHref}
-                    className="font-montserrat text-[12px] text-[#FFFCF3] hover:underline"
-                  >
-                    {clinic.phoneDisplay}
-                  </a>
-                </div>
-
-                {clinic.email && (
-                  <div>
-                    <p className="mb-1 font-montserrat text-[10px] uppercase tracking-[0.14em] text-[#FFFCF3]/65">
-                      Email
-                    </p>
-                    <a
-                      href={`mailto:${clinic.email}`}
-                      className="break-all font-montserrat text-[12px] text-[#FFFCF3] hover:underline"
-                    >
-                      {clinic.email}
-                    </a>
-                  </div>
-                )}
-
-                {(clinic.viber || clinic.whatsapp) && (
-                  <div>
-                    <p className="mb-2 font-montserrat text-[10px] uppercase tracking-[0.14em] text-[#FFFCF3]/65">
-                      Message Us
-                    </p>
-
-                    <div className="flex flex-wrap gap-x-5 gap-y-2">
-                      {clinic.viber && (
-                        <a
-                          href={clinic.viber}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-montserrat text-[12px] underline-offset-4 hover:underline"
-                        >
-                          Viber
-                        </a>
-                      )}
-
-                      {clinic.whatsapp && (
-                        <a
-                          href={clinic.whatsapp}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-montserrat text-[12px] underline-offset-4 hover:underline"
-                        >
-                          WhatsApp
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* HOURS + MAP */}
-            <div>
+            {/* Column 4: Visit Us */}
+            <div className="flex flex-col items-start">
               <FooterHeading>Visit Us</FooterHeading>
 
-              <div className="mb-2">
-                <p className="mb-1 font-montserrat text-[10px] uppercase tracking-[0.14em] text-[#FFFCF3]/65">
-                  Opening Hours
-                </p>
+              <p className="mt-3 font-montserrat text-[10px] font-semibold uppercase tracking-[0.17em] text-[#4C5534]/80">
+                Clinic Address
+              </p>
 
-                <p className="font-montserrat text-[11px] leading-[1.45] text-[#FFFCF3]/85">
-                  Mon–Tue, Thu–Sun: 10:00 AM – 8:00 PM
-                </p>
-
-                <p className="mt-1 font-montserrat text-[12px] text-[#FFFCF3]">
-                  Wednesday — Closed
-                </p>
-              </div>
-
-              <div className="overflow-hidden rounded-[12px] border border-[#FFFCF3]/20">
-                <iframe
-                  title="Aesthera Mère location"
-                  src="https://www.google.com/maps?q=14.5705298,121.0519195&z=16&output=embed"
-                  width="100%"
-                  height="72"
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="block w-full border-0"
-                />
-              </div>
+              <address className="mt-2 font-montserrat text-[13px] not-italic leading-[1.9]">
+                Unit 3 No. 4, Madison Square,
+                <br />
+                Pioneer St., Mandaluyong City,
+                <br />
+                Metro Manila, Philippines
+              </address>
 
               <a
                 href={GOOGLE_MAPS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-0 inline-flex min-h-8 items-center gap-2 font-montserrat text-[11px] text-[#FFFCF3] hover:underline hover:underline-offset-4"
+                className="mt-3 inline-flex items-center gap-2 border-b border-[#4C5534]/35 pb-1 font-montserrat text-[12px] font-medium transition-all duration-300 hover:gap-3 hover:border-[#4C5534]"
               >
                 Get Directions
-                <ArrowUpRightIcon className="h-4 w-4" />
+                <ArrowUpRightIcon className="h-3.5 w-3.5" />
               </a>
             </div>
           </div>
 
-          {/* LEGAL FOOTER */}
-          <div className="mt-4 border-t border-[#FFFCF3]/20 pt-3">
-            <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+          {/* Bottom footer */}
+          <div className="flex flex-col gap-3 py-4 lg:flex-row lg:items-center lg:justify-between">
 
-              <p className="font-montserrat text-[11px] text-[#FFFCF3]/75">
+            {/* Copyright */}
+            <div>
+              <p className="font-montserrat text-[11px] text-[#4C5534]/85">
                 © {year} Aesthera Mère. All rights reserved.
               </p>
 
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                <Link
-                  href="/privacy-policy"
-                  className="font-montserrat text-[11px] text-[#FFFCF3]/80 hover:text-white"
-                >
-                  Privacy Policy
-                </Link>
-
-                <Link
-                  href="/terms"
-                  className="font-montserrat text-[11px] text-[#FFFCF3]/80 hover:text-white"
-                >
-                  Terms of Use
-                </Link>
-
-                <button
-                  type="button"
-                  onClick={() => setCookieVisible(true)}
-                  className="font-montserrat text-[11px] text-[#FFFCF3]/80 hover:text-white"
-                >
-                  Cookie Settings
-                </button>
-
-                <button
-                  type="button"
-                  onClick={backToTop}
-                  className="font-montserrat text-[11px] text-[#FFFCF3]/80 hover:text-white"
-                >
-                  <span className="inline-flex items-center gap-1.5">Back to Top <ArrowUpIcon className="h-3.5 w-3.5" /></span>
-                </button>
-              </div>
             </div>
+
+            {/* Legal Links */}
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-3 font-montserrat text-[11px] text-[#4C5534]">
+              <Link
+                href="/privacy-policy"
+                className="transition-colors hover:text-[#80632F]"
+              >
+                Privacy Policy
+              </Link>
+
+              <Link
+                href="/terms"
+                className="transition-colors hover:text-[#80632F]"
+              >
+                Terms of Use
+              </Link>
+
+              <button
+                type="button"
+                onClick={() => setCookieVisible(true)}
+                className="transition-colors hover:text-[#80632F]"
+              >
+                Cookie Settings
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  window.scrollTo({
+                    top: 0,
+                    behavior: "smooth",
+                  })
+                }
+                className="inline-flex items-center gap-1.5 transition-colors hover:text-[#80632F]"
+              >
+                Back to Top
+                <ArrowUpIcon className="h-3.5 w-3.5" />
+              </button>
+            </div>
+
+
           </div>
         </div>
       </footer>
 
-      {/* COOKIE NOTICE */}
+      {/* Cookie Consent Banner */}
       {cookieReady && cookieVisible && (
         <div
           role="region"
           aria-label="Cookie preferences"
           className="fixed bottom-4 left-4 right-4 z-[100] mx-auto max-w-[680px] rounded-[16px] border border-[#80755F]/25 bg-[#FFFCF3] p-5 shadow-[0_12px_45px_rgba(76,85,52,0.18)] md:p-6"
         >
-          <h2
-            className="text-[23px] text-[#4C5534]"
-            style={{ fontFamily: "'Bodoni FLF', Georgia, serif" }}
-          >
+          <h2 className="font-bodoni text-[23px] text-[#4C5534]">
             Your Privacy Matters
           </h2>
 
