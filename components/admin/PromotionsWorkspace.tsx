@@ -219,14 +219,14 @@ export default function PromotionsWorkspace({ initialPromos }: Props) {
       `}</style>
     <main className="min-h-screen bg-[#FFFCF3] px-5 pb-16 pt-7 text-[#4C5534] sm:px-8 lg:px-10 lg:pt-10">
       <div className="mx-auto max-w-[1460px]">
-        <header className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
-          <h1 className="font-seasons text-[clamp(2.4rem,4vw,3.7rem)] leading-none">Promotions</h1>
-          <button type="button" onClick={openNew} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#4C5534] px-5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white hover:bg-[#3D472A]"><Icon><path d="M12 5v14M5 12h14" /></Icon> Add promotion</button>
+        <header className="flex flex-col justify-between gap-5 rounded-[24px] border border-[#4C5534]/10 bg-[#F5F1E7] px-6 py-7 sm:flex-row sm:items-center sm:px-8">
+          <div><p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#80755F]">Offers & packages</p><h1 className="mt-2 font-seasons text-[clamp(2.4rem,4vw,3.7rem)] leading-none">Promotions</h1></div>
+          <button type="button" onClick={openNew} className="inline-flex min-h-11 items-center justify-center gap-2 self-start rounded-full bg-[#4C5534] px-5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#3D472A] sm:self-auto"><Icon><path d="M12 5v14M5 12h14" /></Icon> Add promotion</button>
         </header>
 
         {!editingId && promotionForm && <div className="mb-6 mt-6">{promotionForm}</div>}
 
-        <section className="mt-8 grid gap-3 sm:grid-cols-4" aria-label="Promotion summary">
+        <section className="mt-6 grid gap-3 sm:grid-cols-4" aria-label="Promotion summary">
           {[["Total", promos.length], ["Active", activeCount], ["Inactive", inactiveCount], ["Expired", expiredCount]].map(([label, value]) => <article key={String(label)} className="rounded-[20px] border border-[#4C5534]/10 bg-white p-5"><p className="font-seasons text-3xl">{value}</p><p className="mt-2 font-montserrat text-[10px] font-semibold text-[#80755F]">{label}</p></article>)}
         </section>
 
@@ -236,23 +236,34 @@ export default function PromotionsWorkspace({ initialPromos }: Props) {
             <div className="flex flex-wrap rounded-full bg-[#EDF0E8] p-1">{(["all", "active", "inactive", "expired"] as const).map((value) => <button key={value} type="button" onClick={() => setStatus(value)} className={`min-h-9 rounded-full px-3 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] ${status === value ? "bg-white text-[#4C5534] shadow-sm" : "text-[#80755F]"}`}>{value}</button>)}</div>
           </div>
 
-          <div className="divide-y divide-[#80755F]/10">
+          <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-5">
             {visible.map((promo) => {
               const expired = isExpired(promo, todayDate);
               const active = !expired && promo.isActive !== false;
               const price = promo.promoPriceLabel ?? (typeof promo.promoPrice === "number" ? new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP", maximumFractionDigits: 0 }).format(promo.promoPrice) : "Price upon inquiry");
-              return <div key={promo.id}>
-                <article className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:p-5">
-                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[#F5F1E7]">{promo.image && promo.image.startsWith("/") ? <Image src={promo.image} alt={promo.title} fill sizes="64px" className="object-cover" /> : promo.image ? <Image src={promo.image} alt={promo.title} fill sizes="64px" className="object-cover" unoptimized /> : <span className="grid h-full w-full place-items-center font-seasons text-xl">{promo.title.slice(0,1)}</span>}</div>
-                <div className="min-w-0 flex-1"><h2 className="font-montserrat text-[11px] font-semibold">{promo.title}</h2><p className="mt-1 font-montserrat text-[9px] text-[#80755F]">{promo.categoryLabel}</p><p className="mt-1 font-montserrat text-[10px] font-semibold">{price}</p><span className={`mt-2 inline-flex rounded-full px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase ${expired ? "bg-[#F1EEE6] text-[#80755F]" : active ? "bg-[#E8EEE3] text-[#4F6442]" : "bg-[#F1EEE6] text-[#80755F]"}`}>{expired ? "Expired" : active ? "Active" : "Inactive"}</span></div>
-                <div className="flex shrink-0 flex-wrap gap-1.5"><button type="button" onClick={() => edit(promo)} className="min-h-8 rounded-full border border-[#4C5534]/20 px-3 font-montserrat text-[8px] font-bold uppercase">Edit</button><button type="button" onClick={() => toggleActive(promo)} disabled={expired} className="min-h-8 rounded-full border border-[#4C5534]/20 px-3 font-montserrat text-[8px] font-bold uppercase disabled:cursor-not-allowed disabled:opacity-40">{promo.isActive === false ? "Mark active" : "Mark inactive"}</button><button type="button" onClick={() => setPendingDelete(promo)} className="min-h-8 rounded-full border border-[#8A5148]/25 px-3 font-montserrat text-[8px] font-bold uppercase text-[#8A5148]">Remove</button></div>
-                </article>
-                {editingId === promo.id && promotionForm && <div className="border-t border-[#4C5534]/10 bg-[#F8F7F1] px-4 py-6 sm:px-6 sm:py-7"><div className="mx-auto max-w-[1120px]">{promotionForm}</div></div>}
-              </div>;
+              return <article key={promo.id} className={`overflow-hidden rounded-[20px] border bg-[#FFFCF3] transition-all duration-200 ${editingId === promo.id ? "border-[#4C5534]/40 ring-2 ring-[#4C5534]/10 shadow-md" : "border-[#4C5534]/10 hover:border-[#4C5534]/25 hover:shadow-[0_12px_28px_-24px_rgba(35,54,40,0.55)]"}`}>
+                <div className="grid grid-cols-[112px_minmax(0,1fr)] gap-4 p-4">
+                  <div className="relative min-h-[132px] overflow-hidden rounded-xl bg-[#E8E4DC]">{promo.image && promo.image.startsWith("/") ? <Image src={promo.image} alt={promo.title} fill sizes="112px" className="object-cover" /> : promo.image ? <Image src={promo.image} alt={promo.title} fill sizes="112px" className="object-cover" unoptimized /> : <span className="grid h-full place-items-center font-seasons text-2xl">{promo.title.slice(0,1)}</span>}</div>
+                  <div className="min-w-0 py-1">
+                    <div className="flex flex-wrap items-center gap-2"><span className={`rounded-full px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] ${expired ? "bg-[#F1EEE6] text-[#80755F]" : active ? "bg-[#E8EEE3] text-[#4F6442]" : "bg-[#F1EEE6] text-[#80755F]"}`}>{expired ? "Expired" : active ? "Active" : "Inactive"}</span>{promo.badge && <span className="rounded-full bg-[#EDE5D5] px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] text-[#806A43]">{promo.badge}</span>}</div>
+                    <h2 className="mt-2 line-clamp-2 font-seasons text-lg leading-tight text-[#4C5534]">{promo.title}</h2>
+                    <p className="mt-1 line-clamp-1 font-montserrat text-[9px] text-[#80755F]">{promo.categoryLabel}</p>
+                    <p className="mt-3 font-montserrat text-[12px] font-bold text-[#4C5534]">{price}</p>
+                    {promo.validUntil && <p className="mt-1 font-montserrat text-[8px] text-[#80755F]">Until {new Date(promo.validUntil + "T12:00:00").toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" })}</p>}
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#80755F]/12 bg-white/70 px-4 py-3">
+                  <button type="button" onClick={() => edit(promo)} className="min-h-9 rounded-full border border-[#4C5534]/20 px-4 font-montserrat text-[8px] font-bold uppercase text-[#4C5534] transition-colors hover:bg-[#F5F1E7]">Edit details</button>
+                  <div className="flex flex-wrap gap-2">
+                    <button type="button" onClick={() => toggleActive(promo)} disabled={expired} className="min-h-9 rounded-full px-3 font-montserrat text-[8px] font-bold uppercase text-[#4C5534] transition-colors hover:bg-[#F5F1E7] disabled:cursor-not-allowed disabled:opacity-40">{promo.isActive === false ? "Activate" : "Deactivate"}</button>
+                    <button type="button" onClick={() => setPendingDelete(promo)} aria-label={"Remove " + promo.title} className="grid h-9 w-9 place-items-center rounded-full border border-[#8A5148]/20 text-[#8A5148] transition-colors hover:bg-[#FBF0ED]"><Icon><path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3" /></Icon></button>
+                  </div>
+                </div>
+                {editingId === promo.id && promotionForm && <div className="border-t border-[#4C5534]/10 bg-[#F5F1E7] p-4 sm:p-5">{promotionForm}</div>}
+              </article>;
             })}
-            {!visible.length && <p className="p-12 text-center font-montserrat text-xs text-[#80755F]">No promotions match your search.</p>}
-          </div>
-        </section>
+            {!visible.length && <p className="col-span-full rounded-2xl border border-dashed border-[#4C5534]/15 p-12 text-center font-montserrat text-xs text-[#80755F]">No promotions match your search.</p>}
+          </div>        </section>
 
 
       </div>
