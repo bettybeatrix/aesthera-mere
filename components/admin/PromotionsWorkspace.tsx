@@ -192,14 +192,11 @@ export default function PromotionsWorkspace({ initialPromos }: Props) {
 
 <section className="space-y-4 border-t border-[#80755F]/15 pt-6">
                 <h3 className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#80755F]">Validity & conditions</h3>
-                <div className="rounded-2xl border border-[#80755F]/15 bg-[#F8F7F1] p-4 sm:p-5">
-                  <label className="block max-w-md"><span className="mb-2 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Valid until</span><input type="date" value={form.validUntil ?? ""} onChange={(event) => {
-                    const value = event.target.value || undefined;
-                    update("validUntil", value);
-                    update("validity", value ? `Valid until ${new Date(value + "T12:00:00").toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}.` : undefined);
-                  }} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-white px-3 font-montserrat text-xs" /></label>
-                  <p className="mt-3 font-montserrat text-[10px] leading-5 text-[#80755F]">{form.validity || (form.validUntil ? `Valid until ${new Date(form.validUntil + "T12:00:00").toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}.` : "No end date set")}</p>
-                </div>
+                <label className="block max-w-md"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Valid until</span><input type="date" value={form.validUntil ?? ""} onChange={(event) => {
+                  const value = event.target.value || undefined;
+                  update("validUntil", value);
+                  update("validity", value ? `Valid until ${new Date(value + "T12:00:00").toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}.` : undefined);
+                }} className="min-h-11 w-full rounded-xl border border-[#80755F]/20 bg-[#FFFCF3] px-3 font-montserrat text-xs" /></label>
                 <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755F]">Terms and conditions (one per line)</span><textarea rows={3} value={lines(form.terms ?? [])} onChange={(event) => update("terms", parseLines(event.target.value))} className="w-full rounded-xl border border-[#80755F]/20 bg-[#FFFCF3] px-3 py-3 font-montserrat text-xs leading-6" /></label>
               </section>
 
@@ -244,11 +241,14 @@ export default function PromotionsWorkspace({ initialPromos }: Props) {
               const expired = isExpired(promo, todayDate);
               const active = !expired && promo.isActive !== false;
               const price = promo.promoPriceLabel ?? (typeof promo.promoPrice === "number" ? new Intl.NumberFormat("en-PH", { style: "currency", currency: "PHP", maximumFractionDigits: 0 }).format(promo.promoPrice) : "Price upon inquiry");
-              return <div key={promo.id}>\n                <article className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:p-5">
+              return <div key={promo.id}>
+                <article className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:p-5">
                 <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[#F5F1E7]">{promo.image && promo.image.startsWith("/") ? <Image src={promo.image} alt={promo.title} fill sizes="64px" className="object-cover" /> : promo.image ? <Image src={promo.image} alt={promo.title} fill sizes="64px" className="object-cover" unoptimized /> : <span className="grid h-full w-full place-items-center font-seasons text-xl">{promo.title.slice(0,1)}</span>}</div>
                 <div className="min-w-0 flex-1"><h2 className="font-montserrat text-[11px] font-semibold">{promo.title}</h2><p className="mt-1 font-montserrat text-[9px] text-[#80755F]">{promo.categoryLabel}</p><p className="mt-1 font-montserrat text-[10px] font-semibold">{price}</p><span className={`mt-2 inline-flex rounded-full px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase ${expired ? "bg-[#F1EEE6] text-[#80755F]" : active ? "bg-[#E8EEE3] text-[#4F6442]" : "bg-[#F1EEE6] text-[#80755F]"}`}>{expired ? "Expired" : active ? "Active" : "Inactive"}</span></div>
                 <div className="flex shrink-0 flex-wrap gap-1.5"><button type="button" onClick={() => edit(promo)} className="min-h-8 rounded-full border border-[#4C5534]/20 px-3 font-montserrat text-[8px] font-bold uppercase">Edit</button><button type="button" onClick={() => toggleActive(promo)} disabled={expired} className="min-h-8 rounded-full border border-[#4C5534]/20 px-3 font-montserrat text-[8px] font-bold uppercase disabled:cursor-not-allowed disabled:opacity-40">{promo.isActive === false ? "Mark active" : "Mark inactive"}</button><button type="button" onClick={() => setPendingDelete(promo)} className="min-h-8 rounded-full border border-[#8A5148]/25 px-3 font-montserrat text-[8px] font-bold uppercase text-[#8A5148]">Remove</button></div>
-                </article>\n                {editingId === promo.id && promotionForm && <div className="border-t border-[#4C5534]/10 bg-[#F8F7F1] px-4 py-6 sm:px-6 sm:py-7"><div className="mx-auto max-w-[1120px]">{promotionForm}</div></div>}\n              </div>;
+                </article>
+                {editingId === promo.id && promotionForm && <div className="border-t border-[#4C5534]/10 bg-[#F8F7F1] px-4 py-6 sm:px-6 sm:py-7"><div className="mx-auto max-w-[1120px]">{promotionForm}</div></div>}
+              </div>;
             })}
             {!visible.length && <p className="p-12 text-center font-montserrat text-xs text-[#80755F]">No promotions match your search.</p>}
           </div>
