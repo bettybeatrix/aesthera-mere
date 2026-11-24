@@ -258,13 +258,26 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
         @media (prefers-reduced-motion: reduce) { .promo-form-reveal { animation: none; } }
       `}</style>
     <main className="min-h-screen bg-[#FFFCF3] text-[#4C5534]">
+      <header className="border-b border-[#80755F]/15 bg-white px-6 py-7 md:px-10">
+        <div className="mx-auto flex max-w-[1280px] flex-col justify-between gap-5 sm:flex-row sm:items-end">
+          <div>
+            <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#80755F]">Website management</p>
+            <h1 className="mt-2 font-seasons text-[clamp(2.2rem,4vw,3.2rem)] leading-none text-[#4C5534]">Promotions</h1>
+          </div>
+          <div className="flex flex-wrap gap-5">
+            <div><p className="font-seasons text-2xl text-[#4C5534]">{promos.length}</p><p className="font-montserrat text-[8px] font-semibold uppercase tracking-wide text-[#80755F]">Offers</p></div>
+            <div><p className="font-seasons text-2xl text-[#4C5534]">{activeCount}</p><p className="font-montserrat text-[8px] font-semibold uppercase tracking-wide text-[#80755F]">Active</p></div>
+            <div><p className="font-seasons text-2xl text-[#4C5534]">{expiredCount}</p><p className="font-montserrat text-[8px] font-semibold uppercase tracking-wide text-[#80755F]">Expired</p></div>
+          </div>
+        </div>
+      </header>
       <div className="border-b border-[#80755F]/15 bg-[#F5F1E7] px-6 py-3 md:px-10">
         <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-3">
           <span className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.14em] text-[#80755F]">Editing Promotions page</span>
           <button type="button" onClick={openNew} className="inline-flex min-h-9 items-center gap-2 rounded-full bg-[#4C5534] px-4 font-montserrat text-[9px] font-semibold uppercase text-white"><Icon><path d="M12 5v14M5 12h14" /></Icon> Add promotion</button>
         </div>
       </div>
-      <PromoCampaignHero campaign={campaign} editable onChange={setCampaign} />
+      <PromoCampaignHero campaign={campaign} editable onChange={setCampaign} onSave={() => setNotice("Hero changes saved in this editing session. Permanent saving will be enabled with the backend.")} />
       {formOpen && promotionForm && <div className="mx-auto max-w-[1180px] px-6 py-6 md:px-10">{promotionForm}</div>}
       <PromosList
         promos={previewPromos}
