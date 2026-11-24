@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import DoctorsDirectory from "@/components/DoctorsDirectory";
@@ -10,6 +11,10 @@ export const metadata: Metadata = {
 };
 
 export default async function DoctorsPage() {
+  // Doctor availability depends on the current date. Defer this read until a
+  // request is available instead of evaluating it during build-time prerendering.
+  await connection();
+
   const doctors = await getDoctorProfiles();
   const today = new Date().toISOString().slice(0, 10);
   const availableDoctors = doctors.filter((doctor) =>
