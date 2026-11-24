@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import PromotionsWorkspace from "@/components/admin/PromotionsWorkspace";
 import { getAllPromos, getPricingTables } from "@/lib/promos";
 
@@ -10,5 +11,9 @@ export default async function AdminPromotionsPage() {
     getAllPromos(),
     getPricingTables(),
   ]);
-  return <PromotionsWorkspace initialPromos={promos} initialPricingTables={pricingTables} />;
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#FFFCF3]" />}>
+      <PromotionsWorkspace initialPromos={promos} initialPricingTables={pricingTables} />
+    </Suspense>
+  );
 }
