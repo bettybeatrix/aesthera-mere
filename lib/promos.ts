@@ -460,3 +460,9 @@ export async function getPromos(): Promise<PromoCard[]> {
 export async function getPricingTables(): Promise<PricingTable[]> {
   return MOCK_PRICING_TABLES;
 }
+
+
+/** Return every promotion for Admin management, including inactive offers. */
+export async function getAllPromos(): Promise<PromoCard[]> {
+  return [...PROMOTIONS];
+}
