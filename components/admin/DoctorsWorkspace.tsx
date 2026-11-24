@@ -209,9 +209,6 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
             <p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#80755F]">Website management</p>
             <h1 className="mt-2 font-seasons text-[clamp(2.2rem,4vw,3.2rem)] leading-none text-[#4C5534]">Doctors</h1>
           </div>
-          <button type="button" onClick={startNew} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#4C5534] px-5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#35452F]">
-            <Icon><path d="M12 5v14M5 12h14" /></Icon> Add doctor
-          </button>
         </div>
       </header>
       <div className="mx-auto max-w-[1280px] px-6 pt-7 md:px-10">
@@ -223,6 +220,11 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
               <p className="mt-2 font-montserrat text-[10px] font-semibold text-[#80755f]">{label}</p>
             </article>
           ))}
+          <div className="flex items-center">
+            <button type="button" onClick={startNew} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-[18px] bg-[#4C5534] px-5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white transition-colors hover:bg-[#35452F]">
+              <Icon><path d="M12 5v14M5 12h14" /></Icon> Add doctor
+            </button>
+          </div>
         </section>
 
         <div className="mt-5 grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(380px,0.9fr)]">
