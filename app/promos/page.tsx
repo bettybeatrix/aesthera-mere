@@ -5,6 +5,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Consultation from "@/components/Consultation";
 import PromosList from "./PromosList";
+import PromoCampaignHero from "@/components/promos/PromoCampaignHero";
+import { getPromoCampaign } from "@/lib/promo-campaign";
 import { getPromos, getPricingTables } from "@/lib/promos";
 
 export const metadata: Metadata = {
