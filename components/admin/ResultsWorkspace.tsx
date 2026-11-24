@@ -178,4 +178,6 @@ export default function ResultsWorkspace() {
 
       {pendingDelete && <div className="fixed inset-0 z-[90] flex items-center justify-center bg-[#172119]/55 px-5 py-8 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setPendingDelete(null); }}><section role="alertdialog" aria-modal="true" aria-labelledby="delete-result-title" className="w-full max-w-[420px] rounded-[24px] border border-[#80755F]/20 bg-[#FFFCF3] p-6 shadow-2xl"><p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.16em] text-[#8A6653]">Confirm removal</p><h2 id="delete-result-title" className="mt-2 font-seasons text-2xl text-[#4C5534]">Remove this result?</h2><p className="mt-3 font-montserrat text-xs leading-6 text-[#80755F]">{pendingDelete.title} · {pendingDelete.view}</p><div className="mt-6 flex justify-end gap-2"><button type="button" onClick={() => setPendingDelete(null)} className="min-h-10 rounded-full border border-[#4C5534]/20 px-5 font-montserrat text-[9px] font-semibold uppercase text-[#4C5534]">Cancel</button><button type="button" onClick={removeResult} className="min-h-10 rounded-full bg-[#8A5148] px-5 font-montserrat text-[9px] font-semibold uppercase text-white">Remove</button></div></section></div>}
       {notice && <div role="status" className="fixed bottom-5 right-5 z-[95] max-w-sm rounded-2xl border border-[#80755F]/15 bg-[#F7F2E8] px-5 py-4 font-montserrat text-[10px] leading-5 text-[#4F6442] shadow-xl">{notice}</div>}
-    </main>}
+    </main>
+  );
+}
