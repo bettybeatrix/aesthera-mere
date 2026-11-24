@@ -103,7 +103,7 @@ export default function ContentWorkspace({ initialEntries }: Props) {
     } else {
       setItems((current) => [...current, {
         ...form,
-        id: \`content-\${Date.now()}\`,
+        id: `content-${Date.now()}`,
         title: form.title.trim(),
         body: form.body.trim(),
         updatedAt: "Just now",
@@ -198,9 +198,9 @@ export default function ContentWorkspace({ initialEntries }: Props) {
         <section>
           <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap gap-2">
-              <button type="button" onClick={() => setActiveCategory("All")} aria-pressed={activeCategory === "All"} className={\`min-h-9 rounded-full border px-4 font-montserrat text-[9px] font-semibold uppercase tracking-[0.08em] transition-colors \${activeCategory === "All" ? "border-[#4C5534] bg-[#4C5534] text-white" : "border-[#80755F]/20 bg-white text-[#80755F] hover:bg-[#F1EBDD]"}\`}>All</button>
+              <button type="button" onClick={() => setActiveCategory("All")} aria-pressed={activeCategory === "All"} className={`min-h-9 rounded-full border px-4 font-montserrat text-[9px] font-semibold uppercase tracking-[0.08em] transition-colors ${activeCategory === "All" ? "border-[#4C5534] bg-[#4C5534] text-white" : "border-[#80755F]/20 bg-white text-[#80755F] hover:bg-[#F1EBDD]"}`}>All</button>
               {categories.map((category) => (
-                <button key={category} type="button" onClick={() => setActiveCategory(category)} aria-pressed={activeCategory === category} className={\`min-h-9 rounded-full border px-4 font-montserrat text-[9px] font-semibold uppercase tracking-[0.08em] transition-colors \${activeCategory === category ? "border-[#4C5534] bg-[#4C5534] text-white" : "border-[#80755F]/20 bg-white text-[#80755F] hover:bg-[#F1EBDD]"}\`}>{category}</button>
+                <button key={category} type="button" onClick={() => setActiveCategory(category)} aria-pressed={activeCategory === category} className={`min-h-9 rounded-full border px-4 font-montserrat text-[9px] font-semibold uppercase tracking-[0.08em] transition-colors ${activeCategory === category ? "border-[#4C5534] bg-[#4C5534] text-white" : "border-[#80755F]/20 bg-white text-[#80755F] hover:bg-[#F1EBDD]"}`}>{category}</button>
               ))}
             </div>
             <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
@@ -224,7 +224,7 @@ export default function ContentWorkspace({ initialEntries }: Props) {
                       <p className="font-montserrat text-[8px] font-bold uppercase tracking-[0.13em] text-[#80755F]">{item.category}</p>
                       <h2 className="mt-1 font-seasons text-xl text-[#4C5534]">{item.title}</h2>
                     </div>
-                    <span className={\`rounded-full border px-3 py-1.5 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] \${statusClass(item.status)}\`}>{item.status}</span>
+                    <span className={`rounded-full border px-3 py-1.5 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] ${statusClass(item.status)}`}>{item.status}</span>
                   </div>
                   <p className="mt-4 line-clamp-4 whitespace-pre-line font-montserrat text-[10px] leading-6 text-[#5F695A]">{item.body}</p>
                   <div className="mt-4 flex items-center justify-between gap-3 border-t border-[#80755F]/12 pt-3">
@@ -236,7 +236,7 @@ export default function ContentWorkspace({ initialEntries }: Props) {
                       ) : (
                         <button type="button" onClick={() => setStatus(item, "published")} className="min-h-9 rounded-full bg-[#4C5534] px-4 font-montserrat text-[8px] font-bold uppercase text-white transition-colors hover:bg-[#35452F]">Publish</button>
                       )}
-                      <button type="button" onClick={() => setPendingDelete(item)} aria-label={\`Delete content: \${item.title}\`} className="grid h-9 w-9 place-items-center rounded-full border border-[#8A5148]/20 text-[#8A5148] transition-colors hover:bg-[#F5E9E4]">
+                      <button type="button" onClick={() => setPendingDelete(item)} aria-label={`Delete content: ${item.title}`} className="grid h-9 w-9 place-items-center rounded-full border border-[#8A5148]/20 text-[#8A5148] transition-colors hover:bg-[#F5E9E4]">
                         <Icon><path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3" /></Icon>
                       </button>
                     </div>
