@@ -78,14 +78,16 @@ export default function ResultsWorkspace() {
       setNotice("Treatment name, view, before photo and after photo are required.");
       return;
     }
+    const message = editingId
+      ? "Result updated in this preview session."
+      : "Result added in this preview session.";
     if (editingId) {
       setItems((current) => current.map((item) => item.id === editingId ? { ...item, ...form } : item));
-      setNotice("Result updated in this preview session.");
     } else {
       setItems((current) => [...current, { ...form, id: `result-${Date.now()}` }]);
-      setNotice("Result added in this preview session.");
     }
     closeForm();
+    setNotice(message);
   }
 
   function removeResult() {
