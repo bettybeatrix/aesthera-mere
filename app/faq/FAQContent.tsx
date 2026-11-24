@@ -58,9 +58,6 @@ export default function FAQContent() {
               Questions, answered.
             </h1>
           </div>
-          <p className="max-w-[420px] font-montserrat text-xs leading-6 text-[#80755F] sm:text-right">
-            A helpful guide to appointments, treatments, and your visit.
-          </p>
         </div>
       </section>
 
