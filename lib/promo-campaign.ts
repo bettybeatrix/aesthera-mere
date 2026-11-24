@@ -1,12 +1,12 @@
 import type { PromoCampaignSettings } from "@/types/promo";
 
 export const PROMO_CAMPAIGN: PromoCampaignSettings = {
-  eyebrow: "Aesthera Mère · Promos & Packages",
-  headlineLine1: "Offers worth",
-  headlineLine2: "coming back for.",
-  description: "Explore our current treatment specials, seasonal offers, and signature treatment passes designed around accessible, medical-grade aesthetic care.",
-  heroImage: "/images/promotions/promo-background.png",
-  heroImageAlt: "Aesthera Mère promotions and packages",
+  eyebrow: "AESTHERA MÈRE · BEReady Holiday Deals",
+  headlineLine1: "Holiday care,",
+  headlineLine2: "thoughtfully priced.",
+  description: "Explore current seasonal offers across facials, laser treatments, lifting, contouring, injectables, and wellness care. Final eligibility and availability are confirmed by the clinic.",
+  heroImage: "/images/promotions/beready-holiday-deals.jpg",
+  heroImageAlt: "Aesthera Mère BEReady Holiday Deals — up to 50% off selected treatments",
 };
 
 export async function getPromoCampaign(): Promise<PromoCampaignSettings> {
