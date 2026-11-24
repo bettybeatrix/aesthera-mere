@@ -146,8 +146,9 @@ export default function ResultsWorkspace() {
           </div>
 
           {visible.length > 0 ? (
-            <div className="grid items-start gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {visible.map((item, index) => <article key={item.id} className="overflow-hidden rounded-[22px] border border-[#4C5534]/12 bg-white shadow-[0_12px_32px_-28px_rgba(35,54,40,0.55)] transition-shadow hover:shadow-[0_18px_38px_-26px_rgba(35,54,40,0.45)]">
+            <div className={editingId && resultForm ? "grid items-start gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)]" : ""}>
+              <div className={editingId ? "grid items-start gap-5 sm:grid-cols-2" : "grid items-start gap-5 md:grid-cols-2 xl:grid-cols-3"}>
+              {visible.map((item) => <article key={item.id} className={`overflow-hidden rounded-[22px] border bg-white shadow-[0_12px_32px_-28px_rgba(35,54,40,0.55)] transition-all duration-200 ${editingId === item.id ? "border-[#4C5534]/45 ring-2 ring-[#4C5534]/10 shadow-[0_16px_36px_-24px_rgba(35,54,40,0.45)]" : "border-[#4C5534]/12 hover:shadow-[0_18px_38px_-26px_rgba(35,54,40,0.45)]"}`}>
                 <div className="relative bg-[#f4f1e8] p-3">
                   
                   <div className="grid grid-cols-2 gap-2">
@@ -161,8 +162,9 @@ export default function ResultsWorkspace() {
                   <div className="min-w-0"><h3 className="truncate font-seasons text-xl text-[#4C5534]">{item.title}</h3><p className="mt-1 font-montserrat text-[9px] text-[#80755f]">{item.view}</p></div>
                   <div className="flex shrink-0 gap-2"><button type="button" onClick={() => openEdit(item)} className="min-h-9 rounded-full border border-[#4C5534]/18 px-3.5 font-montserrat text-[8px] font-bold uppercase text-[#4C5534] transition-colors hover:bg-[#F5F1E7]">Edit</button><button type="button" onClick={() => setPendingDelete(item)} aria-label={"Remove " + item.title + " " + item.view} className="grid h-9 w-9 place-items-center rounded-full border border-[#8a5148]/20 text-[#8a5148] transition-colors hover:bg-[#fbefec]"><Icon><path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3" /></Icon></button></div>
                 </div>
-                {editingId === item.id && resultForm && <div className="border-t border-[#4C5534]/12 bg-[#F5F1E7] p-4 sm:p-5">{resultForm}</div>}
               </article>)}
+              </div>
+              {editingId && resultForm && <aside className="min-w-0 lg:sticky lg:top-6"><div className="mb-3 flex items-center justify-between"><p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.15em] text-[#80755F]">Editing selected result</p><button type="button" onClick={closeForm} className="font-montserrat text-[9px] font-bold uppercase text-[#4C5534] underline underline-offset-4">Close</button></div>{resultForm}</aside>}
             </div>
           ) : <div className="rounded-[22px] border border-dashed border-[#334b39]/20 bg-white/70 px-6 py-16 text-center"><p className="font-seasons text-2xl text-[#4C5534]">No matching results</p><p className="mt-2 font-montserrat text-[10px] text-[#80755f]">Try another treatment name or view.</p></div>}
         </section>
