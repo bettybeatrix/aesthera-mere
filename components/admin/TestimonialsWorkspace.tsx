@@ -254,7 +254,6 @@ export default function TestimonialsWorkspace({ initialTestimonials }: Props) {
 
   return (
     <main className="min-h-screen bg-[#FFFCF3] px-5 pb-16 pt-7 text-[#4C5534] sm:px-8 lg:px-10 lg:pt-8">
-      </div>
       <header className="border-b border-[#80755F]/15 bg-[#F1EBDD] px-6 py-7 md:px-10">
         <div className="mx-auto flex max-w-[1280px] flex-col justify-between gap-5 sm:flex-row sm:items-end">
           <div>
