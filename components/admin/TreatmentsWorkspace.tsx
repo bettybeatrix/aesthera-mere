@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import type { ManagedTreatment, ManagedTreatmentInput } from "@/types/managed-treatment";
 import { treatmentCategories } from "@/data/treatments";
 
@@ -44,11 +44,6 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
   const [imagePreview, setImagePreview] = useState("");
   const [notice, setNotice] = useState("");
   const [pendingDelete, setPendingDelete] = useState<ManagedTreatment | null>(null);
-  const formRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    if (formOpen) formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [formOpen, editingId]);
 
   const visible = useMemo(() => {
     const term = query.trim().toLowerCase();
@@ -143,11 +138,11 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
           <h1 className="mt-2 font-seasons text-[clamp(2.2rem,4vw,3.2rem)] leading-none text-[#4C5534]">Treatments</h1>
         </header>
 
-        <section className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-[repeat(3,minmax(0,1fr))_auto]" aria-label="Treatment summary">
+        <section className="mt-5 grid gap-3 sm:grid-cols-4 sm:items-stretch" aria-label="Treatment summary">
           <article className="rounded-[18px] border border-[#80755F]/15 bg-[#F7F2E8] px-5 py-4"><p className="font-seasons text-3xl text-[#4C5534]">{items.length}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#80755F]">Total treatments</p></article>
           <article className="rounded-[18px] border border-[#80755F]/15 bg-[#E8EEE3] px-5 py-4"><p className="font-seasons text-3xl text-[#4C5534]">{items.filter((item) => item.isAvailable).length}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#4F6442]">Available</p></article>
           <article className="rounded-[18px] border border-[#80755F]/15 bg-[#F3EAE3] px-5 py-4"><p className="font-seasons text-3xl text-[#4C5534]">{items.filter((item) => !item.isAvailable).length}</p><p className="mt-1 font-montserrat text-[9px] font-semibold uppercase tracking-wide text-[#8A6653]">Unavailable</p></article>
-          <div className="flex items-center xl:justify-end"><button type="button" onClick={openNew} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#4C5534] px-6 font-montserrat text-[9px] font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#35452F] xl:w-auto"><Icon><path d="M12 5v14M5 12h14" /></Icon> Add treatment</button></div>
+          <div className="flex items-center"><button type="button" onClick={openNew} className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-[18px] bg-[#4C5534] px-4 font-montserrat text-[9px] font-semibold uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#35452F]"><Icon><path d="M12 5v14M5 12h14" /></Icon> Add treatment</button></div>
         </section>
 
         <section className="mt-5 overflow-hidden rounded-[24px] border border-[#80755F]/15 bg-[#F3F0E6]">
@@ -159,24 +154,24 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
           <div className="p-4 sm:p-5">
             {visible.length ? (
               <>
-                <div className="grid items-start gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                <div className="grid items-start gap-3 md:grid-cols-3">
                   {visible.slice(0, showAll ? visible.length : 9).map((item) => (
                     <article key={item.id} className="overflow-hidden rounded-[20px] border border-[#80755F]/15 bg-[#F8F4EB] shadow-[0_10px_28px_-24px_rgba(35,54,40,0.5)] transition-shadow hover:shadow-[0_16px_34px_-24px_rgba(35,54,40,0.45)]">
-                      <div className="relative aspect-[16/10] overflow-hidden bg-[#E8E4DC]">
-                        {item.image && item.image.startsWith("/") ? <Image src={item.image} alt={item.name} fill sizes="(max-width: 768px) 90vw, 30vw" className="object-cover" /> : item.image ? <Image src={item.image} alt={item.name} fill sizes="(max-width: 768px) 90vw, 30vw" className="object-cover" unoptimized /> : <div className="grid h-full place-items-center bg-[#E8EEE3] font-seasons text-4xl text-[#4C5534]">{item.name.slice(0,1)}</div>}
+                      <div className="relative aspect-[4/3] overflow-hidden bg-[#E8E4DC]">
+                        {item.image && item.image.startsWith("/") ? <Image src={item.image} alt={item.name} fill sizes="(max-width: 768px) 90vw, 28vw" className="object-cover" /> : item.image ? <Image src={item.image} alt={item.name} fill sizes="(max-width: 768px) 90vw, 30vw" className="object-cover" unoptimized /> : <div className="grid h-full place-items-center bg-[#E8EEE3] font-seasons text-4xl text-[#4C5534]">{item.name.slice(0,1)}</div>}
                       </div>
-                      <div className="p-4">
+                      <div className="p-3">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <span className={`rounded-full px-2.5 py-1 font-montserrat text-[8px] font-bold uppercase tracking-wide ${item.isAvailable ? "bg-[#E8EEE3] text-[#4F6442]" : "bg-[#F3EAE3] text-[#8A6653]"}`}>{item.isAvailable ? "Available" : "Unavailable"}</span>
                           <span className="font-montserrat text-[8px] font-semibold uppercase tracking-wide text-[#80755F]">{item.categoryName}</span>
                         </div>
-                        <h2 className="mt-3 line-clamp-2 min-h-[2.8rem] font-seasons text-xl leading-tight text-[#4C5534]">{item.name}</h2>
+                        <h2 className="mt-2 line-clamp-2 min-h-[2.5rem] font-seasons text-lg leading-tight text-[#4C5534]">{item.name}</h2>
                         <p className="mt-1 line-clamp-1 font-montserrat text-[9px] text-[#80755F]">{item.groupName}</p>
                         <p className="mt-3 font-montserrat text-xs font-semibold text-[#4F6442]">{item.price || "Price upon inquiry"}</p>
-                        <div className="mt-4 flex flex-wrap gap-2 border-t border-[#80755F]/15 pt-3">
-                          <button type="button" onClick={() => edit(item)} className="min-h-9 flex-1 rounded-full border border-[#4C5534]/20 px-3 font-montserrat text-[8px] font-bold uppercase text-[#4C5534] transition-colors hover:bg-[#E8EEE3]">Edit</button>
-                          <button type="button" onClick={() => toggleAvailability(item)} className="min-h-9 flex-1 rounded-full border border-[#80755F]/25 px-3 font-montserrat text-[8px] font-bold uppercase text-[#80755F] transition-colors hover:bg-[#F1EBDD]">{item.isAvailable ? "Mark unavailable" : "Mark available"}</button>
-                          <button type="button" onClick={() => setPendingDelete(item)} aria-label={"Remove " + item.name} className="grid h-9 w-9 place-items-center rounded-full border border-[#8A5148]/20 text-[#8A5148] transition-colors hover:bg-[#F3EAE3]"><Icon><path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3" /></Icon></button>
+                        <div className="mt-3 flex flex-wrap gap-1.5 border-t border-[#80755F]/15 pt-3">
+                          <button type="button" onClick={() => edit(item)} className="min-h-8 flex-1 rounded-full border border-[#4C5534]/20 px-2 font-montserrat text-[7px] font-bold uppercase text-[#4C5534] transition-colors hover:bg-[#E8EEE3]">Edit</button>
+                          <button type="button" onClick={() => toggleAvailability(item)} className="min-h-8 flex-1 rounded-full border border-[#80755F]/25 px-2 font-montserrat text-[7px] font-bold uppercase text-[#80755F] transition-colors hover:bg-[#F1EBDD]">{item.isAvailable ? "Mark unavailable" : "Mark available"}</button>
+                          <button type="button" onClick={() => setPendingDelete(item)} aria-label={"Remove " + item.name} className="grid h-8 w-8 place-items-center rounded-full border border-[#8A5148]/20 text-[#8A5148] transition-colors hover:bg-[#F3EAE3]"><Icon><path d="M4 7h16M10 11v6M14 11v6M5 7l1 14h12l1-14M9 7V4h6v3" /></Icon></button>
                         </div>
                       </div>
                     </article>
@@ -188,8 +183,9 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
           </div>        </section>
 
         {formOpen && (
-          <section ref={formRef} className="mt-5 scroll-mt-8 rounded-[24px] border border-[#334b39]/10 bg-white/80 p-5 sm:p-7">
-            <div className="flex items-start justify-between gap-3"><div><p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.16em] text-[#80755f]">{editingId ? "Edit treatment" : "New treatment"}</p><h2 className="font-seasons mt-2 text-2xl text-[#4c5534]">{editingId ? "Update treatment details" : "Add a treatment"}</h2></div><button type="button" onClick={closeForm} className="font-montserrat text-[9px] font-bold uppercase text-[#718071]">Close</button></div>
+          <div className="fixed inset-0 z-[80] flex items-center justify-center bg-[#25291f]/55 px-4 py-6 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeForm(); }}>
+          <section role="dialog" aria-modal="true" aria-labelledby="treatment-form-title" className="max-h-[92vh] w-full max-w-[860px] overflow-y-auto rounded-[24px] border border-[#80755F]/20 bg-[#F8F4EB] p-5 shadow-2xl sm:p-7">
+            <div className="flex items-start justify-between gap-3"><div><p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.16em] text-[#80755f]">{editingId ? "Edit treatment" : "New treatment"}</p><h2 id="treatment-form-title" className="font-seasons mt-2 text-2xl text-[#4c5534]">{editingId ? "Update treatment details" : "Add a treatment"}</h2></div><button type="button" onClick={closeForm} className="font-montserrat text-[9px] font-bold uppercase text-[#718071]">Close</button></div>
             <form onSubmit={save} className="mt-5 grid gap-4 md:grid-cols-2">
               <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755f]">Treatment name *</span><input required value={form.name} onChange={(event) => update("name", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-[#fffcf3] px-3 font-montserrat text-xs outline-none" /></label>
               <label className="block"><span className="mb-1.5 block font-montserrat text-[9px] font-semibold uppercase text-[#80755f]">Slug *</span><input required value={form.slug} onChange={(event) => update("slug", event.target.value)} className="min-h-11 w-full rounded-xl border border-[#334b39]/15 bg-[#fffcf3] px-3 font-montserrat text-xs outline-none" placeholder="e.g. aqua-reset-facial" /></label>
@@ -208,6 +204,7 @@ export default function TreatmentsWorkspace({ initialTreatments }: Props) {
               <div className="md:col-span-2 flex flex-wrap items-center justify-between gap-3 border-t border-[#334b39]/10 pt-4"><button type="submit" className="min-h-11 rounded-full bg-[#4c5534] px-6 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white">{editingId ? "Save changes" : "Add treatment"}</button></div>
             </form>
           </section>
+          </div>
         )}
       </div>
 
