@@ -245,6 +245,11 @@ const MOCK_PRICING_TABLES: PricingTable[] = [
   },
 ];
 
+/** Return every promotion for Admin management, including inactive and expired offers. */
+export async function getAllPromos(): Promise<PromoCard[]> {
+  return [...MOCK_PROMOS];
+}
+
 export async function getPromos(): Promise<PromoCard[]> {
   // The Philippines uses UTC+08:00 year-round. Build the local calendar
   // date directly to avoid relying on Intl locale formatting during prerender.
