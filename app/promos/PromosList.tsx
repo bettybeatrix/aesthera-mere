@@ -27,6 +27,9 @@ interface PromosListProps {
   pricingTables: PricingTable[];
   adminMode?: boolean;
   onEditPromo?: (promo: PromoCard) => void;
+  onTogglePromo?: (promo: PromoCard) => void;
+  onRemovePromo?: (promo: PromoCard) => void;
+  onPricingTablesChange?: (tables: PricingTable[]) => void;
 }
 
 const pesoFormatter = new Intl.NumberFormat("en-PH", {
@@ -339,12 +342,17 @@ export function PromoCardItem({
 // ---------------------------------------------------------------------------
 // Pricing Table
 // ---------------------------------------------------------------------------
-export function PricingTableBlock({ table }: { table: PricingTable }) {
+export function PricingTableBlock({ table, adminMode = false, onChange }: { table: PricingTable; adminMode?: boolean; onChange?: (table: PricingTable) => void }) {
+  function updateRow(index: number, key: keyof PricingTable["rows"][number], value: string) {
+    if (!onChange) return;
+    const numeric = key !== "name";
+    onChange({ ...table, rows: table.rows.map((row, rowIndex) => rowIndex === index ? { ...row, [key]: numeric ? (value === "" ? 0 : Number(value)) : value } : row) });
+  }
   return (
     <div className="overflow-hidden rounded-[20px] border border-[#80755F]/20 bg-white shadow-sm">
       <div className="border-b border-[#80755F]/15 bg-[#4C5534] px-6 py-4 text-white">
-        <h3 className="font-seasons text-xl">{table.title}</h3>
-        <p className="font-montserrat text-xs text-white/80">{table.subtitle}</p>
+        {adminMode ? <input aria-label="Package table title" value={table.title} onChange={(event) => onChange?.({ ...table, title: event.target.value })} className="w-full bg-transparent font-seasons text-xl text-white outline-none" /> : <h3 className="font-seasons text-xl">{table.title}</h3>}
+        {adminMode ? <input aria-label="Package table subtitle" value={table.subtitle} onChange={(event) => onChange?.({ ...table, subtitle: event.target.value })} className="mt-1 w-full bg-transparent font-montserrat text-xs text-white/80 outline-none" /> : <p className="font-montserrat text-xs text-white/80">{table.subtitle}</p>}
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-left font-montserrat text-xs">
@@ -360,11 +368,11 @@ export function PricingTableBlock({ table }: { table: PricingTable }) {
           <tbody className="divide-y divide-[#80755F]/10">
             {table.rows.map((row) => (
               <tr key={row.name}>
-                <td className="px-6 py-4 font-semibold text-[#4C5534]">{row.name}</td>
-                <td className="px-6 py-4 text-[#80755F]">{formatPrice(row.regular)}</td>
-                <td className="px-6 py-4 font-medium text-[#4C5534]">{formatPrice(row.promo)}</td>
-                <td className="px-6 py-4 font-semibold text-[#4C5534]">{formatPrice(row.package)}</td>
-                <td className="px-6 py-4 font-semibold text-[#4f6442]">{formatPrice(row.effective)}</td>
+                <td className="px-6 py-4 font-semibold text-[#4C5534]">{adminMode ? <input aria-label="name" type="text" min={type==="number" ? 0 : undefined} step={type==="number" ? "0.01" : undefined} value={row.name} onChange={(event) => updateRow(index, "name", event.target.value)} className="w-full min-w-[90px] rounded-md border border-[#80755F]/20 bg-[#FFFCF3] px-2 py-1.5 text-xs text-[#4C5534]" /> : row.name}</td>
+                <td className="px-6 py-4 text-[#80755F]">{adminMode ? <input aria-label="regular" type="number" min={type==="number" ? 0 : undefined} step={type==="number" ? "0.01" : undefined} value={row.regular} onChange={(event) => updateRow(index, "regular", event.target.value)} className="w-full min-w-[90px] rounded-md border border-[#80755F]/20 bg-[#FFFCF3] px-2 py-1.5 text-xs text-[#4C5534]" /> : formatPrice(row.regular)}</td>
+                <td className="px-6 py-4 font-medium text-[#4C5534]">{adminMode ? <input aria-label="promo" type="number" min={type==="number" ? 0 : undefined} step={type==="number" ? "0.01" : undefined} value={row.promo} onChange={(event) => updateRow(index, "promo", event.target.value)} className="w-full min-w-[90px] rounded-md border border-[#80755F]/20 bg-[#FFFCF3] px-2 py-1.5 text-xs text-[#4C5534]" /> : formatPrice(row.promo)}</td>
+                <td className="px-6 py-4 font-semibold text-[#4C5534]">{adminMode ? <input aria-label="package" type="number" min={type==="number" ? 0 : undefined} step={type==="number" ? "0.01" : undefined} value={row.package} onChange={(event) => updateRow(index, "package", event.target.value)} className="w-full min-w-[90px] rounded-md border border-[#80755F]/20 bg-[#FFFCF3] px-2 py-1.5 text-xs text-[#4C5534]" /> : formatPrice(row.package)}</td>
+                <td className="px-6 py-4 font-semibold text-[#4f6442]">{adminMode ? <input aria-label="effective" type="number" min={type==="number" ? 0 : undefined} step={type==="number" ? "0.01" : undefined} value={row.effective} onChange={(event) => updateRow(index, "effective", event.target.value)} className="w-full min-w-[90px] rounded-md border border-[#80755F]/20 bg-[#FFFCF3] px-2 py-1.5 text-xs text-[#4C5534]" /> : formatPrice(row.effective)}</td>
               </tr>
             ))}
           </tbody>
@@ -377,7 +385,7 @@ export function PricingTableBlock({ table }: { table: PricingTable }) {
 // ---------------------------------------------------------------------------
 // Main exported client component
 // ---------------------------------------------------------------------------
-export default function PromosList({ promos, pricingTables, adminMode = false, onEditPromo }: PromosListProps) {
+export default function PromosList({ promos, pricingTables, adminMode = false, onEditPromo, onTogglePromo, onRemovePromo, onPricingTablesChange }: PromosListProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeCategory, setActiveCategory] = useState<string>("all");
@@ -468,11 +476,11 @@ export default function PromosList({ promos, pricingTables, adminMode = false, o
             {visiblePromos.map((card) => (
               <div key={card.id} className="relative">
                 <PromoCardItem card={card} onClick={() => openModal(card)} />
-                {adminMode && onEditPromo && (
-                  <button type="button" onClick={() => onEditPromo(card)} className="absolute bottom-[4.7rem] right-4 z-10 rounded-full border border-[#4C5534]/20 bg-[#FFFCF3] px-3 py-2 font-montserrat text-[9px] font-bold uppercase text-[#4C5534] shadow-sm hover:bg-white">
-                    Edit offer
-                  </button>
-                )}
+                {adminMode && <div className="absolute bottom-[4.5rem] right-3 z-10 flex flex-wrap gap-1.5">
+                  {onEditPromo && <button type="button" onClick={() => onEditPromo(card)} className="rounded-full border border-[#4C5534]/20 bg-[#FFFCF3] px-3 py-2 font-montserrat text-[8px] font-bold uppercase text-[#4C5534] shadow-sm">Edit details</button>}
+                  {onTogglePromo && <button type="button" onClick={() => onTogglePromo(card)} className="rounded-full border border-[#4C5534]/20 bg-[#FFFCF3] px-3 py-2 font-montserrat text-[8px] font-bold uppercase text-[#4C5534] shadow-sm">{card.isActive === false ? "Activate" : "Deactivate"}</button>}
+                  {onRemovePromo && <button type="button" onClick={() => onRemovePromo(card)} className="rounded-full border border-[#8A5148]/20 bg-[#FFFCF3] px-3 py-2 font-montserrat text-[8px] font-bold uppercase text-[#8A5148] shadow-sm">Remove</button>}
+                </div>}
               </div>
             ))}
           </div>
@@ -555,7 +563,7 @@ export default function PromosList({ promos, pricingTables, adminMode = false, o
           <div className="mt-10 space-y-8">
             {(activeTableTab === "facials" ? facialTables : dripTables).map(
               (table) => (
-                <PricingTableBlock key={table.id} table={table} />
+                <PricingTableBlock key={table.id} table={table} adminMode={adminMode} onChange={onPricingTablesChange ? (nextTable) => onPricingTablesChange(pricingTables.map((item) => item.id === nextTable.id ? nextTable : item)) : undefined} />
               )
             )}
           </div>
