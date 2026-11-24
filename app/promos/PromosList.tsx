@@ -359,6 +359,8 @@ export function PricingTableBlock({
 }) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(table);
+  const [confirmPackageDelete, setConfirmPackageDelete] = useState(false);
+  const [rowToRemove, setRowToRemove] = useState<number | null>(null);
 
   useEffect(() => setDraft(table), [table]);
 
@@ -398,7 +400,7 @@ export function PricingTableBlock({
               <button type="button" onClick={saveEdit} className="rounded-full bg-[#D8C39A] px-4 py-2 font-montserrat text-[8px] font-bold uppercase text-[#3F4B32] hover:bg-[#E5D5B5]">Save changes</button>
             </> : <>
               <button type="button" onClick={() => setEditing(true)} className="rounded-full border border-white/35 px-4 py-2 font-montserrat text-[8px] font-bold uppercase text-white/90 hover:bg-white/10">Edit package</button>
-              {onRemove && <button type="button" onClick={onRemove} className="rounded-full border border-[#E8B9A9]/60 px-4 py-2 font-montserrat text-[8px] font-bold uppercase text-[#FFE0D6] hover:bg-white/10">Delete package</button>}
+              {onRemove && <button type="button" onClick={() => setConfirmPackageDelete(true)} className="rounded-full border border-[#E8B9A9]/60 px-4 py-2 font-montserrat text-[8px] font-bold uppercase text-[#FFE0D6] hover:bg-white/10">Delete package</button>}
             </>}
           </div>
         )}
@@ -423,13 +425,26 @@ export function PricingTableBlock({
                 <td className="px-6 py-4 font-medium text-[#4C5534]">{adminMode && editing ? <input aria-label="Promo single price" type="number" min={0} step="0.01" value={row.promo} onChange={(event) => updateRow(index, "promo", event.target.value)} className="w-full min-w-[90px] rounded-md border border-[#80755F]/20 bg-white px-2 py-1.5 text-xs text-[#4C5534]" /> : formatPrice(row.promo)}</td>
                 <td className="px-6 py-4 font-semibold text-[#4C5534]">{adminMode && editing ? <input aria-label="Package price" type="number" min={0} step="0.01" value={row.package} onChange={(event) => updateRow(index, "package", event.target.value)} className="w-full min-w-[90px] rounded-md border border-[#80755F]/20 bg-white px-2 py-1.5 text-xs text-[#4C5534]" /> : formatPrice(row.package)}</td>
                 <td className="px-6 py-4 font-semibold text-[#4f6442]">{adminMode && editing ? <input aria-label="Effective price per session" type="number" min={0} step="0.01" value={row.effective} onChange={(event) => updateRow(index, "effective", event.target.value)} className="w-full min-w-[90px] rounded-md border border-[#80755F]/20 bg-white px-2 py-1.5 text-xs text-[#4C5534]" /> : formatPrice(row.effective)}</td>
-                {adminMode && editing && <td className="px-4 py-4"><button type="button" onClick={() => onRemoveRow?.(index)} className="font-montserrat text-[8px] font-bold uppercase text-[#8A5148]">Remove row</button></td>}
+                {adminMode && editing && <td className="px-4 py-4"><button type="button" onClick={() => setRowToRemove(index)} className="font-montserrat text-[8px] font-bold uppercase text-[#8A5148]">Remove row</button></td>}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
       {adminMode && editing && <div className="flex justify-end border-t border-[#80755F]/15 bg-[#E8EEE3]/50 px-5 py-3"><button type="button" onClick={() => onAddRow?.()} className="rounded-full border border-[#4C5534]/25 bg-white px-4 py-2 font-montserrat text-[8px] font-bold uppercase text-[#4C5534] hover:bg-[#F5F1E7]">+ Add treatment row</button></div>}
+      {(confirmPackageDelete || rowToRemove !== null) && (
+        <div className="fixed inset-0 z-[90] flex items-center justify-center bg-[#25291f]/50 px-5 py-6 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) { setConfirmPackageDelete(false); setRowToRemove(null); } }}>
+          <section role="alertdialog" aria-modal="true" aria-labelledby="package-delete-title" className="w-full max-w-[400px] rounded-[22px] border border-[#80755F]/20 bg-[#FFFCF3] p-6 shadow-2xl">
+            <p className="font-montserrat text-[9px] font-bold uppercase tracking-[0.16em] text-[#8A6653]">Confirm removal</p>
+            <h3 id="package-delete-title" className="mt-2 font-seasons text-2xl text-[#4C5534]">{confirmPackageDelete ? "Delete this package?" : "Remove this treatment row?"}</h3>
+            <p className="mt-2 font-montserrat text-xs leading-6 text-[#80755F]">{confirmPackageDelete ? "This package will be removed from the current editing session." : "This treatment row will be removed from the package draft."}</p>
+            <div className="mt-6 flex justify-end gap-2">
+              <button type="button" onClick={() => { setConfirmPackageDelete(false); setRowToRemove(null); }} className="min-h-10 rounded-full border border-[#4C5534]/20 px-4 font-montserrat text-[9px] font-semibold uppercase text-[#4C5534]">Cancel</button>
+              <button type="button" onClick={() => { if (confirmPackageDelete) onRemove?.(); else if (rowToRemove !== null) onRemoveRow?.(rowToRemove); setConfirmPackageDelete(false); setRowToRemove(null); }} className="min-h-10 rounded-full bg-[#8A5148] px-4 font-montserrat text-[9px] font-semibold uppercase text-white">Confirm delete</button>
+            </div>
+          </section>
+        </div>
+      )}
     </div>
   );
 }
