@@ -60,3 +60,13 @@ export interface PricingTable {
   packageType: "5+1" | "10+2";
   rows: PricingRow[];
 }
+
+
+export interface PromoCampaignSettings {
+  eyebrow: string;
+  headlineLine1: string;
+  headlineLine2: string;
+  description: string;
+  heroImage: string;
+  heroImageAlt: string;
+}
