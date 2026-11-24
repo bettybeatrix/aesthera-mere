@@ -40,6 +40,7 @@ function Icon({ children }: { children: React.ReactNode }) {
 
 export default function PromotionsWorkspace({ initialPromos, initialPricingTables, initialCampaign }: Props) {
   const [promos, setPromos] = useState(initialPromos);
+  const [pricingTables, setPricingTables] = useState(initialPricingTables);
   const [campaign, setCampaign] = useState(initialCampaign);
   const [todayDate, setTodayDate] = useState<string | null>(null);
   const [query, setQuery] = useState("");
@@ -265,8 +266,16 @@ export default function PromotionsWorkspace({ initialPromos, initialPricingTable
       </div>
       <PromoCampaignHero campaign={campaign} editable onChange={setCampaign} />
       {formOpen && promotionForm && <div className="mx-auto max-w-[1180px] px-6 py-6 md:px-10">{promotionForm}</div>}
-      <PromosList promos={previewPromos} pricingTables={initialPricingTables} adminMode onEditPromo={edit} />
-      <div className="mx-auto max-w-[1180px] px-6 pb-12 md:px-10"><div className="flex justify-end"><button type="button" onClick={() => setNotice("Campaign changes are currently held in this editing session. Persistent publishing will be connected to the backend.")} className="min-h-10 rounded-full border border-[#4C5534]/25 px-5 font-montserrat text-[9px] font-semibold uppercase text-[#4C5534]">Save campaign draft</button></div></div>
+      <PromosList
+        promos={previewPromos}
+        pricingTables={pricingTables}
+        adminMode
+        onEditPromo={edit}
+        onTogglePromo={toggleActive}
+        onRemovePromo={setPendingDelete}
+        onPricingTablesChange={setPricingTables}
+      />
+      <div className="mx-auto max-w-[1180px] px-6 pb-12 md:px-10"><div className="flex justify-end"><button type="button" onClick={() => setNotice("Campaign changes are currently held in this editing session. Persistent publishing will be connected to the backend.")} className="min-h-10 rounded-full border border-[#4C5534]/25 px-5 font-montserrat text-[9px] font-semibold uppercase text-[#4C5534]">Save changes</button></div></div>
       {pendingDelete && <div className="fixed inset-0 z-[70] flex items-center justify-center bg-[#172119]/55 px-5 py-8 backdrop-blur-sm" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setPendingDelete(null); }}><section role="alertdialog" aria-modal="true" aria-labelledby="delete-promo-title" className="w-full max-w-[440px] rounded-[24px] border border-[#4C5534]/10 bg-[#FFFCF3] p-6 shadow-2xl"><p className="font-montserrat text-[9px] font-semibold uppercase tracking-[0.18em] text-[#8A5148]">Remove promotion</p><h2 id="delete-promo-title" className="font-seasons mt-2 text-2xl">Are you sure?</h2><p className="mt-3 font-montserrat text-xs leading-6 text-[#80755F]">Remove <strong>{pendingDelete.title}</strong> from this editing session?</p><div className="mt-7 flex justify-end gap-2"><button type="button" onClick={() => setPendingDelete(null)} className="min-h-11 rounded-full border border-[#4C5534]/20 px-5 font-montserrat text-[9px] font-semibold uppercase">Cancel</button><button type="button" onClick={confirmDelete} className="min-h-11 rounded-full bg-[#8A5148] px-5 font-montserrat text-[9px] font-semibold uppercase text-white">Remove</button></div></section></div>}
       {notice && <div role="status" className="fixed bottom-5 right-5 z-[60] max-w-sm rounded-2xl border border-[#4C5534]/10 bg-white px-5 py-4 font-montserrat text-[10px] leading-5 text-[#4F6442] shadow-xl">{notice}</div>}
     </main>
