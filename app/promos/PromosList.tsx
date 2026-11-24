@@ -25,6 +25,8 @@ const CATEGORIES = [
 interface PromosListProps {
   promos: PromoCard[];
   pricingTables: PricingTable[];
+  adminMode?: boolean;
+  onEditPromo?: (promo: PromoCard) => void;
 }
 
 const pesoFormatter = new Intl.NumberFormat("en-PH", {
@@ -375,17 +377,22 @@ export function PricingTableBlock({ table }: { table: PricingTable }) {
 // ---------------------------------------------------------------------------
 // Main exported client component
 // ---------------------------------------------------------------------------
-export default function PromosList({ promos, pricingTables }: PromosListProps) {
+export default function PromosList({ promos, pricingTables, adminMode = false, onEditPromo }: PromosListProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [activeTableTab, setActiveTableTab] = useState<"facials" | "drips">("facials");
   const [showAllPromos, setShowAllPromos] = useState(false);
-  const selectedPromo = promos.find((promo) => promo.id === searchParams.get("offer")) ?? null;
+  const [adminSelectedPromo, setAdminSelectedPromo] = useState<PromoCard | null>(null);
+  const selectedPromo = adminMode ? adminSelectedPromo : promos.find((promo) => promo.id === searchParams.get("offer")) ?? null;
 
   const openModal = useCallback((promo: PromoCard) => {
+    if (adminMode) {
+      setAdminSelectedPromo(promo);
+      return;
+    }
     router.replace(`/promos?offer=${encodeURIComponent(promo.id)}`, { scroll: false });
-  }, [router]);
+  }, [adminMode, router]);
 
   const closeModal = useCallback(() => {
     if (searchParams.has("offer")) {
@@ -459,11 +466,14 @@ export default function PromosList({ promos, pricingTables }: PromosListProps) {
         {filteredPromos.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {visiblePromos.map((card) => (
-              <PromoCardItem
-                key={card.id}
-                card={card}
-                onClick={() => openModal(card)}
-              />
+              <div key={card.id} className="relative">
+                <PromoCardItem card={card} onClick={() => openModal(card)} />
+                {adminMode && onEditPromo && (
+                  <button type="button" onClick={() => onEditPromo(card)} className="absolute bottom-[4.7rem] right-4 z-10 rounded-full border border-[#4C5534]/20 bg-[#FFFCF3] px-3 py-2 font-montserrat text-[9px] font-bold uppercase text-[#4C5534] shadow-sm hover:bg-white">
+                    Edit offer
+                  </button>
+                )}
+              </div>
             ))}
           </div>
         ) : (
@@ -554,7 +564,7 @@ export default function PromosList({ promos, pricingTables }: PromosListProps) {
 
       {/* ── Detail Modal ───────────────────────────────────────────── */}
       {selectedPromo && (
-        <PromoModal card={selectedPromo} onClose={closeModal} />
+        <PromoModal card={selectedPromo} onClose={() => adminMode ? setAdminSelectedPromo(null) : closeModal()} />
       )}
     </>
   );
