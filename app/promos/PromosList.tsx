@@ -63,7 +63,7 @@ function CampaignBadge({ label }: { label: string }) {
 // ---------------------------------------------------------------------------
 // Promo Detail Modal
 // ---------------------------------------------------------------------------
-export export function PromoModal({
+export function PromoModal({
   card,
   onClose,
 }: {
