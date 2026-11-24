@@ -2,6 +2,8 @@ export type PromoCategory =
   | "all"
   | "launch"
   | "facials"
+  | "laser"
+  | "wellness"
   | "injectables"
   | "contour";
 
