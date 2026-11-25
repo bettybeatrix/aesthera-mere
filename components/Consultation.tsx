@@ -3,6 +3,7 @@
 
 import { useBooking } from "@/components/BookingProvider";
 import { ArrowUpRightIcon } from "@/components/Icons";
+import { CLASSPASS_URL } from "@/lib/classpass";
 
 function CalendarIcon() {
   return (
@@ -44,7 +45,7 @@ function ArrowUpRight() {
   );
 }
 
-export default function Consultation() {
+export default function Consultation({ showClassPass = false }: { showClassPass?: boolean }) {
   const { openBooking } = useBooking();
   return (
     <section
@@ -81,6 +82,25 @@ export default function Consultation() {
           <a href="https://www.facebook.com/aestheramereph/" target="_blank" rel="noopener noreferrer" className="font-montserrat inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#4C5534]/30 px-6 text-xs font-semibold text-[#4C5534] hover:bg-[#F6F3ED]">Facebook <ArrowUpRightIcon className="h-4 w-4" /></a>
           <a href="https://www.instagram.com/aestheramereph/" target="_blank" rel="noopener noreferrer" className="font-montserrat inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#4C5534]/30 px-6 text-xs font-semibold text-[#4C5534] hover:bg-[#F6F3ED]">Instagram <ArrowUpRightIcon className="h-4 w-4" /></a>
         </div>
+
+        {showClassPass && (
+          <div className="mt-8 w-full max-w-[760px]">
+            <p className="flex items-center gap-3 font-montserrat text-[10px] font-semibold uppercase tracking-[0.16em] text-[#4F6442] before:h-px before:flex-1 before:bg-[#4F6442]/20 after:h-px after:flex-1 after:bg-[#4F6442]/20">
+              Other ways to book
+            </p>
+            <p className="mt-4 font-montserrat text-sm leading-6 text-[#5C675D]">
+              ClassPass members can book select treatments through ClassPass.
+            </p>
+            <a
+              href={CLASSPASS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#4C5534]/35 px-6 font-montserrat text-xs font-semibold text-[#4C5534] transition-colors hover:bg-[#F6F3ED] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4C5534]"
+            >
+              Find us on ClassPass <ArrowUpRightIcon className="h-4 w-4" />
+            </a>
+          </div>
+        )}
 
       </div>
     </section>

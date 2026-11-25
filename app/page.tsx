@@ -53,7 +53,7 @@ export default function Home() {
 
         {/* 8. Ending Card */}
         <div data-scroll-reveal="up">
-          <Consultation />
+          <Consultation showClassPass />
         </div>
       </main>
 

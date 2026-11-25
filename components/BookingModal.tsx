@@ -8,8 +8,9 @@ import {
   type FormEvent,
 } from "react";
 import Link from "next/link";
-import { ArrowRightIcon } from "@/components/Icons";
+import { ArrowRightIcon, ArrowUpRightIcon } from "@/components/Icons";
 import { treatmentCategories } from "@/data/treatments";
+import { CLASSPASS_URL } from "@/lib/classpass";
 
 type BookingModalProps = {
   onClose: () => void;
@@ -278,6 +279,20 @@ export default function BookingModal({
             text-[#777568]">
             Your journey to feeling your best begins here.
           </p>
+          {!preview && (
+            <p className="mt-2 font-montserrat text-xs leading-5 text-[#5C675D]">
+              Already a ClassPass member?{" "}
+              <a
+                href={CLASSPASS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-sm font-semibold text-[#4C5534] underline underline-offset-4 hover:text-[#35452F] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4C5534]"
+              >
+                View eligible treatments on ClassPass{" "}
+                <ArrowUpRightIcon className="inline-block h-3 w-3 align-middle" />
+              </a>
+            </p>
+          )}
         </header>
 
         {submitted ? (
