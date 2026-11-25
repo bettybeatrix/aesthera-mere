@@ -122,11 +122,9 @@ export default function Promos() {
 
                 {/* Pricing */}
 <div className="mt-3 border-t border-[#80755F]/15 pt-3">
-  {/^From\s+/i.test(promoPrice(offer)) && (
-    <p className="mb-1 font-montserrat text-[10px] font-medium uppercase tracking-[0.12em] text-[#80755F]">
-      For as low as
-    </p>
-  )}
+  <p className="mb-1 font-montserrat text-[10px] font-medium uppercase tracking-[0.12em] text-[#80755F]">
+    For as low as
+  </p>
 
   <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
     <span className="font-montserrat text-xl font-semibold text-[#4C5534]">
