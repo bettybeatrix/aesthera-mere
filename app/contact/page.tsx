@@ -32,7 +32,7 @@ export default function ContactPage() {
               </h1>
               <div className="mt-8 flex flex-wrap gap-3">
                 <BookingTrigger className="font-montserrat inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[#4C5534] px-7 text-xs font-semibold text-white transition-colors hover:bg-[#35452F] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4C5534]">
-                  Book a Consultation <ArrowUpRightIcon className="h-4 w-4" />
+                  Book Appointment <ArrowUpRightIcon className="h-4 w-4" />
                 </BookingTrigger>
                 <a href="tel:+639189365679" className="font-montserrat inline-flex min-h-12 items-center justify-center rounded-full border border-[#4C5534]/35 px-7 text-xs font-semibold text-[#4C5534] transition-colors hover:bg-[#EDEFE6] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4C5534]">
                   Call the Clinic
