@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
 import BookingTrigger from "@/components/BookingTrigger";
 import { ArrowUpRightIcon } from "@/components/Icons";
 import type { PromoCard, PricingTable } from "@/types/promo";
@@ -11,9 +12,11 @@ import type { PromoCard, PricingTable } from "@/types/promo";
 // ---------------------------------------------------------------------------
 const CATEGORIES = [
   { id: "all", label: "All Promos & Deals" },
-  { id: "contour", label: "Ultraformer MPT & Slimming" },
-  { id: "injectables", label: "JuveTox, Luhilo & Botox" },
-  { id: "facials", label: "Medical Peels & 5+1 Facials" },
+  { id: "facials", label: "Facials & Skin" },
+  { id: "laser", label: "Laser Treatments" },
+  { id: "injectables", label: "Injectables" },
+  { id: "contour", label: "Lifting & Contouring" },
+  { id: "wellness", label: "Wellness" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -46,10 +49,21 @@ function getRegularPriceLabel(card: PromoCard): string | undefined {
   return undefined;
 }
 
+function CampaignBadge({ label }: { label: string }) {
+  if (label !== "BEReady Holiday Deal") return label;
+
+  return (
+    <>
+      <span className="font-extrabold tracking-[0.14em]">BER</span>
+      <span className="font-semibold">eady Holiday Deal</span>
+    </>
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Promo Detail Modal
 // ---------------------------------------------------------------------------
-function PromoModal({
+export function PromoModal({
   card,
   onClose,
 }: {
@@ -228,7 +242,7 @@ function PromoModal({
             Avail This Promo <ArrowUpRightIcon className="h-4 w-4" />
           </BookingTrigger>
           <p className="mt-3 text-center font-montserrat text-[10px] leading-5 text-[#80755F]">
-            Frontend demonstration pricing and offer details. Final clinic offers will be managed through the backend.
+            Final eligibility, treatment plan, availability, and applicable terms are confirmed by the clinic.
           </p>
         </div>
       </div>
@@ -260,7 +274,7 @@ function PromoCardItem({
       aria-label={`View ${card.title} details`}
       className="flex w-full flex-col overflow-hidden rounded-[20px] border border-[#80755F]/20 bg-white text-left shadow-[0_8px_24px_-20px_rgba(30,58,42,0.28)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4C5534] focus-visible:ring-offset-2"
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#E7E1D7]">
+      <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#E7E1D7]">
         <Image
           src={card.image}
           alt={card.title}
@@ -270,8 +284,8 @@ function PromoCardItem({
           className="object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-        <span className="absolute left-4 top-4 rounded-full bg-[#4C5534] px-3 py-1.5 font-montserrat text-[10px] font-semibold uppercase tracking-[0.1em] text-white">
-          {card.badge}
+        <span className="absolute left-4 top-4 rounded-full bg-[#4C5534] px-3 py-1.5 font-montserrat text-[10px] tracking-[0.06em] text-white">
+          <CampaignBadge label={card.badge} />
         </span>
         {discountLabel && (
           <span className="absolute right-4 top-4 rounded-full bg-[#F4E9D7] px-3 py-1.5 font-montserrat text-[10px] font-bold tracking-[0.06em] text-[#4C5534]">
@@ -362,16 +376,29 @@ function PricingTableBlock({ table }: { table: PricingTable }) {
 // Main exported client component
 // ---------------------------------------------------------------------------
 export default function PromosList({ promos, pricingTables }: PromosListProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [activeTableTab, setActiveTableTab] = useState<"facials" | "drips">("facials");
-  const [selectedPromo, setSelectedPromo] = useState<PromoCard | null>(null);
+  const [showAllPromos, setShowAllPromos] = useState(false);
+  const selectedPromo = promos.find((promo) => promo.id === searchParams.get("offer")) ?? null;
 
-  const closeModal = useCallback(() => setSelectedPromo(null), []);
+  const openModal = useCallback((promo: PromoCard) => {
+    router.replace(`/promos?offer=${encodeURIComponent(promo.id)}`, { scroll: false });
+  }, [router]);
+
+  const closeModal = useCallback(() => {
+    if (searchParams.has("offer")) {
+      router.replace("/promos", { scroll: false });
+    }
+  }, [router, searchParams]);
 
   const filteredPromos =
     activeCategory === "all"
       ? promos
       : promos.filter((p) => p.category === activeCategory);
+  const visiblePromos = showAllPromos ? filteredPromos : filteredPromos.slice(0, 6);
+  const hasMorePromos = filteredPromos.length > 6;
 
   const facialTables = pricingTables.filter((t) =>
     ["premium-facials", "elite-facials"].includes(t.id)
@@ -396,7 +423,10 @@ export default function PromosList({ promos, pricingTables }: PromosListProps) {
                 <button
                   key={cat.id}
                   type="button"
-                  onClick={() => setActiveCategory(cat.id)}
+                  onClick={() => {
+                    setActiveCategory(cat.id);
+                    setShowAllPromos(false);
+                  }}
                   className={`inline-flex min-h-11 items-center rounded-full border px-5 font-montserrat text-xs font-semibold transition-all ${
                     isActive
                       ? "border-[#4C5534] bg-[#4C5534] text-white shadow-sm"
@@ -428,11 +458,11 @@ export default function PromosList({ promos, pricingTables }: PromosListProps) {
         {/* Cards Grid */}
         {filteredPromos.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredPromos.map((card) => (
+            {visiblePromos.map((card) => (
               <PromoCardItem
                 key={card.id}
                 card={card}
-                onClick={() => setSelectedPromo(card)}
+                onClick={() => openModal(card)}
               />
             ))}
           </div>
@@ -450,6 +480,29 @@ export default function PromosList({ promos, pricingTables }: PromosListProps) {
               className="mt-6 rounded-full bg-[#4C5534] px-6 py-3 font-montserrat text-xs font-semibold text-white hover:bg-[#35452F]"
             >
               View All Promos
+            </button>
+          </div>
+        )}
+
+        {hasMorePromos && (
+          <div className="mt-10 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setShowAllPromos((current) => !current)}
+              aria-expanded={showAllPromos}
+              className="group inline-flex min-h-12 items-center justify-center gap-3 rounded-full border border-[#4C5534]/35 bg-transparent px-7 font-montserrat text-xs font-semibold text-[#4C5534] transition-colors hover:bg-[#4C5534] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#4C5534]"
+            >
+              {showAllPromos ? "Show Less" : `Show More (${filteredPromos.length - visiblePromos.length})`}
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
+                className={`transition-transform duration-300 ${showAllPromos ? "rotate-180" : "group-hover:translate-y-0.5"}`}
+              >
+                <path d="M3 6l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </button>
           </div>
         )}
