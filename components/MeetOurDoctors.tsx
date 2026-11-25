@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRightIcon } from "@/components/Icons";
+import { ChevronRightIcon } from "@/components/Icons";
 
 const doctors = [
   {
@@ -125,19 +125,7 @@ export default function MeetOurDoctors() {
                   >
                     View Profile
 
-                    <svg
-                      width="15"
-                      height="15"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.7"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
+                    <ChevronRightIcon className="h-4 w-4" />
                   </Link>
                 </div>
               </div>
@@ -152,7 +140,7 @@ export default function MeetOurDoctors() {
             className="inline-flex min-h-11 items-center gap-3 border-b border-[#4C5534] pb-1 font-montserrat text-[12px] font-medium tracking-[0.08em] text-[#4C5534] transition-all duration-300 hover:gap-5"
           >
             View All Doctors
-            <ArrowRightIcon className="h-4 w-4" />
+            <ChevronRightIcon className="h-4 w-4" />
           </Link>
         </div>
 

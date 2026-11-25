@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { ArrowUpRightIcon } from "@/components/Icons";
+import { ChevronRightIcon } from "@/components/Icons";
 
 export const metadata: Metadata = {
   title: "About Aesthera Mère | Our Story, Philosophy & Clinic",
@@ -200,7 +200,7 @@ export default function AboutPage() {
                 href="/contact"
                 className="hidden min-h-11 items-center gap-2 rounded-full border border-[#4C5534]/30 px-5 font-montserrat text-[11px] font-semibold sm:inline-flex"
               >
-                Visit Us <ArrowUpRightIcon className="h-4 w-4" />
+                Visit Us <ChevronRightIcon className="h-4 w-4" />
               </Link>
             </div>
             <div className="grid gap-4 md:grid-cols-12 md:grid-rows-2">
@@ -242,7 +242,7 @@ export default function AboutPage() {
                   provide the relevant license or registration before your procedure.
                 </p>
                 <a href="tel:+639189365679" className="mt-6 inline-flex min-h-11 items-center gap-2 font-montserrat text-[12px] font-semibold underline underline-offset-4">
-                  Request Verification <ArrowUpRightIcon className="h-4 w-4" />
+                  Request Verification <ChevronRightIcon className="h-4 w-4" />
                 </a>
               </article>
               <article className="rounded-[24px] border border-[#80755F]/15 p-7 md:p-9">
@@ -258,7 +258,7 @@ export default function AboutPage() {
                   documents, and cash-out requirements before booking.
                 </p>
                 <Link href="/contact" className="mt-6 inline-flex min-h-11 items-center gap-2 font-montserrat text-[12px] font-semibold underline underline-offset-4">
-                  Confirm Coverage <ArrowUpRightIcon className="h-4 w-4" />
+                  Confirm Coverage <ChevronRightIcon className="h-4 w-4" />
                 </Link>
               </article>
             </div>

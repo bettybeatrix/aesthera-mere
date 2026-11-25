@@ -3,7 +3,7 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import TreatmentSubcategoryCard from "@/components/TreatmentSubcategoryCard";
-import { ArrowUpRightIcon } from "@/components/Icons";
+import { ChevronRightIcon } from "@/components/Icons";
 import type { TreatmentCategory } from "@/data/treatments";
 
 export default function TreatmentCategoryPage({ category }: { category: TreatmentCategory }) {
@@ -36,7 +36,7 @@ export default function TreatmentCategoryPage({ category }: { category: Treatmen
               <p className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.2em] text-[#80755F]">Explore by collection</p>
               <h2 id="subcategory-heading" className="font-seasons mt-2 text-[clamp(2.5rem,5vw,4rem)] leading-tight text-[#4C5534]">Choose a treatment category</h2>
             </div>
-            <Link href="/treatments" className="group inline-flex w-fit items-center gap-2 border-b border-[#4C5534] pb-1 font-montserrat text-xs font-semibold text-[#4C5534]">View All Treatments <span aria-hidden="true" className="transition-transform group-hover:translate-x-1"><ArrowUpRightIcon className="h-4 w-4" /></span></Link>
+            <Link href="/treatments" className="group inline-flex w-fit items-center gap-2 border-b border-[#4C5534] pb-1 font-montserrat text-xs font-semibold text-[#4C5534]">View All Treatments <span aria-hidden="true" className="transition-transform group-hover:translate-x-1"><ChevronRightIcon className="h-4 w-4" /></span></Link>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {category.groups.map((group) => (

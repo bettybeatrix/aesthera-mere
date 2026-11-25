@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { StarIcon } from "@/components/Icons";
+import { ChevronLeftIcon, ChevronRightIcon, StarIcon } from "@/components/Icons";
 import { featuredTestimonials, supportingTestimonials } from "@/data/testimonials";
 
 const GOOGLE_REVIEWS_URL =
@@ -136,19 +136,7 @@ export default function Testimonials() {
                 aria-label="Previous featured testimonial"
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-[#FFFCF3]/50 text-[#FFFCF3] transition-all duration-300 hover:bg-[#FFFCF3] hover:text-[#4C5534] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFFCF3]"
               >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M19 12H5M12 19l-7-7 7-7" />
-                </svg>
+                <ChevronLeftIcon className="h-4 w-4" />
               </button>
 
               <span className="font-montserrat text-[10px] tracking-[0.12em] text-[#FFFCF3]/80">
@@ -162,19 +150,7 @@ export default function Testimonials() {
                 aria-label="Next featured testimonial"
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-[#FFFCF3]/50 text-[#FFFCF3] transition-all duration-300 hover:bg-[#FFFCF3] hover:text-[#4C5534] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFFCF3]"
               >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
+                <ChevronRightIcon className="h-4 w-4" />
               </button>
             </div>
           )}
@@ -225,20 +201,7 @@ export default function Testimonials() {
           >
             Read Our Google Reviews
 
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.7"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-              className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-            >
-              <path d="M7 17 17 7M7 7h10v10" />
-            </svg>
+            <ChevronRightIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
           </a>
         </div>
       </div>

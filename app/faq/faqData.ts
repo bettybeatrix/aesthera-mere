@@ -29,7 +29,7 @@ export const FAQ_ITEMS: FAQItem[] = [
   {
     id: "book-consultation",
     category: "Appointments",
-    question: "How can I book a consultation or appointment?",
+    question: "How can I book an appointment?",
     answer:
       "You can use the Book Appointment button on the website to start an appointment request. You may also contact the clinic through its official channels to ask about available schedules. Your appointment is subject to confirmation by the clinic.",
   },

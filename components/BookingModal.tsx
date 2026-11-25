@@ -8,7 +8,7 @@ import {
   type FormEvent,
 } from "react";
 import Link from "next/link";
-import { ArrowRightIcon, ArrowUpRightIcon } from "@/components/Icons";
+import { ChevronLeftIcon, ChevronRightIcon } from "@/components/Icons";
 import { treatmentCategories } from "@/data/treatments";
 import { CLASSPASS_URL } from "@/lib/classpass";
 
@@ -289,7 +289,7 @@ export default function BookingModal({
                 className="rounded-sm font-semibold text-[#4C5534] underline underline-offset-4 hover:text-[#35452F] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4C5534]"
               >
                 View eligible treatments on ClassPass{" "}
-                <ArrowUpRightIcon className="inline-block h-3 w-3 align-middle" />
+                <ChevronRightIcon className="inline-block h-3 w-3 align-middle" />
               </a>
             </p>
           )}
@@ -458,7 +458,7 @@ export default function BookingModal({
                     transition hover:bg-[#F6F3ED]
                     disabled:opacity-30"
                 >
-                  ‹
+                  <ChevronLeftIcon className="mx-auto h-4 w-4" />
                 </button>
 
                 <span className="font-montserrat text-sm
@@ -481,7 +481,7 @@ export default function BookingModal({
                     border-[#E3DDD1] text-[#4C5534]
                     transition hover:bg-[#F6F3ED]"
                 >
-                  ›
+                  <ChevronRightIcon className="mx-auto h-4 w-4" />
                 </button>
               </div>
 
@@ -817,7 +817,7 @@ export default function BookingModal({
                 disabled={!date || !time || !privacy}
                 className="inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-full bg-[#4C5534] px-6 py-3 font-montserrat text-[12px] font-medium text-white transition hover:bg-[#39432D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4C5534] disabled:cursor-not-allowed disabled:opacity-40"
               >
-                Preview Appointment Request <ArrowRightIcon className="h-4 w-4" />
+                Preview Appointment Request <ChevronRightIcon className="h-4 w-4" />
               </button>
             </div>
             <p className="mt-1 text-center font-montserrat text-[10px] text-[#777568] sm:text-left">Frontend preview only. No booking is submitted.</p>

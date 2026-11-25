@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ChevronLeftIcon, ChevronRightIcon } from "@/components/Icons";
 import { useMemo, useState, type ReactNode, type SVGProps } from "react";
 
 type IconProps = SVGProps<SVGSVGElement>;
@@ -82,7 +83,7 @@ export default function CalendarWorkspace() {
 }
 
 function ViewSwitcher({ view, onChange }: { view: CalendarView; onChange: (view: CalendarView) => void }) { return <div className="flex rounded-full bg-[#f0f2ec] p-1">{(["day", "week", "month", "year"] as const).map((item) => <button key={item} type="button" onClick={() => onChange(item)} className={`min-h-9 rounded-full px-3 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] transition-all ${view === item ? "bg-white text-[#36513c] shadow-sm" : "text-[#858c85] hover:text-[#405745]"}`}>{item}</button>)}</div>; }
-function CircleButton({ label, onClick, left }: { label: string; onClick: () => void; left?: boolean }) { return <button type="button" aria-label={label} onClick={onClick} className="grid h-10 w-10 place-items-center rounded-full bg-[#f0f2ec] text-[#405745] transition-colors hover:bg-[#e3e9df]"><Icon className="h-4 w-4"><path d={left ? "m15 18-6-6 6-6" : "m9 18 6-6-6-6"} /></Icon></button>; }
+function CircleButton({ label, onClick, left }: { label: string; onClick: () => void; left?: boolean }) { return <button type="button" aria-label={label} onClick={onClick} className="grid h-10 w-10 place-items-center rounded-full bg-[#f0f2ec] text-[#405745] transition-colors hover:bg-[#e3e9df]">{left ? <ChevronLeftIcon className="h-4 w-4" /> : <ChevronRightIcon className="h-4 w-4" />}</button>; }
 
 function ScheduleGrid({ days, items, selectedId, onSelect }: { days: Date[]; items: CalendarItem[]; selectedId: string; onSelect: (id: string) => void }) {
   const columns = `72px repeat(${days.length}, minmax(${days.length === 1 ? "360px" : "112px"}, 1fr))`;

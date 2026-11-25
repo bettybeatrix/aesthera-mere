@@ -1,5 +1,6 @@
 
 import Link from "next/link";
+import { ChevronRightIcon } from "@/components/Icons";
 
 type Category = {
   title: string;
@@ -34,20 +35,7 @@ function TreatmentCategory({
               className="font-montserrat group inline-flex items-center gap-2 text-[14px] leading-6 text-[#80755F] transition-colors duration-200 hover:text-[#4C5534]"
             >
               <span>{item.title}</span>
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
-                aria-hidden="true"
-              >
-                <path d="M5 12h14m-6-6 6 6-6 6" />
-              </svg>
+              <ChevronRightIcon className="h-4 w-4 opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100" />
             </Link>
           </li>
         ))}

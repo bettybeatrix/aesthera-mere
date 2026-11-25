@@ -1,52 +1,11 @@
 
 "use client";
 
-import { useBooking } from "@/components/BookingProvider";
-import { ArrowUpRightIcon } from "@/components/Icons";
+import BookingTrigger from "@/components/BookingTrigger";
+import { ChevronRightIcon } from "@/components/Icons";
 import { CLASSPASS_URL } from "@/lib/classpass";
 
-function CalendarIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x="3" y="5" width="18" height="16" rx="2" />
-      <path d="M16 3v4M8 3v4M3 10h18" />
-    </svg>
-  );
-}
-
-function ArrowUpRight() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M7 17 17 7" />
-      <path d="M7 7h10v10" />
-    </svg>
-  );
-}
-
 export default function Consultation({ showClassPass = false }: { showClassPass?: boolean }) {
-  const { openBooking } = useBooking();
   return (
     <section
       id="consultation"
@@ -76,11 +35,9 @@ export default function Consultation({ showClassPass = false }: { showClassPass?
         </div>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <button type="button" onClick={() => openBooking()} className="font-montserrat group inline-flex min-h-12 items-center justify-center gap-3 rounded-full border border-[#4C5534] bg-[#4C5534] px-7 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#35452F] hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4C5534]">
-            <CalendarIcon /> <span>Book Appointment</span><span className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"><ArrowUpRight /></span>
-          </button>
-          <a href="https://www.facebook.com/aestheramereph/" target="_blank" rel="noopener noreferrer" className="font-montserrat inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#4C5534]/30 px-6 text-xs font-semibold text-[#4C5534] hover:bg-[#F6F3ED]">Facebook <ArrowUpRightIcon className="h-4 w-4" /></a>
-          <a href="https://www.instagram.com/aestheramereph/" target="_blank" rel="noopener noreferrer" className="font-montserrat inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#4C5534]/30 px-6 text-xs font-semibold text-[#4C5534] hover:bg-[#F6F3ED]">Instagram <ArrowUpRightIcon className="h-4 w-4" /></a>
+          <BookingTrigger className="font-montserrat inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#4C5534] bg-[#4C5534] px-7 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#35452F] hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4C5534]" />
+          <a href="https://www.facebook.com/aestheramereph/" target="_blank" rel="noopener noreferrer" className="font-montserrat inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#4C5534]/30 px-6 text-xs font-semibold text-[#4C5534] hover:bg-[#F6F3ED]">Facebook <ChevronRightIcon className="h-4 w-4" /></a>
+          <a href="https://www.instagram.com/aestheramereph/" target="_blank" rel="noopener noreferrer" className="font-montserrat inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#4C5534]/30 px-6 text-xs font-semibold text-[#4C5534] hover:bg-[#F6F3ED]">Instagram <ChevronRightIcon className="h-4 w-4" /></a>
         </div>
 
         {showClassPass && (
@@ -97,7 +54,7 @@ export default function Consultation({ showClassPass = false }: { showClassPass?
               rel="noopener noreferrer"
               className="mt-4 inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-[#4C5534]/35 px-6 font-montserrat text-xs font-semibold text-[#4C5534] transition-colors hover:bg-[#F6F3ED] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4C5534]"
             >
-              Find us on ClassPass <ArrowUpRightIcon className="h-4 w-4" />
+              Find us on ClassPass <ChevronRightIcon className="h-4 w-4" />
             </a>
           </div>
         )}

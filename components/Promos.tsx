@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { PromoModal } from "@/app/promos/PromosList";
-import { ArrowUpRightIcon } from "@/components/Icons";
+import { ChevronLeftIcon, ChevronRightIcon } from "@/components/Icons";
 import { PROMOTIONS } from "@/lib/promos";
 
 const offers = PROMOTIONS;
@@ -70,14 +70,14 @@ export default function Promos() {
             </p>
             <Link href="/promos" className="group inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-full bg-[#4C5534] px-6 font-montserrat text-[12px] font-semibold uppercase tracking-[0.08em] text-white shadow-[0_12px_28px_-18px_rgba(30,58,42,0.75)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#35452F] hover:shadow-[0_18px_34px_-18px_rgba(30,58,42,0.8)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4C5534] md:w-auto">
               View All Promos &amp; Packages
-              <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"><ArrowUpRightIcon className="h-4 w-4" /></span>
+              <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1"><ChevronRightIcon className="h-4 w-4" /></span>
             </Link>
           </div>
         </div>
 
         <div className="grid grid-cols-[44px_minmax(0,1fr)_44px] items-center gap-2 sm:gap-4">
           <button type="button" onClick={() => moveCarousel(-1)} aria-label="Previous promotion" className="flex h-11 w-11 items-center justify-center rounded-full border border-[#4C5534]/30 bg-white text-[#4C5534] transition-colors hover:bg-[#4C5534] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4C5534]">
-            <span aria-hidden="true">←</span>
+            <ChevronLeftIcon className="h-4 w-4" />
           </button>
 
           <div ref={carouselRef} role="region" aria-label="Current promotions" className="flex min-w-0 items-stretch snap-x snap-mandatory gap-5 overflow-x-auto py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:gap-6">
@@ -155,7 +155,7 @@ export default function Promos() {
                     className="inline-flex min-h-10 w-full shrink-0 items-center justify-center gap-2 rounded-full bg-[#4C5534] px-4 font-montserrat text-xs font-semibold text-white transition-colors hover:bg-[#35452F] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#4C5534]"
                   >
                     View Offer Details
-                    <ArrowUpRightIcon className="h-3.5 w-3.5" />
+                    <ChevronRightIcon className="h-3.5 w-3.5" />
                   </button>
                 </div>
 
@@ -166,7 +166,7 @@ export default function Promos() {
           </div>
 
           <button type="button" onClick={() => moveCarousel(1)} aria-label="Next promotion" className="flex h-11 w-11 items-center justify-center rounded-full bg-[#4C5534] text-white transition-colors hover:bg-[#35452F] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4C5534]">
-            <span aria-hidden="true">→</span>
+            <ChevronRightIcon className="h-4 w-4" />
           </button>
         </div>
       </div>

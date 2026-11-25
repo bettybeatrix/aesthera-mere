@@ -6,9 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import TreatmentsMegaMenu from "@/components/TreatmentsMegaMenu";
-import { useBooking } from "@/components/BookingProvider";
+import BookingTrigger from "@/components/BookingTrigger";
 import { useTreatmentsMenu } from "@/components/TreatmentsMenuProvider";
-import { ArrowUpRightIcon } from "@/components/Icons";
+import { ChevronRightIcon } from "@/components/Icons";
 import { treatmentCategories as treatmentCatalog } from "@/data/treatments";
 
 const navLinks = [
@@ -28,25 +28,6 @@ const treatmentCategories = treatmentCatalog.map((category) => ({
   items: category.groups.map((group) => ({ title: group.title, slug: group.slug })),
 }));
 
-
-function CalendarIcon() {
-  return (
-    <svg
-      width="17"
-      height="17"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x="3" y="5" width="18" height="16" rx="2" />
-      <path d="M8 3v4M16 3v4M3 10h18" />
-    </svg>
-  );
-}
 
 function MenuIcon({ open }: { open: boolean }) {
   return open ? (
@@ -85,18 +66,13 @@ function BookingButton({
   fullWidth?: boolean;
   onClick?: () => void;
 }) {
-  const { openBooking } = useBooking();
   return (
-    <button
-      type="button"
-      onClick={() => { onClick?.(); openBooking(); }}
+    <BookingTrigger
+      onClick={onClick}
       className={`font-montserrat inline-flex items-center justify-center gap-2 rounded-full bg-[#FFFCF3] px-5 py-3 text-[13px] font-semibold text-[#4C5534] shadow-sm transition-all duration-300 hover:bg-white hover:shadow-md ${
         fullWidth ? "w-full" : "whitespace-nowrap"
       }`}
-    >
-      <CalendarIcon />
-      <span>Book Appointment</span>
-    </button>
+    />
   );
 }
 
@@ -137,7 +113,7 @@ function MobileNavigation({ pathname, onClose, onTreatments }: { pathname: strin
           {navLinks.map((link) => {
             const active = link.href === "/" ? pathname === "/" : pathname === link.href || pathname.startsWith(`${link.href}/`);
             const classes = `group flex min-h-12 w-full items-center justify-between gap-4 border-b border-[#80755F]/15 py-2.5 text-left transition-colors hover:text-[#4F6442] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4F6442] ${active ? "text-[#4F6442]" : "text-[#4C5534]"}`;
-            const label = <><span className="font-montserrat text-[14px] font-medium leading-tight">{link.name}</span><span aria-hidden="true" className={`text-[14px] transition-transform group-hover:translate-x-1 ${active ? "text-[#4F6442]" : "text-[#80755F]"}`}>{link.name === "Treatments" ? "+" : active ? "•" : <ArrowUpRightIcon className="h-4 w-4" />}</span></>;
+            const label = <><span className="font-montserrat text-[14px] font-medium leading-tight">{link.name}</span><span aria-hidden="true" className={`text-[14px] transition-transform group-hover:translate-x-1 ${active ? "text-[#4F6442]" : "text-[#80755F]"}`}>{link.name === "Treatments" ? "+" : active ? "•" : <ChevronRightIcon className="h-4 w-4" />}</span></>;
             return link.name === "Treatments" ? (
               <button key={link.name} type="button" onClick={onTreatments} aria-haspopup="dialog" aria-controls="treatments-mega-menu" className={classes}>{label}</button>
             ) : <Link key={link.name} href={link.href} onClick={onClose} aria-current={active ? "page" : undefined} className={classes}>{label}</Link>;
@@ -158,7 +134,6 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { treatmentsOpen, setTreatmentsOpen } = useTreatmentsMenu();
-  const { openBooking } = useBooking();
   const treatmentsTriggerRef = useRef<HTMLButtonElement>(null);
   const treatmentsMenuRef = useRef<HTMLDivElement>(null);
 
@@ -345,14 +320,9 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Menu Button */}
-        <button
-          type="button"
-          onClick={() => openBooking()}
-          className="font-montserrat ml-auto inline-flex h-11 shrink-0 items-center justify-center rounded-full bg-[#FFFCF3] px-4 text-[11px] font-semibold text-[#4C5534] shadow-sm xl:hidden"
-        >
-           <CalendarIcon />
-          Book Appointment
-        </button>
+        <BookingTrigger
+          className="font-montserrat ml-auto inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-[#FFFCF3] px-4 text-[11px] font-semibold text-[#4C5534] shadow-sm xl:hidden"
+        />
         <button
           type="button"
           onClick={() => setMenuOpen(!menuOpen)}

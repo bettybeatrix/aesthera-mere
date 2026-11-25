@@ -5,10 +5,7 @@ import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowUpIcon,
-  ArrowUpRightIcon,
-} from "@/components/Icons";
+import { ArrowUpIcon, ChevronRightIcon } from "@/components/Icons";
 
 const GOOGLE_MAPS_URL =
   "https://www.google.com/maps/place/Aesthera+Mere+Beauty+Creations/@14.570535,121.0493446,17z/data=!4m8!3m7!1s0x3397c9ff0d4effff:0x8f90fb8a8325a1c2!8m2!3d14.5705298!4d121.0519195!9m1!1b1!16s%2Fg%2F11nb_t70wc";
@@ -261,7 +258,7 @@ export default function Footer() {
                 className="mt-3 inline-flex items-center gap-2 border-b border-[#4C5534]/35 pb-1 font-montserrat text-[12px] font-medium transition-all duration-300 hover:gap-3 hover:border-[#4C5534]"
               >
                 Get Directions
-                <ArrowUpRightIcon className="h-3.5 w-3.5" />
+                <ChevronRightIcon className="h-3.5 w-3.5" />
               </a>
             </div>
           </div>

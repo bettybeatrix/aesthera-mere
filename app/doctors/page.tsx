@@ -4,7 +4,7 @@
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { useBooking } from "@/components/BookingProvider";
+import BookingTrigger from "@/components/BookingTrigger";
 
 // ======================================
 // DOCTORS DATA
@@ -109,8 +109,6 @@ const doctors = [
 // ======================================
 
 export default function DoctorsPage() {
-  const { openBooking } = useBooking();
-
   return (
     <>
       <Navbar />
@@ -233,31 +231,10 @@ export default function DoctorsPage() {
                     </div>
 
                     {/* BOOKING BUTTON */}
-                    <button
-                      type="button"
-                      onClick={() =>
-                        openBooking("", doctor.shortName)
-                      }
-                      className="mt-8 inline-flex items-center justify-center gap-3 rounded-full bg-[#4C5534] px-7 py-3.5 font-montserrat text-[12px] font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#39432D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4C5534] motion-reduce:transform-none"
-                    >
-                      <svg
-                        width="17"
-                        height="17"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.7"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden="true"
-                      >
-                        <rect x="3" y="5" width="18" height="16" rx="2" />
-                        <path d="M7 3v4M17 3v4M3 10h18" />
-                      </svg>
-
-                      Book a Consultation
-                      <span aria-hidden="true">↗</span>
-                    </button>
+                    <BookingTrigger
+                      initialDoctor={doctor.shortName}
+                      className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-[#4C5534] px-7 py-3.5 font-montserrat text-[12px] font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#39432D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4C5534] motion-reduce:transform-none"
+                    />
                   </div>
                 </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ChevronLeftIcon, ChevronRightIcon } from "@/components/Icons";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import type { DoctorProfile, DoctorProfileInput } from "@/types/doctor";
 
@@ -329,9 +330,9 @@ export default function DoctorsWorkspace({ initialDoctors }: Props) {
               <div className="flex items-center justify-between"><h3 className="font-montserrat text-[10px] font-semibold uppercase tracking-[0.12em] text-[#4c5534]">Leave dates</h3><span className="font-montserrat text-[9px] text-[#80755f]">Select start, then end</span></div>
               <div className="mt-3 rounded-2xl border border-[#334b39]/10 bg-white p-4 sm:p-5">
                 <div className="mb-4 flex items-center justify-between">
-                  <button type="button" aria-label="Previous month" onClick={() => setCalendarMonth((month) => new Date(month.getFullYear(), month.getMonth() - 1, 1))} className="grid h-9 w-9 place-items-center rounded-full text-[#4c5534] hover:bg-[#f5f1e7]">‹</button>
+                  <button type="button" aria-label="Previous month" onClick={() => setCalendarMonth((month) => new Date(month.getFullYear(), month.getMonth() - 1, 1))} className="grid h-9 w-9 place-items-center rounded-full text-[#4c5534] hover:bg-[#f5f1e7]"><ChevronLeftIcon className="h-4 w-4" /></button>
                   <h4 className="font-montserrat text-xs font-semibold text-[#4c5534]">{calendarMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" })}</h4>
-                  <button type="button" aria-label="Next month" onClick={() => setCalendarMonth((month) => new Date(month.getFullYear(), month.getMonth() + 1, 1))} className="grid h-9 w-9 place-items-center rounded-full text-[#4c5534] hover:bg-[#f5f1e7]">›</button>
+                  <button type="button" aria-label="Next month" onClick={() => setCalendarMonth((month) => new Date(month.getFullYear(), month.getMonth() + 1, 1))} className="grid h-9 w-9 place-items-center rounded-full text-[#4c5534] hover:bg-[#f5f1e7]"><ChevronRightIcon className="h-4 w-4" /></button>
                 </div>
                 <div className="grid grid-cols-7 gap-1 text-center">
                   {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => <span key={day} className="py-2 font-montserrat text-[9px] font-semibold text-[#80755f]">{day}</span>)}

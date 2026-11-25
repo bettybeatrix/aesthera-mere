@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ChevronLeftIcon, ChevronRightIcon } from "@/components/Icons";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { treatmentResults, type ResultPhoto } from "@/data/results";
 import styles from "./ResultsGallery.module.css";
@@ -33,10 +34,6 @@ function Comparison({ item, enlarged = false, eager = false }: {
       </figure>)}
     </div>
   );
-}
-
-function Chevron({ previous = false }: { previous?: boolean }) {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d={previous ? "m14 6-6 6 6 6" : "m10 6 6 6-6 6"} /></svg>;
 }
 
 function ResultViewer({ item, position, total, onClose, onPrevious, onNext }: {
@@ -74,9 +71,9 @@ function ResultViewer({ item, position, total, onClose, onPrevious, onNext }: {
         <div className={styles.viewerFooter}>
           <p id="result-viewer-note">Results vary per individual.</p>
           <div className={styles.viewerControls}>
-            <button type="button" className={styles.iconButton} aria-label="Previous result" onClick={onPrevious} disabled={total < 2}><Chevron previous /></button>
+            <button type="button" className={styles.iconButton} aria-label="Previous result" onClick={onPrevious} disabled={total < 2}><ChevronLeftIcon /></button>
             <span aria-live="polite">{position} / {total}</span>
-            <button type="button" className={styles.iconButton} aria-label="Next result" onClick={onNext} disabled={total < 2}><Chevron /></button>
+            <button type="button" className={styles.iconButton} aria-label="Next result" onClick={onNext} disabled={total < 2}><ChevronRightIcon /></button>
           </div>
         </div>
       </div>

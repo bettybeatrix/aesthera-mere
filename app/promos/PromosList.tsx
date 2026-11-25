@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import BookingTrigger from "@/components/BookingTrigger";
-import { ArrowUpRightIcon } from "@/components/Icons";
+import { ChevronRightIcon } from "@/components/Icons";
 import type { PromoCard, PricingTable } from "@/types/promo";
 
 // ---------------------------------------------------------------------------
@@ -239,7 +239,7 @@ export function PromoModal({
             initialTreatment={card.title}
             className="mt-8 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-[#4C5534] px-5 font-montserrat text-xs font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#4C5534]"
           >
-            Avail This Promo <ArrowUpRightIcon className="h-4 w-4" />
+            Avail This Promo <ChevronRightIcon className="h-4 w-4" />
           </BookingTrigger>
           <p className="mt-3 text-center font-montserrat text-[10px] leading-5 text-[#80755F]">
             Final eligibility, treatment plan, availability, and applicable terms are confirmed by the clinic.
@@ -327,7 +327,7 @@ function PromoCardItem({
           <span className="font-montserrat text-[11px] font-semibold text-[#4f6442]">
             View full details
           </span>
-          <ArrowUpRightIcon className="h-4 w-4 text-[#4f6442]" />
+          <ChevronRightIcon className="h-4 w-4 text-[#4f6442]" />
         </div>
       </div>
     </button>

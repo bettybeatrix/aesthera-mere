@@ -209,17 +209,15 @@ export default function FAQContent() {
               Still have questions?
             </p>
             <h2 className="font-seasons mt-2 text-3xl leading-tight text-[#4C5534] sm:text-4xl">
-              Let's talk about your goals.
+              Let&apos;s talk about your goals.
             </h2>
             <p className="mt-3 font-montserrat text-xs leading-6 text-[#80755F]">
               Get in touch with the team to discuss your concerns and learn about the next steps.
             </p>
           </div>
           <BookingTrigger
-            className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-full bg-[#4C5534] px-7 font-montserrat text-xs font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#4C5534]"
-          >
-            Book Appointment
-          </BookingTrigger>
+            className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-full bg-[#4C5534] px-7 font-montserrat text-xs font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#4C5534]"
+          />
         </div>
       </section>
     </>

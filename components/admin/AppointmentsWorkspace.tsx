@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, type FormEvent, type ReactNode, type SVGProps } from "react";
+import { ChevronLeftIcon, ChevronRightIcon } from "@/components/Icons";
 
 type AppointmentStatus = "Pending" | "Confirmed" | "Completed" | "Cancelled";
 type Appointment = {
@@ -146,7 +147,7 @@ export default function AppointmentsWorkspace() {
 }
 
 function StatusBadge({ status }: { status: AppointmentStatus }) { return <span className={`inline-flex rounded-full px-2.5 py-1.5 font-montserrat text-[8px] font-bold uppercase tracking-[0.08em] ${statusStyles[status]}`}>{status}</span>; }
-function CircleButton({ label, onClick, left }: { label: string; onClick: () => void; left?: boolean }) { return <button type="button" aria-label={label} onClick={onClick} className="flex h-9 w-9 items-center justify-center rounded-full border border-[#334b39]/10 text-[#69736b] hover:bg-[#eef1ea]"><Icon className="h-4 w-4"><path d={left ? "m15 18-6-6 6-6" : "m9 18 6-6-6-6"} /></Icon></button>; }
+function CircleButton({ label, onClick, left }: { label: string; onClick: () => void; left?: boolean }) { return <button type="button" aria-label={label} onClick={onClick} className="flex h-9 w-9 items-center justify-center rounded-full border border-[#334b39]/10 text-[#69736b] hover:bg-[#eef1ea]">{left ? <ChevronLeftIcon className="h-4 w-4" /> : <ChevronRightIcon className="h-4 w-4" />}</button>; }
 
 function AppointmentList({ appointments, selectedId, onSelect }: { appointments: Appointment[]; selectedId: string; onSelect: (id: string) => void }) {
   if (!appointments.length) return <EmptyState />;

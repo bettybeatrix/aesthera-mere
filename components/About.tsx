@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ChevronRightIcon } from "@/components/Icons";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -213,19 +214,7 @@ export default function About() {
             >
               Discover Our Story
 
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+              <ChevronRightIcon className="h-4 w-4" />
             </Link>
           </div>
         </div>

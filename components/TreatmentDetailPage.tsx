@@ -1,17 +1,10 @@
 import Image from "next/image";
+import { ChevronLeftIcon } from "@/components/Icons";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import BookingTrigger from "@/components/BookingTrigger";
 import type { Treatment, TreatmentCategory, TreatmentGroup } from "@/data/treatments";
-
-function ArrowIcon() {
-  return (
-    <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" aria-hidden="true">
-      <path d="M4 10h11M11 6l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
 
 export default function TreatmentDetailPage({
   category,
@@ -100,12 +93,9 @@ export default function TreatmentDetailPage({
               )}
 
               <div className="mt-7 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-              <BookingTrigger initialTreatment={treatment.name} className="group inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-[#4C5534] px-8 font-montserrat text-xs font-semibold text-white transition-colors hover:bg-[#4F6442] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4C5534]">
-                Book an Appointment
-                <span className="transition-transform duration-300 group-hover:translate-x-1"><ArrowIcon /></span>
-              </BookingTrigger>
+              <BookingTrigger initialTreatment={treatment.name} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#4C5534] px-8 font-montserrat text-xs font-semibold text-white transition-colors hover:bg-[#4F6442] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4C5534]" />
                 <Link href={backHref} className="inline-flex items-center gap-2 font-montserrat text-[11px] font-semibold text-[#4C5534] transition-colors hover:text-[#80755F]">
-                  <span aria-hidden="true">←</span>
+                  <ChevronLeftIcon className="h-4 w-4" />
                   Back to Treatments
                 </Link>
               </div>

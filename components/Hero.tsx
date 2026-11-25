@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { useBooking } from "@/components/BookingProvider";
+import BookingTrigger from "@/components/BookingTrigger";
 import { useTreatmentsMenu } from "@/components/TreatmentsMenuProvider";
-import { ArrowUpRightIcon } from "@/components/Icons";
+import { ChevronRightIcon } from "@/components/Icons";
 
 // Hero slideshow assets live in public/images/hero/.
 const slides = [
@@ -17,7 +17,6 @@ const slides = [
 export default function Hero() {
   const [activeSlide, setActiveSlide] = useState(0);
   const { setTreatmentsOpen } = useTreatmentsMenu();
-  const { openBooking } = useBooking();
   const heroRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -123,27 +122,9 @@ export default function Hero() {
           </h1>
 
           <div className="hero-intro-actions mt-9 flex flex-wrap items-center gap-3 sm:gap-4">
-            <button
-              type="button"
-              onClick={() => openBooking()}
+            <BookingTrigger
               className="font-montserrat inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#FFFCF3] px-7 py-3 text-[13px] font-semibold text-[#4C5534] transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
-            >
-              <svg
-                width="17"
-                height="17"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <rect x="3" y="5" width="18" height="16" rx="2" />
-                <path d="M8 3v4M16 3v4M3 10h18" />
-              </svg>
-              Book an Appointment
-            </button>
+            />
 
             <button
               type="button"
@@ -153,7 +134,7 @@ export default function Hero() {
               className="font-montserrat inline-flex min-h-12 items-center justify-center gap-3 rounded-full border border-[#FFFCF3] bg-transparent px-7 py-3 text-[13px] font-semibold text-[#FFFCF3] transition-colors hover:border-[#B39552] hover:bg-[#B39552] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
               Explore Treatments
-              <ArrowUpRightIcon className="h-4 w-4" />
+              <ChevronRightIcon className="h-4 w-4" />
             </button>
           </div>
         </div>

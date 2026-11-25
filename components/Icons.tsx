@@ -12,29 +12,27 @@ const baseProps = {
   strokeLinejoin: "round" as const,
 };
 
-export function ArrowUpRightIcon(props: IconProps) {
+export function CalendarIcon(props: IconProps) {
   return (
     <svg {...baseProps} {...props}>
-      <path d="M7 17 17 7" />
-      <path d="M8 7h9v9" />
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <path d="M8 3v4M16 3v4M3 10h18" />
     </svg>
   );
 }
 
-export function ArrowRightIcon(props: IconProps) {
+export function ChevronRightIcon(props: IconProps) {
   return (
     <svg {...baseProps} {...props}>
-      <path d="M5 12h14" />
-      <path d="m13 6 6 6-6 6" />
+      <path d="m9 6 6 6-6 6" />
     </svg>
   );
 }
 
-export function ArrowLeftIcon(props: IconProps) {
+export function ChevronLeftIcon(props: IconProps) {
   return (
     <svg {...baseProps} {...props}>
-      <path d="M19 12H5" />
-      <path d="m11 18-6-6 6-6" />
+      <path d="m15 6-6 6 6 6" />
     </svg>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ChevronRightIcon } from "@/components/Icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode, type SVGProps } from "react";
@@ -123,7 +124,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           </div>
           <Link href="/" onClick={onNavigate} className="mt-4 flex items-center justify-between border-t border-white/10 pt-3 font-montserrat text-[10px] font-semibold uppercase tracking-[0.12em] text-[#d8c7a7] transition-colors hover:text-white">
             View website
-            <Icon className="h-4 w-4"><path d="M7 17 17 7M8 7h9v9" /></Icon>
+            <ChevronRightIcon className="h-4 w-4" />
           </Link>
         </div>
       </div>
