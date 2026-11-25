@@ -3,10 +3,84 @@
 
 import { useState } from "react";
 import { StarIcon } from "@/components/Icons";
-import { featuredTestimonials, supportingTestimonials } from "@/data/testimonials";
+
+type Testimonial = {
+  id: number;
+  quote: string;
+  name: string;
+  detail: string;
+  rating?: number;
+};
 
 const GOOGLE_REVIEWS_URL =
   "https://www.google.com/search?q=aesthera+mere+beauty+creations&sca_esv=9c0ea2fc79e91fa8&biw=1536&bih=695&sxsrf=AKL5yDh4Yw6YgVbTwB9yTzPXpWWkAP_DBg%3A1794556159209&ei=_8D2ariwDPW3rfcP75nWmQ4&uact=5&oq=aesthera+mere+beauty+creations&gs_lp=Egxnd3Mtd2l6LXNlcnAiHmFlc3RoZXJhIG1lcmUgYmVhdXR5IGNyZWF0aW9uczIEECMYJzIHECMY8AUYJzILEC4YgAQYxwEYrwEyBhAAGBYYHjIGEAAYFhgeMgIQJjILEAAYgAQYigUYhgMyCxAAGIAEGIoFGIYDMgsQABiABBiKBRiGAzIFEAAY7wVIwAJQL1gvcAF4AJABAJgBjAGgAYwBqgEDMC4xuAEDyAEA-AEBmAIBoAKRAZgDAIgGAZIHAzAuMaAHjguyBwMwLjG4B5EBwgcDMi0xyAcDgAgB&sclient=gws-wiz-serp#lrd=0x3397c9ff0d4effff:0x8f90fb8a8325a1c2,1,,,,";
+
+// FEATURED REVIEWS
+// Only these reviews will appear in the main green container.
+const featuredTestimonials: Testimonial[] = [
+  {
+    id: 1,
+    quote:
+      "Highly recommended! Very accommodating and professional staff. They explain the treatments very well, so you really understand what’s best for you. Great service overall!",
+    name: "JMC DANUELLA NARVAEZ",
+    detail: "",
+  },
+   {
+    id: 2,
+    quote:
+      "The clinic is very clean and has a premium feel. Everyone was warm, friendly and welcoming. I really felt that I was getting a high-quality, premium experience without the premium price tag.",
+    name: "Luis Robedillo",
+    detail: "",
+  },
+     {
+    id: 3,
+    quote: "Had a wonderful time here and the service is great. Will definitely recommend and come back to avail the other service! The clinic is very clean and has a premium feel. Everyone was warm, friendly and welcoming. I really felt that I was getting a high-quality, premium experience without the premium price tag.",
+    name: "Justin Eduardo",
+    detail: "",
+  },
+
+  // Add more featured testimonials here.
+];
+
+// SUPPORTING REVIEWS
+// These reviews always remain in the two smaller cards.
+const supportingTestimonials: Testimonial[] = [
+  {
+    id: 2,
+    quote:
+      "I will definitely be coming back to this clinic! The staff are very accommodating, friendly, and professional, and I’m really satisfied with their services. I especially loved their Korean facial—it was such a relaxing and refreshing experience. Highly recommended!",
+    name: "Reynard",
+    detail: "Client Review",
+  },
+  {
+    id: 3,
+    quote:
+      "Had a wonderful experience here! The ambiance is super warm and relaxing, and the whole team makes you feel comfortable and well cared for right away. Top-tier service and professional care!",
+    name: "Kristian Sevilla",
+    detail: "Client Review",
+  },
+  {
+    id: 4,
+    quote:
+      "Highly recommended!! Absolutely loved my facial experience here! Sobrang soft at glowing ng face ko after the facial. Glass skin achieved. The staff were professional, gentle, and made me feel comfortable throughout.",
+    name: "Mildred Del Rosario",
+    detail: "Client Review",
+  },
+  {
+    id: 5,
+    quote:
+      "From their treatments to how they care for their clients, you can really feel the passion and effort they put into every single service. All their work is consistently good, professional, and makes everyone feel and look their best. They truly know how to create beauty and give amazing experiences!",
+    name: "JET Regilme",
+    detail: "Client Review",
+  },
+  {
+    id: 6,
+    quote:
+      "Staff are friendly and approachable. Ambiance is warm and welcoming. Facility is orderly and clean. Treatments so far are recommended :)",
+    name: "Daniela De Luna",
+    detail: "Client Review",
+  },
+];
 
 export default function Testimonials() {
   const [active, setActive] = useState(0);

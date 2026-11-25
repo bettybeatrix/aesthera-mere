@@ -223,15 +223,10 @@ export default function ContentWorkspace({ initialEntries }: Props) {
                 {categories.map((category) => {
                   const count = items.filter((item) => item.category === category).length;
                   return (
-                    <div key={category} className={`flex min-h-10 shrink-0 items-center gap-1 rounded-xl pr-1 transition-colors lg:w-full ${activeCategory === category ? "bg-[#E8EEE3] text-[#40543A]" : "text-[#687260] hover:bg-[#F1EBDD]"}`}>
-                      <button type="button" onClick={() => setActiveCategory(category)} aria-pressed={activeCategory === category} className="flex min-w-0 flex-1 items-center justify-between gap-2 rounded-xl px-3 text-left font-montserrat text-[9px] font-semibold">
-                        <span className="truncate">{category}</span>
-                        <span className="rounded-full bg-white/80 px-2 py-1 text-[8px]">{count}</span>
-                      </button>
-                      <button type="button" onClick={() => openAdd(category)} aria-label={`Add ${category} entry`} title={`Add ${category}`} className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-[#4C5534] transition-colors hover:bg-white/80 focus-visible:outline-2 focus-visible:outline-[#4C5534]">
-                        <Icon><path d="M12 5v14M5 12h14" /></Icon>
-                      </button>
-                    </div>
+                    <button key={category} type="button" onClick={() => setActiveCategory(category)} aria-pressed={activeCategory === category} className={`flex min-h-10 shrink-0 items-center justify-between gap-3 rounded-xl px-3 text-left font-montserrat text-[9px] font-semibold transition-colors lg:w-full ${activeCategory === category ? "bg-[#E8EEE3] text-[#40543A]" : "text-[#687260] hover:bg-[#F1EBDD]"}`}>
+                      <span className="truncate">{category}</span>
+                      <span className="rounded-full bg-white/80 px-2 py-1 text-[8px]">{count}</span>
+                    </button>
                   );
                 })}
               </nav>
