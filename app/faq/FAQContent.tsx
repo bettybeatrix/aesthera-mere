@@ -218,7 +218,7 @@ export default function FAQContent() {
           <BookingTrigger
             className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-full bg-[#4C5534] px-7 font-montserrat text-xs font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#4C5534]"
           >
-            Book a consultation
+            Book Appointment
           </BookingTrigger>
         </div>
       </section>
