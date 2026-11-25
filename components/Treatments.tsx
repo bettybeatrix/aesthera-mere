@@ -67,7 +67,7 @@ export default function Treatments() {
                         </Link>
                       ))}
                     </div>
-                    <Link href={base} scroll={true} className="am-desktop-treatment-link mt-3 inline-flex items-center gap-2 self-start border-b border-white pb-1 text-[10px] font-semibold uppercase tracking-[0.08em] focus-visible:outline-2 focus-visible:outline-white">View category <ChevronRightIcon className="h-3.5 w-3.5" /></Link>
+                    <Link href={base} scroll={true} className="am-desktop-treatment-link mt-3 inline-flex items-center gap-2 self-start border-b border-white pb-1 text-[10px] font-semibold uppercase tracking-[0.08em] focus-visible:outline-2 focus-visible:outline-white">View All Treatments <ChevronRightIcon className="h-3.5 w-3.5" /></Link>
                   </nav>
                   {/* Keyboard users can focus a persistent trigger rather than needing mouse hover. */}
                   <Link href={base} scroll={true} aria-label={`View ${category.name} treatments`} className="absolute inset-0 hidden rounded-xl focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-white lg:block lg:group-hover:pointer-events-none lg:group-focus-within:pointer-events-none" />
@@ -82,7 +82,7 @@ export default function Treatments() {
                         <span>{group.title}</span><ChevronRightIcon className="h-5 w-5 shrink-0" />
                       </Link>
                     ))}
-                    <Link href={base} scroll={true} className="mt-3 inline-flex min-h-11 items-center gap-2 text-xs font-semibold uppercase tracking-[0.07em] text-[#4C5534]">View category <ChevronRightIcon className="h-4 w-4" /></Link>
+                    <Link href={base} scroll={true} className="mt-3 inline-flex min-h-11 items-center gap-2 text-xs font-semibold uppercase tracking-[0.07em] text-[#4C5534]">View All Treatments <ChevronRightIcon className="h-4 w-4" /></Link>
                   </nav>
                 </div>
               </article>

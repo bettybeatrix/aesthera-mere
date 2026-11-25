@@ -21,6 +21,8 @@ const aboutImages = [
   },
 ];
 
+const imageDurationMs = 3000;
+
 const highlights = [
   "Expert-Led Care",
   "Personalized Treatments",
@@ -29,7 +31,6 @@ const highlights = [
 
 export default function About() {
   const [activeImage, setActiveImage] = useState(0);
-  const [paused, setPaused] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(true);
 
   useEffect(() => {
@@ -51,18 +52,18 @@ export default function About() {
   }, []);
 
   useEffect(() => {
-    if (paused || reduceMotion || aboutImages.length < 2) {
+    if (reduceMotion || aboutImages.length < 2) {
       return;
     }
 
-    const interval = window.setInterval(() => {
+    const timeout = window.setTimeout(() => {
       setActiveImage((current) =>
         (current + 1) % aboutImages.length
       );
-    }, 5000);
+    }, imageDurationMs);
 
-    return () => window.clearInterval(interval);
-  }, [paused, reduceMotion]);
+    return () => window.clearTimeout(timeout);
+  }, [activeImage, reduceMotion]);
 
   return (
     <section
@@ -74,21 +75,7 @@ export default function About() {
         <div className="grid items-center gap-10 md:grid-cols-2 md:gap-14">
 
           {/* LEFT - FADING IMAGE SLIDESHOW */}
-          <div
-            className="relative"
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
-            onFocusCapture={() => setPaused(true)}
-            onBlurCapture={(event) => {
-              if (
-                !event.currentTarget.contains(
-                  event.relatedTarget
-                )
-              ) {
-                setPaused(false);
-              }
-            }}
-          >
+          <div className="relative">
             <div className="relative aspect-[4/4.2] overflow-hidden rounded-[20px] bg-[#FFFCF3]">
 
               {aboutImages.map((image, index) => (
@@ -121,20 +108,12 @@ export default function About() {
               {/* Image indicators */}
               <div
                 className="absolute bottom-5 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2.5"
-                aria-label="Clinic photo slideshow"
+                aria-hidden="true"
               >
                 {aboutImages.map((image, index) => (
-                  <button
+                  <span
                     key={image.src}
-                    type="button"
-                    onClick={() => setActiveImage(index)}
-                    aria-label={`Show clinic photo ${index + 1}`}
-                    aria-current={
-                      activeImage === index
-                        ? "true"
-                        : undefined
-                    }
-                    className="flex h-11 w-11 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFFCF3]"
+                    className="flex h-11 w-11 items-center justify-center"
                   >
                     <span
                       className={`block h-1.5 rounded-full transition-all duration-300 motion-reduce:transition-none ${
@@ -143,7 +122,7 @@ export default function About() {
                           : "w-2 bg-[#FFFCF3]/60"
                       }`}
                     />
-                  </button>
+                  </span>
                 ))}
               </div>
             </div>

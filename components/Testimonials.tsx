@@ -1,18 +1,37 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { ChevronLeftIcon, ChevronRightIcon, StarIcon } from "@/components/Icons";
 import { featuredTestimonials, supportingTestimonials } from "@/data/testimonials";
 
 const GOOGLE_REVIEWS_URL =
   "https://www.google.com/search?q=aesthera+mere+beauty+creations&sca_esv=9c0ea2fc79e91fa8&biw=1536&bih=695&sxsrf=AKL5yDh4Yw6YgVbTwB9yTzPXpWWkAP_DBg%3A1794556159209&ei=_8D2ariwDPW3rfcP75nWmQ4&uact=5&oq=aesthera+mere+beauty+creations&gs_lp=Egxnd3Mtd2l6LXNlcnAiHmFlc3RoZXJhIG1lcmUgYmVhdXR5IGNyZWF0aW9uczIEECMYJzIHECMY8AUYJzILEC4YgAQYxwEYrwEyBhAAGBYYHjIGEAAYFhgeMgIQJjILEAAYgAQYigUYhgMyCxAAGIAEGIoFGIYDMgsQABiABBiKBRiGAzIFEAAY7wVIwAJQL1gvcAF4AJABAJgBjAGgAYwBqgEDMC4xuAEDyAEA-AEBmAIBoAKRAZgDAIgGAZIHAzAuMaAHjguyBwMwLjG4B5EBwgcDMi0xyAcDgAgB&sclient=gws-wiz-serp#lrd=0x3397c9ff0d4effff:0x8f90fb8a8325a1c2,1,,,,";
 
+function reviewMotionStyle(
+  index: number,
+  activeIndex: number,
+  count: number,
+  axis: "x" | "y",
+  stagger: number
+): CSSProperties {
+  const isActive = index === activeIndex;
+  const isNext = (index - activeIndex + count) % count === 1;
+  const distance = isActive ? 0 : (isNext ? 1 : -1) * (axis === "x" ? 22 : 6);
+
+  return {
+    opacity: isActive ? 1 : 0,
+    transform: axis === "x" ? `translate3d(${distance}px, 0, 0)` : `translate3d(0, ${distance}px, 0)`,
+    transitionProperty: "opacity, transform",
+    transitionDuration: isActive ? "400ms" : "180ms",
+    transitionDelay: isActive ? `${180 + stagger * 60}ms` : "0ms",
+    transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+  };
+}
+
 export default function Testimonials() {
   const [active, setActive] = useState(0);
   const [supportingOffset, setSupportingOffset] = useState(0);
-
-  const current = featuredTestimonials[active] ?? featuredTestimonials[0];
 
   const previous = () => {
     setActive(
@@ -36,16 +55,6 @@ export default function Testimonials() {
     );
   };
 
-  const visibleSupportingReviews = Array.from(
-    {
-      length: Math.min(2, supportingTestimonials.length),
-    },
-    (_, index) =>
-      supportingTestimonials[
-        (supportingOffset + index) % supportingTestimonials.length
-      ]
-  );
-
   return (
     <section
       id="testimonials"
@@ -54,15 +63,15 @@ export default function Testimonials() {
       <div className="mx-auto max-w-[1280px] px-6 md:px-10">
 
         {/* SECTION HEADING */}
-        <div className="mb-7 text-center">
-          <div className="mb-4 flex items-center justify-center gap-3">
-            <span className="h-px w-8 bg-[#80755F]/50" />
+        <div className="mb-5 text-center">
+          <div className="mb-3 flex items-center justify-center gap-3">
+            <span className="h-px w-8 bg-[#B5AD80]" />
 
             <span className="font-montserrat text-[10px] font-medium uppercase tracking-[0.22em] text-[#80755F]">
               Words From Our Clients
             </span>
 
-            <span className="h-px w-8 bg-[#80755F]/50" />
+            <span className="h-px w-8 bg-[#B5AD80]" />
           </div>
 
           <h2
@@ -76,12 +85,12 @@ export default function Testimonials() {
         </div>
 
         {/* FEATURED TESTIMONIAL */}
-        <div className="relative mx-auto max-w-[1050px] overflow-hidden rounded-[20px] bg-[linear-gradient(135deg,#4F6442_0%,#4C5534_100%)] px-6 py-8 text-center shadow-[0_10px_28px_rgba(76,85,52,0.09)] md:px-12 md:py-10">
+        <div className="relative mx-auto max-w-[1050px] overflow-hidden rounded-[18px] px-6 py-7 text-center text-[#FFFCF3] shadow-[0_12px_28px_rgba(52,65,44,0.12)] md:px-12 md:py-9" style={{ backgroundImage: "linear-gradient(135deg, #B5AD80 0%, #89956C 25%, #4F6442 55%, #34412C 100%)" }}>
 
           {/* Decorative quotation mark */}
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute -top-9 left-5 select-none text-[130px] leading-none text-[#FFFCF3]/10"
+            className="pointer-events-none absolute -top-9 left-5 select-none text-[130px] leading-none text-[#FFFCF3]/20"
             style={{
               fontFamily: "Georgia, serif",
             }}
@@ -89,41 +98,34 @@ export default function Testimonials() {
             “
           </span>
 
-          <div className="relative z-10 mx-auto flex max-w-[850px] flex-col items-center">
-
-            <span className="mb-4 h-px w-10 bg-[#FFFCF3]/50" />
-
-            {/* Verified star rating, when provided */}
-            {typeof current.rating === "number" && (
+          <div className="relative z-10 mx-auto grid max-w-[850px] items-center" aria-live="polite" aria-atomic="true">
+            {featuredTestimonials.map((testimonial, index) => (
               <div
-                className="mb-4 flex gap-1 text-[#FFFCF3]"
-                aria-label={`${current.rating} out of 5 stars`}
+                key={testimonial.id}
+                aria-hidden={index !== active}
+                className="col-start-1 row-start-1 flex flex-col items-center motion-reduce:!transition-none"
+                style={reviewMotionStyle(index, active, featuredTestimonials.length, "x", 0)}
               >
-                {Array.from({ length: 5 }, (_, i) => (
-                  <StarIcon key={i} filled={i < (current.rating ?? 0)} className="h-4 w-4" />
-                ))}
+                <span className="mb-4 h-px w-10 bg-[#FFFCF3]/60" />
+
+                {typeof testimonial.rating === "number" && (
+                  <div className="mb-4 flex gap-1" aria-label={`${testimonial.rating} out of 5 stars`}>
+                    {Array.from({ length: 5 }, (_, i) => (
+                      <StarIcon key={i} filled={i < (testimonial.rating ?? 0)} className="h-4 w-4" />
+                    ))}
+                  </div>
+                )}
+
+                <blockquote className="text-[18px] leading-[1.55] md:text-[21px]" style={{ fontFamily: "'The Seasons', Georgia, serif" }}>
+                  “{testimonial.quote}”
+                </blockquote>
+
+                <span className="my-4 h-px w-9 bg-[#FFFCF3]/50" />
+
+                <p className="font-montserrat text-[12px] font-medium">{testimonial.name}</p>
+                {testimonial.detail && <p className="mt-1 font-montserrat text-[10px] uppercase tracking-[0.12em] text-[#FFFCF3]/80">{testimonial.detail}</p>}
               </div>
-            )}
-
-            <blockquote
-              key={current.id}
-              className="text-[18px] leading-[1.65] text-[#FFFCF3] md:text-[23px]"
-              style={{
-                fontFamily: "'The Seasons', Georgia, serif",
-              }}
-            >
-              “{current.quote}”
-            </blockquote>
-
-            <span className="my-4 h-px w-9 bg-[#FFFCF3]/40" />
-
-            <p className="font-montserrat text-[12px] font-medium text-[#FFFCF3]">
-              {current.name}
-            </p>
-
-            <p className="mt-1 font-montserrat text-[10px] uppercase tracking-[0.12em] text-[#FFFCF3]/75">
-              {current.detail}
-            </p>
+            ))}
           </div>
 
           {/* Only show arrows when there are multiple featured reviews */}
@@ -163,24 +165,31 @@ export default function Testimonials() {
           </h3>
 
           <div className="grid gap-4 md:grid-cols-2">
-            {visibleSupportingReviews.map((testimonial) => (
+            {Array.from({ length: Math.min(2, supportingTestimonials.length) }, (_, cardIndex) => (
               <article
-                key={testimonial.id}
-                className="flex min-h-[135px] flex-col justify-between rounded-[16px] border border-[#80755F]/15 bg-white p-5 transition-all duration-300 hover:shadow-[0_8px_24px_rgba(76,85,52,0.06)]"
+                key={cardIndex}
+                className="grid min-h-[135px] overflow-hidden rounded-[16px] border border-[#80755F]/15 bg-white p-5 transition-shadow duration-300 hover:shadow-[0_8px_24px_rgba(76,85,52,0.06)]"
+                aria-live="polite"
+                aria-atomic="true"
               >
-                <p className="font-montserrat text-[12px] leading-[1.75] text-[#4C5534]">
-                  “{testimonial.quote}”
-                </p>
+                {supportingTestimonials.map((_, offset) => {
+                  const testimonial = supportingTestimonials[(offset + cardIndex) % supportingTestimonials.length];
+                  return (
+                    <div
+                      key={offset}
+                      aria-hidden={offset !== supportingOffset}
+                      className="col-start-1 row-start-1 flex flex-col justify-between motion-reduce:!transition-none"
+                      style={reviewMotionStyle(offset, supportingOffset, supportingTestimonials.length, "y", cardIndex + 1)}
+                    >
+                      <p className="font-montserrat text-[12px] leading-[1.75] text-[#4C5534]">“{testimonial.quote}”</p>
 
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-                  <span className="font-montserrat text-[11px] font-medium text-[#80755F]">
-                    {testimonial.name}
-                  </span>
-
-                  <span className="font-montserrat text-[10px] uppercase tracking-[0.1em] text-[#80755F]">
-                    {testimonial.detail}
-                  </span>
-                </div>
+                      <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+                        <span className="font-montserrat text-[11px] font-medium text-[#80755F]">{testimonial.name}</span>
+                        <span className="font-montserrat text-[10px] uppercase tracking-[0.1em] text-[#80755F]">{testimonial.detail}</span>
+                      </div>
+                    </div>
+                  );
+                })}
               </article>
             ))}
           </div>
