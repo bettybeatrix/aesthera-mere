@@ -136,6 +136,17 @@ export default function ResultsGallery() {
           </div>)}
         </div>}
       </section>
+      <section className={styles.stylePreview} aria-labelledby="style-preview-title">
+        <div className={styles.stylePreviewHeading}>
+          <p className={styles.viewerEyebrow}>Visual direction</p>
+          <h2 id="style-preview-title">Pearl silk photo styling</h2>
+          <p>AI-generated visual mockups showing the proposed pearl-white silk background. These are not actual patient photographs or treatment results.</p>
+        </div>
+        <div className={styles.stylePreviewGrid}>
+          <figure><Image src="/images/results/mockups/ultraformer-right-angle-ai-mockup.webp" alt="AI-generated right-angle portrait styling mockup on pearl-white silk" width={720} height={960} /><figcaption>Right angle · AI mockup</figcaption></figure>
+          <figure><Image src="/images/results/mockups/ultraformer-left-angle-ai-mockup.webp" alt="AI-generated left-angle portrait styling mockup on pearl-white silk" width={720} height={960} /><figcaption>Left angle · AI mockup</figcaption></figure>
+        </div>
+      </section>
       {selected && <ResultViewer item={selected} position={selectedIndex + 1} total={visible.length} onClose={closeViewer} onPrevious={() => changeResult(-1)} onNext={() => changeResult(1)} />}
     </div>
   );

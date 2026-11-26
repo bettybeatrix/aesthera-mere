@@ -82,3 +82,13 @@
   .viewerControls { gap: .4rem; font-size: .75rem; }
 }
 @media (prefers-reduced-motion: reduce) { .resultCard, .viewAll { transition: none; } }
+
+.stylePreview { margin: 3rem auto 4rem; max-width: 1040px; padding: clamp(1rem, 3vw, 2rem); border: 1px solid #ded8ca; border-radius: 18px; background: #f8f4eb; }
+.stylePreviewHeading { max-width: 620px; margin-bottom: 1.25rem; }
+.stylePreviewHeading h2 { margin: .35rem 0 .5rem; font-family: var(--font-seasons), Georgia, serif; font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 500; color: #4c5534; }
+.stylePreviewHeading > p:last-child { color: #80755f; font-size: .8rem; line-height: 1.7; }
+.stylePreviewGrid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; }
+.stylePreviewGrid figure { margin: 0; min-width: 0; overflow: hidden; border: 1px solid #ded8ca; border-radius: 12px; background: #fffefa; }
+.stylePreviewGrid img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; }
+.stylePreviewGrid figcaption { padding: .7rem .85rem; color: #80755f; font-size: .7rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+@media (max-width: 600px) { .stylePreviewGrid { grid-template-columns: minmax(0,1fr); } }
