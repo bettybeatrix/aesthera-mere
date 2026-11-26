@@ -170,10 +170,10 @@ export default function Footer() {
                 className="inline-block"
               >
                 <Image
-                  src="/images/brand/logo_name.png"
+                  src="/images/brand/aesthera-mere-full-logo.png"
                   alt="Aesthera Mère Beauty Creations"
-                  width={2048}
-                  height={342}
+                  width={2160}
+                  height={2160}
                   quality={90}
                   className="h-auto w-[225px] max-w-full"
                 />

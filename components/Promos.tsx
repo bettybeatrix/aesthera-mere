@@ -7,7 +7,7 @@ import { PromoModal } from "@/app/promos/PromosList";
 import { ChevronLeftIcon, ChevronRightIcon } from "@/components/Icons";
 import { PROMOTIONS } from "@/lib/promos";
 
-const offers = PROMOTIONS;
+const offers = PROMOTIONS.filter((offer) => offer.badge === "BEReady Holiday Deal");
 
 const pesoFormatter = new Intl.NumberFormat("en-PH", {
   style: "currency",

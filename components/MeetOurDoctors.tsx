@@ -121,6 +121,12 @@ export default function MeetOurDoctors() {
                 <div className="mt-auto w-full pt-6">
                   <Link
                     href={`/doctors#${doctor.id}`}
+                    scroll={false}
+                    onClick={(event) => {
+                      if (event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+                        window.sessionStorage.setItem("aesthera-doctor-profile-scroll", doctor.id);
+                      }
+                    }}
                     className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#FFFCF3] px-4 py-3 font-montserrat text-[12px] font-medium text-[#4C5534] transition-all duration-300 hover:bg-white hover:shadow-[0_4px_14px_rgba(0,0,0,0.10)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFFCF3]"
                   >
                     View Profile

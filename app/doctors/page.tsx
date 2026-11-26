@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useLayoutEffect } from "react";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -109,6 +110,33 @@ const doctors = [
 // ======================================
 
 export default function DoctorsPage() {
+  useLayoutEffect(() => {
+    const id = window.location.hash.slice(1);
+    if (window.sessionStorage.getItem("aesthera-doctor-profile-scroll") !== id) return;
+
+    const profile = document.getElementById(id);
+    if (!profile) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      profile.scrollIntoView({ behavior: "instant", block: "start" });
+      window.sessionStorage.removeItem("aesthera-doctor-profile-scroll");
+      return;
+    }
+
+    const root = document.documentElement;
+    const previousBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    window.scrollTo(0, 0);
+    root.style.scrollBehavior = previousBehavior;
+
+    const frame = window.requestAnimationFrame(() => {
+      profile.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.sessionStorage.removeItem("aesthera-doctor-profile-scroll");
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
   return (
     <>
       <Navbar />
