@@ -73,11 +73,11 @@ function ResultViewer({ item, position, total, onClose, onPrevious, onNext }: {
         <div className={styles.viewerPhotoArea}><Comparison item={item} enlarged /></div>
         <div className={styles.viewerFooter}>
           <p id="result-viewer-note">Results vary per individual.</p>
-          <div className={styles.viewerControls}>
-            <button type="button" className={styles.iconButton} aria-label="Previous result" onClick={onPrevious} disabled={total < 2}><Chevron previous /></button>
+          {total > 1 && <div className={styles.viewerControls}>
+            <button type="button" className={styles.iconButton} aria-label="Previous photo of the same client" onClick={onPrevious}><Chevron previous /></button>
             <span aria-live="polite">{position} / {total}</span>
-            <button type="button" className={styles.iconButton} aria-label="Next result" onClick={onNext} disabled={total < 2}><Chevron /></button>
-          </div>
+            <button type="button" className={styles.iconButton} aria-label="Next photo of the same client" onClick={onNext}><Chevron /></button>
+          </div>}
         </div>
       </div>
     </dialog>
