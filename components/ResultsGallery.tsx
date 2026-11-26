@@ -90,9 +90,10 @@ export default function ResultsGallery() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const closeViewer = useCallback(() => setSelectedId(null), []);
   const filtered = comparisons.filter((item) => filter === "All treatments" || item.title === filter);
-  const featured = filter === "All treatments"
-    ? filtered.filter((item, index, list) => list.findIndex((other) => other.title === item.title) === index).slice(0, PREVIEW_COUNT)
-    : filtered.slice(0, PREVIEW_COUNT);
+  // Preview the first four client/result sets, keeping every matching
+  // angle for each set together so the viewer can navigate only within it.
+  const featuredGroupIds = [...new Set(filtered.map((item) => item.groupId))].slice(0, PREVIEW_COUNT);
+  const featured = filtered.filter((item) => featuredGroupIds.includes(item.groupId));
   const visible = expanded ? filtered : featured;
   const visibleGroups = treatmentNames.map((title) => ({ title, items: visible.filter((item) => item.title === title) })).filter((group) => group.items.length);
   const selected = visible.find((item) => item.id === selectedId);
