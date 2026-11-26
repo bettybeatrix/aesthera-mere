@@ -9,17 +9,17 @@ const PREVIEW_COUNT = 4;
 type ComparisonItem = { id: string; title: string; photo: ResultPhoto };
 type ResultSet = { id: string; title: string; photos: ComparisonItem[] };
 
-// Group by treatment and exact BEFORE image so the same client is shown once.
-const resultSets: ResultSet[] = treatmentResults.flatMap((result) => {
-  const groups = new Map<string, ComparisonItem[]>();
-  result.photos.forEach((photo, index) => {
-    const id = result.title + "::" + photo.before.src;
-    const entries = groups.get(id) ?? [];
-    entries.push({ id: result.id + "-" + index, title: result.title, photo });
-    groups.set(id, entries);
-  });
-  return Array.from(groups.entries()).map(([id, photos]) => ({ id, title: result.title, photos }));
-});
+// Each TreatmentResult record represents one source case/client.
+// Keep every angle in that record together, even when the BEFORE files differ.
+const resultSets: ResultSet[] = treatmentResults.map((result) => ({
+  id: result.id,
+  title: result.title,
+  photos: result.photos.map((photo, index) => ({
+    id: result.id + "-" + index,
+    title: result.title,
+    photo,
+  })),
+}));
 
 const treatmentNames = Array.from(new Set(resultSets.map((result) => result.title)));
 
