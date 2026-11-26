@@ -55,19 +55,17 @@ const doctorLedTreatments = new Set(
 );
 
 const fieldClass =
-  "w-full min-h-[44px] rounded-xl border border-[#E3DDD1] " +
-  "bg-white px-3 py-2.5 font-montserrat text-[13px] " +
+  "w-full min-h-11 rounded-[10px] border border-[#DDD6C8] " +
+  "bg-[#FFFEFB] px-3 py-2 font-montserrat text-[13px] lg:min-h-10 " +
   "text-[#4C5534] outline-none transition-colors " +
   "placeholder:text-[#898779] " +
   "focus:border-[#4C5534] focus:ring-1 focus:ring-[#4C5534]/15";
 
 const labelClass =
-  "mb-1.5 block font-montserrat text-xs font-medium text-[#4C5534]";
+  "mb-1 block font-montserrat text-[11px] font-semibold text-[#4C5534]";
 
 const cardClass =
-  "rounded-[20px] border border-[#E3DDD1] bg-white " +
-  "p-4 shadow-[0_8px_28px_rgba(60,50,30,0.035)] " +
-  "sm:p-5";
+  "rounded-[18px] border border-[#E3DDD1] bg-white p-4";
 
 function getToday() {
   const parts = new Intl.DateTimeFormat("en-US", {
@@ -188,6 +186,12 @@ export default function BookingModal({
     };
   }, [onClose]);
 
+  useEffect(() => {
+    if (preview || submitted) {
+      modalRef.current?.querySelector<HTMLElement>("#booking-title")?.focus();
+    }
+  }, [preview, submitted]);
+
   const year = month?.year ?? 2026;
   const monthIndex = month?.index ?? 0;
 
@@ -233,9 +237,7 @@ export default function BookingModal({
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center
-        justify-center bg-black/55 p-0 backdrop-blur-sm
-        md:p-5"
+      className="fixed inset-0 z-[9999] flex items-start justify-center overflow-y-auto bg-black/55 p-0 backdrop-blur-sm md:p-3 lg:items-center lg:p-0 xl:p-2"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
@@ -245,42 +247,26 @@ export default function BookingModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="booking-title"
-        className="relative flex h-full w-full max-w-[1120px] flex-col overflow-hidden bg-[#F6F3ED] shadow-[0_25px_80px_rgba(0,0,0,0.18)] md:h-[90vh] md:rounded-[26px]"
+        className={`relative flex min-h-[100dvh] w-full flex-col bg-[#F6F3ED] shadow-[0_25px_80px_rgba(0,0,0,0.18)] md:min-h-0 md:rounded-[22px] ${preview || submitted ? "md:h-[540px] md:max-w-[820px]" : "md:max-w-[960px]"}`}
       >
         <button
           ref={closeRef}
           type="button"
           onClick={onClose}
           aria-label="Close appointment form"
-          className="absolute right-4 top-4 z-10 flex h-9 w-9
-            items-center justify-center rounded-full
-            border border-[#DAD5C9] bg-white
-            text-lg text-[#4C5534] transition
-            hover:bg-[#F6F3ED]"
+          className="absolute right-3 top-3 z-20 flex h-10 w-10 items-center justify-center rounded-full text-lg text-[#4C5534] transition hover:bg-[#4C5534]/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4C5534]"
         >
           ×
         </button>
 
         {/* HEADER */}
-        <header className="shrink-0 px-12 pb-3 pt-5 text-center md:px-10 md:pb-4 md:pt-5">
-          <p className="font-montserrat text-[10px] font-medium
-            uppercase tracking-[0.3em] text-[#4C5534]">
-            AESTHERA MÈRE
-          </p>
-
-          <h2
-            id="booking-title"
-            className="mt-1 font-seasons font-bold text-[31px] leading-tight text-[#4C5534] md:text-[39px]"
-          >
-            Book Your Appointment
-          </h2>
-
-          <p className="mt-2 font-montserrat text-[13px]
-            text-[#777568]">
-            Your journey to feeling your best begins here.
-          </p>
-          {!preview && (
-            <p className="mt-2 font-montserrat text-xs leading-5 text-[#5C675D]">
+        {!preview && !submitted && <header className="shrink-0 px-12 pb-3 pt-3 text-center">
+          <div>
+            <p className="font-montserrat text-[10px] font-medium uppercase tracking-[0.25em] text-[#80755F]">AESTHERA MÈRE</p>
+            <h2 id="booking-title" className="mt-1 font-seasons text-[33px] leading-none text-[#4C5534]">Book Your Appointment</h2>
+            <p className="mt-2 font-montserrat text-[12px] text-[#777568]">Your journey to feeling your best begins here.</p>
+          </div>
+          <p className="mt-2 font-montserrat text-[11px] leading-5 text-[#5C675D]">
               Already a ClassPass member?{" "}
               <a
                 href={CLASSPASS_URL}
@@ -288,292 +274,153 @@ export default function BookingModal({
                 rel="noopener noreferrer"
                 className="rounded-sm font-semibold text-[#4C5534] underline underline-offset-4 hover:text-[#35452F] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4C5534]"
               >
-                View eligible treatments on ClassPass{" "}
+                View eligible treatments{" "}
                 <ChevronRightIcon className="inline-block h-3 w-3 align-middle" />
               </a>
-            </p>
-          )}
-        </header>
+          </p>
+        </header>}
 
         {submitted ? (
-          <section className="mx-auto flex w-full max-w-[760px] min-h-0 flex-1 flex-col items-center overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-6 py-10 text-center">
-            <div className="mb-5 flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-[#4C5534]/30 bg-white text-[#4C5534]" aria-hidden="true">
-              <svg width="29" height="29" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m5 12 4 4L19 6" />
-              </svg>
+          <section className="px-5 pb-5 pt-7 text-center sm:px-8 md:flex md:flex-1 md:flex-col md:justify-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-[#C9AD76] bg-[#F8F5EC]" aria-hidden="true">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#4C5534] shadow-sm">
+                <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 4 4L19 6" /></svg>
+              </span>
             </div>
-            <p className="font-montserrat text-[10px] uppercase tracking-[0.25em] text-[#4C5534]">AESTHERA MÈRE · DEMO</p>
-            <h3 className="mt-3 font-seasons font-bold text-[30px] leading-tight text-[#4C5534] md:text-[38px]">Request Preview Complete</h3>
-            <p className="mt-4 max-w-[520px] font-montserrat text-[13px] leading-7 text-[#777568]">
-              Your appointment request was simulated successfully. No information has been sent to the clinic or saved to a database.
-            </p>
-            <div className="mt-7 w-full rounded-[20px] border border-[#E3DDD1] bg-white p-6 text-left">
-              <p className="font-montserrat text-[10px] uppercase tracking-[0.2em] text-[#777568]">Appointment Summary</p>
-              <h4 className="mt-2 font-seasons font-bold text-[25px] text-[#4C5534]">{readableDate(date)}</h4>
-              <p className="mt-2 font-montserrat text-[13px] text-[#4C5534]">{time} · {service}</p>
-              {showDoctorField && doctor && (
-                <p className="mt-2 font-montserrat text-[12px] text-[#777568]">Preferred Doctor: {doctor}</p>
-              )}
-              <p className="mt-3 break-words font-montserrat text-[12px] text-[#777568]">{email.toLowerCase()}</p>
+            <p className="mt-3 font-montserrat text-[10px] font-medium uppercase tracking-[0.28em] text-[#80755F]">AESTHERA MÈRE</p>
+            <h2 id="booking-title" tabIndex={-1} className="mx-auto mt-1 font-seasons text-[33px] leading-[1.08] text-[#4C5534] outline-none">Your appointment has been successfully booked.</h2>
+            <p className="mx-auto mt-2 font-montserrat text-[12px] leading-5 text-[#777568]">We look forward to welcoming you to Aesthera Mère.</p>
+
+            <div className="mt-4 rounded-[12px] border border-[#DAD2C2] bg-white p-4 text-left">
+              <div className="flex items-center justify-between gap-3 border-b border-[#E3DDD1] pb-3">
+                <p className="font-montserrat text-[10px] uppercase tracking-[0.12em] text-[#80755F]">Appointment Details</p>
+              </div>
+              <dl className="mt-3 grid gap-x-5 gap-y-3 font-montserrat text-[12px] text-[#4C5534] sm:grid-cols-2">
+                <div><dt className="text-[10px] uppercase text-[#80755F]">Date</dt><dd className="mt-1">{readableDate(date)}</dd></div>
+                <div><dt className="text-[10px] uppercase text-[#80755F]">Time</dt><dd className="mt-1">{time}</dd></div>
+                <div><dt className="text-[10px] uppercase text-[#80755F]">Service</dt><dd className="mt-1">{service}</dd></div>
+                {showDoctorField && doctor && <div><dt className="text-[10px] uppercase text-[#80755F]">Doctor</dt><dd className="mt-1">{doctor}</dd></div>}
+                <div><dt className="text-[10px] uppercase text-[#80755F]">Email</dt><dd className="mt-1 break-words">{email.toLowerCase()}</dd></div>
+              </dl>
             </div>
-            <button type="button" onClick={onClose} className="mt-7 rounded-full bg-[#4C5534] px-10 py-3 font-montserrat text-sm text-white transition hover:bg-[#39432D]">Done</button>
+            <div className="mt-4 flex justify-center">
+              <button type="button" onClick={onClose} className="min-h-11 min-w-36 rounded-full bg-[#4C5534] px-8 font-montserrat text-[12px] font-medium text-white transition hover:bg-[#39432D] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4C5534]">Done</button>
+            </div>
           </section>
         ) : preview ? (
-          /* ELEGANT PREVIEW */
-          <section className="mx-auto w-full max-w-[760px] flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-5 pb-6">
-            <div className={cardClass}>
-              <div className="border-b border-[#E3DDD1]
-                pb-6 text-center">
-                <p className="font-montserrat text-[10px]
-                  uppercase tracking-[0.2em] text-[#777568]">
-                  Review Your Details
-                </p>
-                <h3 className="mt-2 font-seasons font-bold text-3xl
-                  text-[#4C5534]">
-                  Appointment Preview
-                </h3>
-                <p className="mt-2 font-montserrat text-xs
-                  text-[#777568]">
-                  Please review your information before booking.
-                  This is a frontend preview only.
-                </p>
-              </div>
+          <section className="px-5 pb-5 pt-7 sm:px-7 md:flex md:flex-1 md:flex-col md:justify-center">
+            <div className="text-center">
+              <div className="mx-auto h-px w-10 bg-[#C9AD76]" />
+              <p className="mt-2 font-montserrat text-[10px] uppercase tracking-[0.24em] text-[#80755F]">The Final Details</p>
+              <h2 id="booking-title" tabIndex={-1} className="mt-1 font-seasons text-[35px] leading-none text-[#4C5534] outline-none">Appointment Preview</h2>
+              <p className="mt-2 font-montserrat text-[12px] text-[#777568]">Review your details before continuing.</p>
+            </div>
 
-              <div className="mt-6 rounded-2xl border
-                border-[#E3DDD1] bg-[#F6F3ED] p-5">
-                <p className="mb-2 font-montserrat text-[10px]
-                  uppercase tracking-[0.16em] text-[#777568]">
-                  Selected Schedule
-                </p>
-                <h4 className="font-seasons font-bold text-[26px]
-                  text-[#4C5534]">
-                  {readableDate(date)}
-                </h4>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {[time, service].map((item) => (
-                    <span
-                      key={item}
-                      className="rounded-full border border-[#E3DDD1]
-                        bg-white px-3 py-1.5 font-montserrat
-                        text-xs text-[#4C5534]"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-                {showDoctorField && doctor && (
-                  <p className="mt-3 font-montserrat text-xs
-                    text-[#4C5534]">
-                    Preferred Doctor: {doctor}
-                  </p>
-                )}
-              </div>
-
-              <div className="mt-6 grid gap-5 sm:grid-cols-2">
-                {[
-                  ["First Name", firstName],
-                  ["Last Name", lastName],
-                  ["Contact Number", phone],
-                  ["Email Address", email],
-                  ["Appointment Type", appointmentType === "treatment" ? "Treatment" : "Consultation"],
-                ].map(([label, value]) => (
-                  <div key={label}>
-                    <p className="mb-1 font-montserrat text-[10px]
-                      uppercase tracking-[0.13em] text-[#777568]">
-                      {label}
-                    </p>
-                    <p className="break-words font-montserrat
-                      text-[13px] text-[#4C5534]">
-                      {label === "Email Address" ? value.toLowerCase() : value}
-                    </p>
+            <div className="mt-4 rounded-[13px] border border-[#E3DDD1] bg-white p-4 font-montserrat text-[#4C5534]">
+              <div className="grid gap-4 sm:grid-cols-[0.9fr_1.1fr]">
+                <div className="sm:border-r sm:border-[#E3DDD1] sm:pr-4">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-[10px] uppercase tracking-[0.12em] text-[#80755F]">Selected Schedule</p>
+                    <button type="button" onClick={() => setPreview(false)} className="text-[11px] underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4C5534]">Edit</button>
                   </div>
-                ))}
-              </div>
-
-              {notes && (
-                <div className="mt-5 border-t border-[#E3DDD1] pt-5">
-                  <p className="mb-2 font-montserrat text-[10px]
-                    uppercase tracking-[0.13em] text-[#777568]">
-                    Additional Notes
-                  </p>
-                  <p className="whitespace-pre-wrap font-montserrat
-                    text-sm text-[#4C5534]">
-                    {notes}
-                  </p>
+                  <p className="mt-3 font-seasons text-[25px] leading-tight">{readableDate(date)}</p>
+                  <p className="mt-2 text-[12px]">{time} · {service}</p>
+                  {showDoctorField && doctor && <p className="mt-1 text-[11px] text-[#777568]">Preferred Doctor: {doctor}</p>}
+                  <p className="mt-3 text-[10px] leading-4 text-[#777568]">Preferred times are subject to availability.</p>
                 </div>
-              )}
-
-              <p className="mt-6 text-center font-montserrat
-                text-xs text-[#777568]">
-                Demo mode: Submitting will show a confirmation screen. No appointment will be sent or saved.
-              </p>
-
-              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                <button
-                  type="button"
-                  onClick={() => setPreview(false)}
-                  className="flex-1 rounded-full border
-                    border-[#4C5534]/25 bg-white px-5 py-3
-                    font-montserrat text-sm text-[#4C5534]
-                    transition hover:bg-[#F6F3ED]"
-                >
-                  Back to Booking
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setSubmitted(true)}
-                  className="flex-1 rounded-full bg-[#4C5534]
-                    px-5 py-3 font-montserrat text-sm
-                    text-white transition hover:bg-[#39432D]"
-                >
-                  Submit Appointment Request
-                </button>
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.12em] text-[#80755F]">Personal Information</p>
+                  <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-3 text-[12px]">
+                    <div><dt className="text-[10px] uppercase text-[#80755F]">First Name</dt><dd className="mt-1">{firstName}</dd></div>
+                    <div><dt className="text-[10px] uppercase text-[#80755F]">Last Name</dt><dd className="mt-1">{lastName}</dd></div>
+                    <div><dt className="text-[10px] uppercase text-[#80755F]">Contact Number</dt><dd className="mt-1">{phone}</dd></div>
+                    <div><dt className="text-[10px] uppercase text-[#80755F]">Email Address</dt><dd className="mt-1 break-words">{email.toLowerCase()}</dd></div>
+                  </dl>
+                </div>
               </div>
+              <div className="mt-4 grid gap-3 border-t border-[#E3DDD1] pt-3 text-[11px] sm:grid-cols-[0.9fr_1.1fr]">
+                <div><p className="text-[10px] uppercase text-[#80755F]">Appointment Type</p><p className="mt-1 capitalize">{appointmentType}</p></div>
+                <div><p className="text-[10px] uppercase text-[#80755F]">Additional Notes</p><p className="mt-1 break-words">{notes || "No additional notes provided."}</p></div>
+              </div>
+            </div>
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+              <button type="button" onClick={() => setPreview(false)} className="min-h-11 rounded-full border border-[#C9C6B8] px-6 font-montserrat text-[12px] text-[#4C5534] hover:bg-white sm:flex-1">Back to Booking</button>
+              <button type="button" onClick={() => setSubmitted(true)} className="min-h-11 rounded-full bg-[#4C5534] px-6 font-montserrat text-[12px] font-medium text-white hover:bg-[#39432D] sm:flex-[1.4]">Confirm Details</button>
             </div>
           </section>
         ) : (
           <form
             id="booking-form"
             onSubmit={handleSubmit}
-            className="grid min-h-0 flex-1 items-start gap-4 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-4 pb-5 md:grid-cols-[0.92fr_1.08fr] md:gap-5 md:px-7 md:pb-6"
+            className="grid items-start gap-4 px-4 pb-2 lg:grid-cols-[0.92fr_1.08fr] lg:px-6"
           >
             {/* LEFT WHITE CARD */}
             <section className={cardClass}>
-              <h3 className="mb-3 font-seasons font-bold text-[25px]
+              <h3 className="mb-3 font-seasons text-[27px] leading-tight
                 text-[#4C5534]">
                 Select Your Schedule
               </h3>
 
-              <div className="mb-3 flex items-center
-                justify-between">
-                <button
-                  type="button"
-                  disabled={!canGoBack}
-                  onClick={() => changeMonth(-1)}
-                  aria-label="Previous month"
-                  className="flex h-9 w-9 items-center
-                    justify-center rounded-full border
-                    border-[#E3DDD1] text-[#4C5534]
-                    transition hover:bg-[#F6F3ED]
-                    disabled:opacity-30"
-                >
-                  <ChevronLeftIcon className="mx-auto h-4 w-4" />
-                </button>
-
-                <span className="font-montserrat text-sm
-                  font-medium text-[#4C5534]">
-                  {month
-                    ? new Date(year, monthIndex, 1)
-                        .toLocaleDateString("en-PH", {
-                          month: "long",
-                          year: "numeric",
-                        })
-                    : "Loading"}
-                </span>
-
-                <button
-                  type="button"
-                  aria-label="Next month"
-                  onClick={() => changeMonth(1)}
-                  className="flex h-9 w-9 items-center
-                    justify-center rounded-full border
-                    border-[#E3DDD1] text-[#4C5534]
-                    transition hover:bg-[#F6F3ED]"
-                >
-                  <ChevronRightIcon className="mx-auto h-4 w-4" />
-                </button>
-              </div>
-
-              <div className="mx-auto grid max-w-[390px] grid-cols-7 gap-0.5 text-center">
-                {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map(
-                  (item) => (
-                    <span
-                      key={item}
-                      className="py-1 font-montserrat
-                        text-[11px] text-[#777568]"
-                    >
-                      {item}
-                    </span>
-                  )
-                )}
-
-                {days.map((day, index) => {
-                  if (!day || !month) {
-                    return <div key={`empty-${index}`} />;
-                  }
-
-                  const value = makeDate(year, monthIndex, day);
-                  const selected = date === value;
-
-                  return (
-                    <button
-                      key={value}
-                      type="button"
-                      disabled={value < today}
-                      aria-pressed={selected}
-                      aria-label={readableDate(value)}
-                      onClick={() => {
-                        setDate(value);
-                        setTime("");
-                      }}
-                      className={`mx-auto flex h-9 w-9 items-center justify-center rounded-full
-                        font-montserrat text-[13px] transition
-                        ${selected
-                          ? "bg-[#4C5534] text-white"
-                          : "text-[#4C5534] hover:bg-[#F6F3ED]"}
-                        disabled:cursor-not-allowed
-                        disabled:opacity-25`}
-                    >
-                      {day}
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_104px]">
+                <div className="min-w-0 sm:pr-1">
+                  <div className="mb-2 flex items-center justify-between gap-1">
+                    <button type="button" disabled={!canGoBack} onClick={() => changeMonth(-1)} aria-label="Previous month" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#E3DDD1] text-[#4C5534] transition hover:bg-[#F6F3ED] disabled:opacity-30">
+                      <ChevronLeftIcon className="h-4 w-4" />
                     </button>
-                  );
-                })}
+                    <span className="text-center font-montserrat text-[11px] font-medium text-[#4C5534]">
+                      {month ? new Date(year, monthIndex, 1).toLocaleDateString("en-PH", { month: "long", year: "numeric" }) : "Loading"}
+                    </span>
+                    <button type="button" aria-label="Next month" onClick={() => changeMonth(1)} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#E3DDD1] text-[#4C5534] transition hover:bg-[#F6F3ED]">
+                      <ChevronRightIcon className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-7 gap-0.5 text-center">
+                    {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((item) => (
+                      <span key={item} className="py-1 font-montserrat text-[10px] text-[#777568]">{item}</span>
+                    ))}
+                    {days.map((day, index) => {
+                      if (!day || !month) return <div key={`empty-${index}`} />;
+                      const value = makeDate(year, monthIndex, day);
+                      const selected = date === value;
+                      return (
+                        <button key={value} type="button" disabled={value < today} aria-pressed={selected} aria-label={readableDate(value)} onClick={() => { setDate(value); setTime(""); }} className={`mx-auto flex h-8 w-8 items-center justify-center rounded-[8px] font-montserrat text-[11px] transition ${selected ? "bg-[#4C5534] text-white" : "text-[#4C5534] hover:bg-[#F6F3ED]"} disabled:cursor-not-allowed disabled:opacity-25`}>
+                          {day}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="border-t border-[#E3DDD1] pt-2 sm:border-l sm:border-t-0 sm:pl-2 sm:pt-0">
+                  <h4 className="mb-1 text-center font-montserrat text-[10px] font-medium text-[#4C5534]">Preferred Time</h4>
+                  <div className="grid max-h-48 grid-cols-3 gap-1 overflow-y-auto overscroll-contain pr-1 [scrollbar-width:thin] sm:flex sm:flex-col sm:gap-0.5">
+                    {timeSlots.map((slot) => (
+                      <button key={slot} type="button" disabled={!date} aria-pressed={time === slot} onClick={() => setTime(slot)} className={`min-h-9 rounded-[6px] px-1 font-montserrat text-[10px] transition sm:min-h-6 ${time === slot ? "bg-[#4C5534] font-semibold text-white" : "text-[#4C5534] hover:bg-[#F6F3ED]"} disabled:opacity-35`}>
+                        {slot}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              <div className="my-4 h-px bg-[#E3DDD1]" />
-
-              <h4 className="mb-3 font-montserrat text-sm
-                font-medium text-[#4C5534]">
-                Preferred Time
-              </h4>
-
-              <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-4">
-                {timeSlots.map((slot) => (
-                  <button
-                    key={slot}
-                    type="button"
-                    disabled={!date}
-                    aria-pressed={time === slot}
-                    onClick={() => setTime(slot)}
-                    className={`rounded-full border px-2
-                      py-2 font-montserrat text-[11px]
-                      transition
-                      ${time === slot
-                        ? "border-[#4C5534] bg-[#4C5534] text-white"
-                        : "border-[#E3DDD1] bg-white text-[#4C5534] hover:bg-[#F6F3ED]"}
-                      disabled:opacity-35`}
-                  >
-                    {slot}
-                  </button>
-                ))}
+              <div className="mt-3 border-t border-[#E3DDD1] pt-3">
+                <div className="rounded-[10px] bg-[#F6F3ED] px-3 py-2 font-montserrat">
+                  <p className="text-[10px] uppercase tracking-[0.06em] text-[#80755F]">Selected Schedule</p>
+                  <p className="mt-0.5 text-[11px] font-medium text-[#4C5534]">{date ? readableDate(date) : "Select a date"} · {time || "Select a time"}</p>
+                </div>
               </div>
 
-              <p className="mt-3 text-center font-montserrat
-                text-[11px] leading-5 text-[#777568]">
-                Philippine Time (GMT+8). Preferred times are
-                illustrative and not confirmed availability.
-              </p>
             </section>
 
             {/* RIGHT WHITE CARD */}
-            <section className={`${cardClass} space-y-3`}>
-              <h3 className="font-seasons font-bold text-[25px]
+            <section className={`${cardClass} space-y-2`}>
+              <h3 className="font-seasons text-[27px] leading-tight
                 text-[#4C5534]">
                 Appointment Details
               </h3>
 
               {/* APPOINTMENT TYPE */}
+              <div className="space-y-2">
               <div>
                 <p className={labelClass}>Appointment Type</p>
                 <div className="flex rounded-full border
@@ -593,7 +440,7 @@ export default function BookingModal({
                             setDoctor("");
                           }
                         }}
-                        className={`flex-1 rounded-full px-3 py-2.5
+                        className={`min-h-9 flex-1 rounded-full px-3 py-1.5
                           font-montserrat text-[12px]
                           capitalize transition
                           ${appointmentType === item
@@ -620,8 +467,8 @@ export default function BookingModal({
                       type="button"
                       aria-pressed={consultationType === value}
                       onClick={() => setConsultationType(value)}
-                      className={`rounded-full border px-3
-                        py-2.5 font-montserrat text-xs transition
+                      className={`min-h-10 rounded-full border px-3
+                        py-1.5 font-montserrat text-xs transition
                         ${consultationType === value
                           ? "border-[#4C5534] bg-[#4C5534]/10 text-[#4C5534]"
                           : "border-[#E3DDD1] bg-white text-[#777568] hover:bg-[#F6F3ED]"}`}
@@ -632,6 +479,7 @@ export default function BookingModal({
                   </div>
                 </div>
               )}
+              </div>
 
               {/* NAME */}
               <div className="grid gap-3 sm:grid-cols-2">
@@ -702,6 +550,7 @@ export default function BookingModal({
               </div>
 
               {/* TREATMENT */}
+              <div className={appointmentType === "treatment" && showDoctorField ? "grid gap-3 sm:grid-cols-2" : ""}>
               {appointmentType === "treatment" && (
                 <div>
                   <label
@@ -757,27 +606,17 @@ export default function BookingModal({
                   </select>
                 </div>
               )}
+              </div>
 
               {/* NOTES */}
               <div>
-                <label htmlFor="booking-notes" className={labelClass}>
-                  {appointmentType === "consultation"
-                    ? "What would you like to discuss? (Optional)"
-                    : "Additional Notes (Optional)"}
-                </label>
-                <textarea
-                  id="booking-notes"
-                  rows={2}
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Tell us about your concerns or requests"
-                  className={`${fieldClass} resize-none`}
-                />
+                <label htmlFor="booking-notes" className={labelClass}>{appointmentType === "consultation" ? "What would you like to discuss? (Optional)" : "Additional Notes (Optional)"}</label>
+                <textarea id="booking-notes" rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Tell us about your concerns or requests" className={`${fieldClass} resize-y`} />
               </div>
 
               {/* PRIVACY */}
-              <label className="flex items-start gap-3
-                font-montserrat text-[11px] leading-5
+              <label className="flex items-start gap-2
+                font-montserrat text-[10px] leading-4
                 text-[#777568]">
                 <input
                   type="checkbox"
@@ -787,11 +626,10 @@ export default function BookingModal({
                   className="mt-1 accent-[#4C5534]"
                 />
                 <span>
-                  I understand this is a demo appointment request and no details
-                  will be sent or saved. I have read the{" "}
+                  I have read the{" "}
                   <Link href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-[#4C5534] underline underline-offset-2">
                     Privacy Policy
-                  </Link>.
+                  </Link> and agree to continue with this appointment form.
                 </span>
               </label>
 
@@ -799,9 +637,9 @@ export default function BookingModal({
           </form>
         )}
 
-        {!preview && (
-          <footer className="z-10 shrink-0 border-t border-[#E3DDD1] bg-white px-4 py-3 shadow-[0_-10px_22px_rgba(50,45,30,0.035)] md:px-7">
-            <div className="mx-auto flex max-w-[1064px] flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+        {!preview && !submitted && (
+          <footer className="shrink-0 border-t border-[#E3DDD1] bg-[#F6F3ED] px-4 py-2 md:px-6">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
               <div className="min-w-0 font-montserrat">
                 <p className="text-[11px] font-semibold text-[#4C5534]">Your Appointment</p>
                 <p className="text-[12px] leading-5 text-[#777568]">
@@ -820,7 +658,6 @@ export default function BookingModal({
                 Preview Appointment Request <ChevronRightIcon className="h-4 w-4" />
               </button>
             </div>
-            <p className="mt-1 text-center font-montserrat text-[10px] text-[#777568] sm:text-left">Frontend preview only. No booking is submitted.</p>
           </footer>
         )}
       </div>

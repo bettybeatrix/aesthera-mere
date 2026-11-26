@@ -7,6 +7,7 @@ import { featuredTestimonials, supportingTestimonials } from "@/data/testimonial
 
 const GOOGLE_REVIEWS_URL =
   "https://www.google.com/search?q=aesthera+mere+beauty+creations&sca_esv=9c0ea2fc79e91fa8&biw=1536&bih=695&sxsrf=AKL5yDh4Yw6YgVbTwB9yTzPXpWWkAP_DBg%3A1794556159209&ei=_8D2ariwDPW3rfcP75nWmQ4&uact=5&oq=aesthera+mere+beauty+creations&gs_lp=Egxnd3Mtd2l6LXNlcnAiHmFlc3RoZXJhIG1lcmUgYmVhdXR5IGNyZWF0aW9uczIEECMYJzIHECMY8AUYJzILEC4YgAQYxwEYrwEyBhAAGBYYHjIGEAAYFhgeMgIQJjILEAAYgAQYigUYhgMyCxAAGIAEGIoFGIYDMgsQABiABBiKBRiGAzIFEAAY7wVIwAJQL1gvcAF4AJABAJgBjAGgAYwBqgEDMC4xuAEDyAEA-AEBmAIBoAKRAZgDAIgGAZIHAzAuMaAHjguyBwMwLjG4B5EBwgcDMi0xyAcDgAgB&sclient=gws-wiz-serp#lrd=0x3397c9ff0d4effff:0x8f90fb8a8325a1c2,1,,,,";
+const FACEBOOK_REVIEWS_URL = "https://www.facebook.com/aestheramereph/reviews";
 
 function reviewMotionStyle(
   index: number,
@@ -195,23 +196,30 @@ export default function Testimonials() {
           </div>
         </div>
 
-        {/* GOOGLE REVIEWS BUTTON */}
+        {/* EXTERNAL REVIEWS */}
         <div className="mt-7 flex flex-col items-center gap-3 text-center">
 
           <p className="font-montserrat text-[12px] text-[#80755F]">
-            Discover what our clients are saying on Google.
+            Discover what our clients are saying on Google and Facebook.
           </p>
 
-          <a
-            href={GOOGLE_REVIEWS_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex min-h-11 items-center justify-center gap-3 rounded-full border border-[#4C5534] px-6 py-3 font-montserrat text-[12px] font-medium text-[#4C5534] transition-all duration-300 hover:bg-[#4C5534] hover:text-[#FFFCF3] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4C5534]"
-          >
-            Read Our Google Reviews
-
-            <ChevronRightIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-          </a>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {[
+              { href: GOOGLE_REVIEWS_URL, label: "Read Our Google Reviews" },
+              { href: FACEBOOK_REVIEWS_URL, label: "Read Our Facebook Reviews" },
+            ].map(({ href, label }) => (
+              <a
+                key={href}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex min-h-11 items-center justify-center gap-3 rounded-full border border-[#4C5534] px-6 py-3 font-montserrat text-[12px] font-medium text-[#4C5534] transition-all duration-300 hover:bg-[#4C5534] hover:text-[#FFFCF3] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4C5534]"
+              >
+                {label}
+                <ChevronRightIcon className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </section>
