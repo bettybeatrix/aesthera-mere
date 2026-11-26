@@ -165,6 +165,17 @@ export default function ResultsGallery() {
         {expanded && filtered.length > PREVIEW_COUNT && <div className={styles.moreResults}><button type="button" className={styles.viewAll} onClick={() => setExpanded(false)}>Show less</button></div>}
         <p className={styles.resultsNote}>Individual results vary. Images are shared for illustrative purposes and do not guarantee identical outcomes.</p>
       </section>
+      <section className={styles.stylePreview} aria-labelledby="style-preview-title">
+        <div className={styles.stylePreviewHeading}>
+          <p className={styles.viewerEyebrow}>Visual direction</p>
+          <h2 id="style-preview-title">Pearl silk photo styling</h2>
+          <p>AI-generated styling mockups for the Ultraformer MPT gallery background. These are visual references only, not actual client photographs or treatment results.</p>
+        </div>
+        <div className={styles.stylePreviewGrid}>
+          <figure><Image src="/images/results/mockups/ultraformer-right-angle-ai-mockup.webp" alt="AI-generated right-angle portrait styling mockup on pearl-white silk" width={720} height={960} /><figcaption>Right angle · styling mockup</figcaption></figure>
+          <figure><Image src="/images/results/mockups/ultraformer-left-angle-ai-mockup.webp" alt="AI-generated left-angle portrait styling mockup on pearl-white silk" width={720} height={960} /><figcaption>Left angle · styling mockup</figcaption></figure>
+        </div>
+      </section>
       {selected && <ResultViewer item={selected} position={selectedPhotoIndex + 1} total={selectedSet?.photos.length ?? 1} onClose={closeViewer} onPrevious={() => changePhoto(-1)} onNext={() => changePhoto(1)} />}
     </div>
   );
