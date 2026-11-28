@@ -27,7 +27,25 @@ export default function SecretSantaAdmin() {
     catch(e){setError(e instanceof Error?e.message:"Unable to generate codes.");}
     setBusy(false);
   }
-  async function resetRehearsal() {\n    if(!window.confirm("Clear ALL 13 participants’ wishlists, draw assignments, and active sessions? The 13 participant accounts and access codes will be kept. Do this only after rehearsal and before the real exchange."))return;\n    setBusy(true);setError("");setMessage("");\n    try { const r=await request("/api/secret-santa/admin/reset","POST");const d=await r.json();if(!r.ok)throw new Error(d.error||"Reset failed.");setCodes(null);setDemoPairs(null);setMessage(d.message);await refresh(); }\n    catch(e){setError(e instanceof Error?e.message:"Reset failed.");}\n    setBusy(false);\n  }\n  async function startDraw() {
+  async function resetRehearsal() {
+    if (!window.confirm("Clear all 13 participants' wishlists, draw assignments, and active sessions? The participant accounts and access codes will be kept. Do this only after rehearsal and before the real exchange.")) return;
+    setBusy(true);
+    setError("");
+    setMessage("");
+    try {
+      const response = await request("/api/secret-santa/admin/reset", "POST");
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Reset failed.");
+      setCodes(null);
+      setDemoPairs(null);
+      setMessage(result.message);
+      await refresh();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Reset failed.");
+    }
+    setBusy(false);
+  }
+  async function startDraw() {
     if(!window.confirm("Start the final Secret Santa draw? This cannot be undone."))return;
     setBusy(true);setError("");setMessage("");
     try { const r=await request("/api/secret-santa/draw","POST");const d=await r.json();if(!r.ok)throw new Error(d.error||"The draw failed.");setMessage(d.message);await refresh(); }
