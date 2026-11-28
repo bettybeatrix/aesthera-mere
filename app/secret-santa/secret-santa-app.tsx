@@ -222,7 +222,7 @@ export default function SecretSantaApp() {
           {data.wishlist ? (
             <section className={styles.savedWishlist}>
               <div className={styles.savedHeader}>
-                <div><p className={styles.kicker}>YOUR WISHLIST</p><h3>Saved successfully</h3></div>
+                <div><p className={styles.kicker}>YOUR WISHLIST</p><h3>Wishlist details</h3></div>
                 {!data.drawStarted && <button className={styles.editButton} type="button" onClick={() => { setError(""); setEditing(true); }}>Edit wishlist</button>}
               </div>
               {!editing ? (
