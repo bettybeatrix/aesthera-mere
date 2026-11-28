@@ -27,24 +27,24 @@ export async function POST(request: NextRequest) {
       .from("ss_assignments").select("giver_id", { count: "exact", head: true });
     if (assignmentError) throw assignmentError;
 
-    // The first participant to draw creates the complete one-to-one derangement atomically.
-    // Later participants only reveal their own preassigned recipient.
+    // First participant to press Draw creates all 13 unique, no-self assignments atomically.
+    // Every subsequent participant only views their own already-created assignment.
     if ((assignmentCount ?? 0) === 0) {
       const { error: drawError } = await auth.db.rpc("draw_secret_santa");
       if (drawError) {
-        // A concurrent participant may have completed the draw first. Re-check below.
-        const { count: afterRace } = await auth.db
+        const { count: afterRace, error: raceError } = await auth.db
           .from("ss_assignments").select("giver_id", { count: "exact", head: true });
-        if ((afterRace ?? 0) === 0) throw drawError;
+        if (raceError) throw raceError;
+        if ((afterRace ?? 0) !== 13) throw drawError;
       }
     }
 
-    const { error: revealError } = await auth.db
-      .from("ss_assignments")
-      .update({ revealed_at: new Date().toISOString() })
-      .eq("giver_id", auth.id)
-      .is("revealed_at", null);
-    if (revealError) throw revealError;
+    const { data: ownAssignment, error: ownError } = await auth.db
+      .from("ss_assignments").select("recipient_id").eq("giver_id", auth.id).maybeSingle();
+    if (ownError) throw ownError;
+    if (!ownAssignment) {
+      return NextResponse.json({ error: "Your assignment could not be found. Please contact the organizer." }, { status: 500 });
+    }
 
     return NextResponse.json({
       success: true,
