@@ -15,6 +15,7 @@ type MeResponse = {
   wishlist: Wishlist | null;
   hasDrawn: boolean;
   drawStarted: boolean;
+  drawNames: string[];
   recipient: { name: string; wishlist: Wishlist | null } | null;
   progress: { submitted: number; total: number };
 };
@@ -287,7 +288,7 @@ export default function SecretSantaApp() {
                 <p className={styles.drawModalCopy}>Your Secret Santa is being revealed. Good luck!</p>
                 <div className={styles.drawReel} aria-label="Names spinning in the Secret Santa draw">
                   <div className={styles.reelTrack}>
-                    {["Ma'am Zophia","Sir Jace","Sir Lui","Ma'am Tarah","Ma'am Chi","Ma'am Mae","Ma'am Danna","Ma'am Acel","Sir Popoy","Doc Ian","Doc Raine","Cianna","James", "Ma'am Zophia","Sir Jace","Sir Lui","Ma'am Tarah","Ma'am Chi","Ma'am Mae","Ma'am Danna","Ma'am Acel","Sir Popoy","Doc Ian","Doc Raine","Cianna","James"].map((name,index)=><div className={styles.reelName} key={index}>{name}</div>)}
+                    {[...(data?.drawNames ?? []), ...(data?.drawNames ?? []), ...(data?.drawNames ?? [])].map((name,index)=><div className={styles.reelName} key={`${name}-${index}`}>{name}</div>)}
                   </div>
                   <div className={styles.reelMarker}>✧</div>
                 </div>
