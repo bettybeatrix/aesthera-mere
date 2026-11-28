@@ -21,7 +21,7 @@ export function sha256(value: string) {
 }
 
 export function createAccessCode() {
-  return randomBytes(9).toString("base64url").slice(0, 12).toUpperCase();
+  return randomBytes(6).toString("hex").toUpperCase();
 }
 
 export function isValidSetupKey(request: NextRequest) {
