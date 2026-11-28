@@ -43,6 +43,12 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    const { data: drawNames, error: namesError } = await auth.db
+      .from("ss_participants")
+      .select("name")
+      .order("name");
+    if (namesError) throw namesError;
+
     const { count: submittedCount } = await auth.db
       .from("ss_wishlists")
       .select("participant_id", { count: "exact", head: true });
@@ -55,7 +61,7 @@ export async function GET(request: NextRequest) {
       participant: { id: auth.id, name: auth.name },
       wishlist: wishlist ?? null,
       hasDrawn: Boolean(assignment),
-      drawStarted,
+      drawStarted,\n      drawNames: (drawNames ?? []).map((person) => person.name),
       recipient,
       progress: { submitted: submittedCount ?? 0, total: participantCount ?? 13 },
     });
