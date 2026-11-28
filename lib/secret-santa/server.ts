@@ -38,7 +38,7 @@ export function setSessionCookie(response: NextResponse, token: string) {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    path: "/secret-santa",
+    path: "/",
     maxAge: SESSION_DAYS * 24 * 60 * 60,
   });
 }
@@ -76,7 +76,7 @@ export function clearSessionCookie(response: NextResponse) {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    path: "/secret-santa",
+    path: "/",
     maxAge: 0,
   });
 }
