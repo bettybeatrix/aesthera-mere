@@ -287,7 +287,7 @@ export default function SecretSantaApp() {
                 <h2 id="draw-modal-title">The excitement begins...</h2>
                 <p className={styles.drawModalCopy}>Your Secret Santa is being revealed. Good luck!</p>
                 <div className={styles.drawReel} aria-label="Names spinning in the Secret Santa draw">
-                  <div className={styles.reelTrack}>
+                  <div className={styles.reelTrack} style={{ "--reel-distance": `${(data?.drawNames?.length ?? 13) * 88}px` } as React.CSSProperties}>
                     {[...(data?.drawNames ?? []), ...(data?.drawNames ?? []), ...(data?.drawNames ?? [])].map((name,index)=><div className={styles.reelName} key={`${name}-${index}`}>{name}</div>)}
                   </div>
                   <div className={styles.reelMarker}>✧</div>
