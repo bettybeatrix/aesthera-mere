@@ -10,15 +10,14 @@ type Wishlist = {
   avoid: string;
   notes: string;
 };
-
 type MeResponse = {
   participant: { id: string; name: string };
   wishlist: Wishlist | null;
   hasDrawn: boolean;
+  drawStarted: boolean;
   recipient: { name: string; wishlist: Wishlist | null } | null;
   progress: { submitted: number; total: number };
 };
-
 const emptyWishlist: Wishlist = {
   gift_ideas: ["", "", ""],
   preferred_colors: "",
@@ -33,7 +32,8 @@ export default function SecretSantaApp() {
   const [wishlist, setWishlist] = useState<Wishlist>(emptyWishlist);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [successOpen, setSuccessOpen] = useState(false);
   const [error, setError] = useState("");
 
   const loadMe = useCallback(async () => {
@@ -45,53 +45,68 @@ export default function SecretSantaApp() {
     }
     const result = (await response.json()) as MeResponse;
     setData(result);
-    setWishlist(result.wishlist ? {
-      ...result.wishlist,
-      gift_ideas: [...result.wishlist.gift_ideas, "", "", ""].slice(0, 5),
-    } : emptyWishlist);
+    if (result.wishlist) {
+      setWishlist({
+        ...result.wishlist,
+        gift_ideas: [...result.wishlist.gift_ideas, "", "", ""].slice(0, 3),
+      });
+      setEditing(false);
+    } else {
+      setWishlist(emptyWishlist);
+      setEditing(true);
+    }
     setLoading(false);
   }, []);
 
   useEffect(() => { void loadMe(); }, [loadMe]);
 
+  useEffect(() => {
+    if (!data) return;
+    const timer = window.setInterval(() => { void loadMe(); }, 15000);
+    return () => window.clearInterval(timer);
+  }, [data, loadMe]);
+
   async function signIn(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
     setError("");
-    const response = await fetch("/api/secret-santa/access", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ accessCode: accessCode.trim().toUpperCase() }),
-    });
-    const result = await response.json();
-    if (!response.ok) {
-      setError(result.error ?? "Unable to sign in.");
-      setBusy(false);
-      return;
+    try {
+      const response = await fetch("/api/secret-santa/access", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ accessCode: accessCode.trim().toUpperCase() }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error ?? "Unable to sign in.");
+      setAccessCode("");
+      await loadMe();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unable to sign in.");
     }
-    setAccessCode("");
-    await loadMe();
     setBusy(false);
   }
 
   async function saveWishlist(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (data?.drawStarted) {
+      setError("The draw has started. Wishlists can no longer be edited.");
+      return;
+    }
     setBusy(true);
     setError("");
-    setMessage("");
-    const response = await fetch("/api/secret-santa/wishlist", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...wishlist,
-        giftIdeas: wishlist.gift_ideas,
-      }),
-    });
-    const result = await response.json();
-    if (!response.ok) setError(result.error ?? "Unable to save your wishlist.");
-    else {
-      setMessage("Your wishlist has been saved.");
+    try {
+      const response = await fetch("/api/secret-santa/wishlist", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...wishlist, giftIdeas: wishlist.gift_ideas }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error ?? "Unable to save your wishlist.");
       await loadMe();
+      setSuccessOpen(true);
+      setEditing(false);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unable to save your wishlist.");
     }
     setBusy(false);
   }
@@ -101,7 +116,8 @@ export default function SecretSantaApp() {
     await fetch("/api/secret-santa/logout", { method: "POST" });
     setData(null);
     setWishlist(emptyWishlist);
-    setMessage("");
+    setEditing(false);
+    setSuccessOpen(false);
     setBusy(false);
   }
 
@@ -113,9 +129,7 @@ export default function SecretSantaApp() {
     });
   }
 
-  if (loading) {
-    return <main className={styles.page}><div className={styles.loading}>Preparing your Secret Santa...</div></main>;
-  }
+  if (loading) return <main className={styles.page}><div className={styles.loading}>Preparing your Secret Santa...</div></main>;
 
   return (
     <main className={styles.page}>
@@ -127,9 +141,7 @@ export default function SecretSantaApp() {
         <p className={styles.eyebrow}>YEAR-END PARTY 2026</p>
         <h1>Secret Santa</h1>
         <p className={styles.tagline}>A little wish, a little surprise.</p>
-        <div className={styles.eventMeta}>
-          <span>DECEMBER 16, 2026</span><i /> <span>ROMULO CAFÉ · BGC</span>
-        </div>
+        <div className={styles.eventMeta}><span>DECEMBER 16, 2026</span><i /><span>ROMULO CAFÉ · BGC</span></div>
       </header>
 
       {!data ? (
@@ -159,15 +171,13 @@ export default function SecretSantaApp() {
           </div>
 
           {data.hasDrawn && data.recipient ? (
-            <div className={styles.recipientCard}>
+            <div className={styles.recipientCard + " " + styles.revealCard}>
               <p className={styles.kicker}>YOUR SECRET RECIPIENT</p>
               <h3>{data.recipient.name}</h3>
-              <p className={styles.secretNote}>Keep it a secret until gift exchange night!</p>
+              <p className={styles.secretNote}>Your Secret Santa assignment is ready. Keep it a secret!</p>
               <div className={styles.wishDetails}>
-                <h4>Wishlist</h4>
-                {data.recipient.wishlist?.gift_ideas?.length ? (
-                  <ul>{data.recipient.wishlist.gift_ideas.map((gift, index) => <li key={index}>{gift}</li>)}</ul>
-                ) : <p>No gift ideas added yet.</p>}
+                <h4>Their wishlist</h4>
+                {data.recipient.wishlist?.gift_ideas?.length ? <ul>{data.recipient.wishlist.gift_ideas.map((gift, index) => <li key={index}>{gift}</li>)}</ul> : <p>No gift ideas added.</p>}
                 {data.recipient.wishlist?.preferred_colors && <p><b>Preferred colors:</b> {data.recipient.wishlist.preferred_colors}</p>}
                 {data.recipient.wishlist?.preferred_style && <p><b>Preferred style:</b> {data.recipient.wishlist.preferred_style}</p>}
                 {data.recipient.wishlist?.avoid && <p><b>Please avoid:</b> {data.recipient.wishlist.avoid}</p>}
@@ -177,31 +187,80 @@ export default function SecretSantaApp() {
           ) : (
             <div className={styles.drawCard}>
               <p className={styles.kicker}>THE SECRET DRAW</p>
-              <h3>{data.hasDrawn ? "Your draw is being prepared." : "Your recipient will be revealed here."}</h3>
-              <p>{data.hasDrawn ? "Please refresh in a moment." : "The organizer will start the draw once all wishlists have been submitted. You won't be able to see anyone else's assignment."}</p>
+              <h3>{data.drawStarted ? "Your name has been drawn!" : "Your recipient will be revealed here."}</h3>
+              <p>{data.drawStarted ? "Your assignment is being prepared. Refresh this page shortly." : "The organizer will start the draw once all wishlists have been submitted."}</p>
               <div className={styles.progress}><span style={{ width: `${Math.min(100, (data.progress.submitted / Math.max(1, data.progress.total)) * 100)}%` }} /></div>
               <small>{data.progress.submitted} of {data.progress.total} wishlists submitted</small>
             </div>
           )}
 
-          <form onSubmit={saveWishlist} className={styles.panelForm}>
-            <div><p className={styles.kicker}>YOUR WISHLIST</p><h3>What would you love to receive?</h3><p className={styles.helper}>Add up to five gift ideas within the ₱500 budget.</p></div>
-            {wishlist.gift_ideas.map((gift, index) => (
-              <div className={styles.field} key={index}>
-                <label htmlFor={`gift-${index}`}>Gift idea {index + 1}{index < 3 ? " *" : " (optional)"}</label>
-                <input id={`gift-${index}`} value={gift} onChange={(event) => updateGift(index, event.target.value)} placeholder={index === 0 ? "e.g. skincare, tumbler, book..." : "Another gift idea"} maxLength={120} />
+          {data.wishlist ? (
+            <section className={styles.savedWishlist}>
+              <div className={styles.savedHeader}>
+                <div><p className={styles.kicker}>YOUR WISHLIST</p><h3>Saved successfully</h3></div>
+                {!data.drawStarted && <button className={styles.editButton} type="button" onClick={() => { setError(""); setEditing(true); }}>Edit wishlist</button>}
               </div>
-            ))}
-            <div className={styles.field}><label htmlFor="colors">Preferred colors</label><input id="colors" value={wishlist.preferred_colors} onChange={(event) => setWishlist({ ...wishlist, preferred_colors: event.target.value })} placeholder="e.g. white, silver, neutrals" maxLength={160} /></div>
-            <div className={styles.field}><label htmlFor="style">Preferred style or interests</label><input id="style" value={wishlist.preferred_style} onChange={(event) => setWishlist({ ...wishlist, preferred_style: event.target.value })} placeholder="e.g. minimalist, cozy, practical" maxLength={160} /></div>
-            <div className={styles.field}><label htmlFor="avoid">Things you'd rather not receive</label><input id="avoid" value={wishlist.avoid} onChange={(event) => setWishlist({ ...wishlist, avoid: event.target.value })} placeholder="Optional" maxLength={300} /></div>
-            <div className={styles.field}><label htmlFor="notes">Additional notes</label><textarea id="notes" value={wishlist.notes} onChange={(event) => setWishlist({ ...wishlist, notes: event.target.value })} placeholder="Sizes, preferences, or helpful details..." rows={3} maxLength={500} /></div>
-            {error && <p className={styles.error}>{error}</p>}
-            {message && <p className={styles.success}>{message}</p>}
-            <button type="submit" disabled={busy}>{busy ? "Saving..." : "Save my wishlist"}</button>
-          </form>
+              {!editing ? (
+                <div className={styles.savedContent}>
+                  <ul>{data.wishlist.gift_ideas.map((gift, index) => <li key={index}>{gift}</li>)}</ul>
+                  {data.wishlist.preferred_colors && <p><b>Preferred colors:</b> {data.wishlist.preferred_colors}</p>}
+                  {data.wishlist.preferred_style && <p><b>Preferred style:</b> {data.wishlist.preferred_style}</p>}
+                  {data.wishlist.avoid && <p><b>Please avoid:</b> {data.wishlist.avoid}</p>}
+                  {data.wishlist.notes && <p><b>Additional notes:</b> {data.wishlist.notes}</p>}
+                  {data.drawStarted && <p className={styles.lockedNote}>The draw has started. Your wishlist is now locked and cannot be edited.</p>}
+                </div>
+              ) : (
+                <form onSubmit={saveWishlist} className={styles.panelForm}>
+                  <p className={styles.helper}>You can edit your wishlist until the organizer starts the draw.</p>
+                  {wishlist.gift_ideas.map((gift, index) => (
+                    <div className={styles.field} key={index}>
+                      <label htmlFor={`gift-${index}`}>Gift idea {index + 1}</label>
+                      <input id={`gift-${index}`} value={gift} onChange={(event) => updateGift(index, event.target.value)} placeholder="e.g. skincare, tumbler, book..." maxLength={120} />
+                    </div>
+                  ))}
+                  <div className={styles.field}><label htmlFor="colors">Preferred colors</label><input id="colors" value={wishlist.preferred_colors} onChange={(event) => setWishlist({ ...wishlist, preferred_colors: event.target.value })} placeholder="e.g. white, silver, neutrals" maxLength={160} /></div>
+                  <div className={styles.field}><label htmlFor="style">Preferred style or interests</label><input id="style" value={wishlist.preferred_style} onChange={(event) => setWishlist({ ...wishlist, preferred_style: event.target.value })} placeholder="e.g. minimalist, cozy, practical" maxLength={160} /></div>
+                  <div className={styles.field}><label htmlFor="avoid">Things you'd rather not receive</label><input id="avoid" value={wishlist.avoid} onChange={(event) => setWishlist({ ...wishlist, avoid: event.target.value })} placeholder="Optional" maxLength={300} /></div>
+                  <div className={styles.field}><label htmlFor="notes">Additional notes</label><textarea id="notes" value={wishlist.notes} onChange={(event) => setWishlist({ ...wishlist, notes: event.target.value })} placeholder="Sizes, preferences, or helpful details..." rows={3} maxLength={500} /></div>
+                  {error && <p className={styles.error}>{error}</p>}
+                  <div className={styles.formActions}>
+                    <button className={styles.cancelButton} type="button" onClick={() => { setEditing(false); setError(""); void loadMe(); }}>Cancel</button>
+                    <button type="submit" disabled={busy}>{busy ? "Saving..." : "Save wishlist"}</button>
+                  </div>
+                </form>
+              )}
+            </section>
+          ) : (
+            <form onSubmit={saveWishlist} className={styles.panelForm}>
+              <div><p className={styles.kicker}>YOUR WISHLIST</p><h3>What would you love to receive?</h3><p className={styles.helper}>Add up to three gift ideas within the ₱500 budget.</p></div>
+              {wishlist.gift_ideas.map((gift, index) => (
+                <div className={styles.field} key={index}>
+                  <label htmlFor={`gift-${index}`}>Gift idea {index + 1}</label>
+                  <input id={`gift-${index}`} value={gift} onChange={(event) => updateGift(index, event.target.value)} placeholder="e.g. skincare, tumbler, book..." maxLength={120} />
+                </div>
+              ))}
+              <div className={styles.field}><label htmlFor="colors">Preferred colors</label><input id="colors" value={wishlist.preferred_colors} onChange={(event) => setWishlist({ ...wishlist, preferred_colors: event.target.value })} placeholder="e.g. white, silver, neutrals" maxLength={160} /></div>
+              <div className={styles.field}><label htmlFor="style">Preferred style or interests</label><input id="style" value={wishlist.preferred_style} onChange={(event) => setWishlist({ ...wishlist, preferred_style: event.target.value })} placeholder="e.g. minimalist, cozy, practical" maxLength={160} /></div>
+              <div className={styles.field}><label htmlFor="avoid">Things you'd rather not receive</label><input id="avoid" value={wishlist.avoid} onChange={(event) => setWishlist({ ...wishlist, avoid: event.target.value })} placeholder="Optional" maxLength={300} /></div>
+              <div className={styles.field}><label htmlFor="notes">Additional notes</label><textarea id="notes" value={wishlist.notes} onChange={(event) => setWishlist({ ...wishlist, notes: event.target.value })} placeholder="Sizes, preferences, or helpful details..." rows={3} maxLength={500} /></div>
+              {error && <p className={styles.error}>{error}</p>}
+              <button type="submit" disabled={busy || data.drawStarted}>{busy ? "Saving..." : "Save my wishlist"}</button>
+            </form>
+          )}
           <p className={styles.footerNote}>Your wishlist is only shared with the person assigned to you.</p>
         </section>
+      )}
+
+      {successOpen && (
+        <div className={styles.modalBackdrop} role="presentation" onClick={() => setSuccessOpen(false)}>
+          <section className={styles.successModal} role="dialog" aria-modal="true" aria-labelledby="save-success-title" onClick={(event) => event.stopPropagation()}>
+            <div className={styles.modalSparkle}>✧</div>
+            <p className={styles.kicker}>A LITTLE WISH, A LITTLE SURPRISE</p>
+            <h2 id="save-success-title">Wishlist saved!</h2>
+            <p>Your wishlist has been successfully saved. You can view it anytime and edit it before the draw begins.</p>
+            <button type="button" onClick={() => setSuccessOpen(false)}>Lovely, thank you</button>
+          </section>
+        </div>
       )}
       <footer className={styles.footer}>AESTHERA MÈRE BEAUTY CREATIONS <span>✧</span> GLITZ & GLAM 2026</footer>
     </main>
