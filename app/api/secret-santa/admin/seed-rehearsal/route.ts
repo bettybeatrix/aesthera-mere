@@ -51,18 +51,12 @@ export async function POST(request: NextRequest) {
     const { error: wishlistError } = await db.from("ss_wishlists").upsert(rows, { onConflict: "participant_id" });
     if (wishlistError) throw wishlistError;
 
-    const { error: drawError } = await db.rpc("draw_secret_santa");
-    if (drawError) {
-      await db.from("ss_wishlists").delete().in("participant_id", people.map((p) => p.id));
-      throw drawError;
-    }
-
     return NextResponse.json({
       success: true,
-      message: "Rehearsal wishlists saved and a test draw completed. All 13 real participant accounts now have a temporary sample recipient.",
+      message: "Sample rehearsal wishlists saved for all 13 participants. No draw has been run; use the Admin Dashboard to start the draw when you are ready.",
       participants: 13,
       wishlistsSeeded: 13,
-      assignmentsCreated: 13,
+      assignmentsCreated: 0,
       note: "After testing, use the organizer reset endpoint to clear rehearsal wishlists, assignments, and sessions while keeping participant accounts and access codes.",
     });
   } catch {
