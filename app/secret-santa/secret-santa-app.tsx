@@ -34,7 +34,7 @@ export default function SecretSantaApp() {
   const [busy, setBusy] = useState(false);
   const [editing, setEditing] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
-  const [drawBusy, setDrawBusy] = useState(false);
+  const [drawBusy, setDrawBusy] = useState(false);\n  const [drawAnimationOpen, setDrawAnimationOpen] = useState(false);\n  const [drawAnimationDone, setDrawAnimationDone] = useState(false);
   const [error, setError] = useState("");
 
   const loadMe = useCallback(async () => {
@@ -113,18 +113,25 @@ export default function SecretSantaApp() {
   }
 
   async function drawMyRecipient() {
+    if (drawBusy || data?.progress.submitted !== data?.progress.total) return;
     setDrawBusy(true);
     setError("");
+    setDrawAnimationDone(false);
+    setDrawAnimationOpen(true);
     try {
       const response = await fetch("/api/secret-santa/draw", { method: "POST" });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error ?? "The draw is not available yet.");
+      await new Promise((resolve) => window.setTimeout(resolve, 4200));
       await loadMe();
+      setDrawAnimationDone(true);
     } catch (e) {
+      setDrawAnimationOpen(false);
       setError(e instanceof Error ? e.message : "Unable to draw your recipient.");
     }
     setDrawBusy(false);
   }
+
   async function signOut() {
     setBusy(true);
     await fetch("/api/secret-santa/logout", { method: "POST" });
@@ -201,11 +208,11 @@ export default function SecretSantaApp() {
           ) : (
             <div className={styles.drawCard}>
               <p className={styles.kicker}>THE SECRET DRAW</p>
-              <h3>{data.drawStarted ? "Your name has been drawn!" : "Your recipient will be revealed here."}</h3>
+              <h3>{data.drawStarted ? "The draw is ready!" : "Your recipient will be revealed here."}</h3>
               <p>{data.drawStarted ? "Your assignment is being prepared. Refresh this page shortly." : "The draw becomes available once everyone has submitted a wishlist. Each participant draws their own recipient."}</p>
               <div className={styles.progress}><span style={{ width: `${Math.min(100, (data.progress.submitted / Math.max(1, data.progress.total)) * 100)}%` }} /></div>
               <small>{data.progress.submitted} of {data.progress.total} wishlists submitted</small>
-              {data.progress.submitted === data.progress.total && <button type="button" onClick={drawMyRecipient} disabled={drawBusy}>{drawBusy ? "Preparing your draw..." : data.drawStarted ? "Reveal my recipient" : "Draw my Secret Santa"}</button>}
+              {data.progress.submitted === data.progress.total && !data.hasDrawn && <button className={styles.drawButton} type="button" onClick={drawMyRecipient} disabled={drawBusy}><span className={styles.drawButtonIcon}>✧</span>{drawBusy ? "Drawing your name..." : "Draw My Secret Santa"}<span className={styles.drawButtonHint}>Tap to reveal your surprise</span></button>}
               {error && <p className={styles.error}>{error}</p>}
             </div>
           )}
@@ -267,7 +274,37 @@ export default function SecretSantaApp() {
         </section>
       )}
 
-      {successOpen && (
+
+      {drawAnimationOpen && (
+        <div className={styles.drawModalBackdrop} role="presentation">
+          <section className={styles.drawModal} role="dialog" aria-modal="true" aria-labelledby="draw-modal-title">
+            {!drawAnimationDone ? (
+              <>
+                <p className={styles.kicker}>AESTHERA MÈRE · SECRET SANTA 2026</p>
+                <h2 id="draw-modal-title">The excitement begins...</h2>
+                <p className={styles.drawModalCopy}>Your Secret Santa is being revealed. Good luck!</p>
+                <div className={styles.drawReel} aria-label="Names spinning in the Secret Santa draw">
+                  <div className={styles.reelTrack}>
+                    {["Ma'am Zophia","Sir Jace","Sir Lui","Ma'am Tarah","Ma'am Chi","Ma'am Mae","Ma'am Danna","Ma'am Acel","Sir Popoy","Doc Ian","Doc Raine","Cianna","James", "Ma'am Zophia","Sir Jace","Sir Lui","Ma'am Tarah","Ma'am Chi","Ma'am Mae","Ma'am Danna","Ma'am Acel","Sir Popoy","Doc Ian","Doc Raine","Cianna","James"].map((name,index)=><div className={styles.reelName} key={index}>{name}</div>)}
+                  </div>
+                  <div className={styles.reelMarker}>✧</div>
+                </div>
+                <div className={styles.drawLoading}><span/><span/><span/></div>
+                <p className={styles.drawModalCopy}>Finding your one special match...</p>
+              </>
+            ) : (
+              <>
+                <div className={styles.drawFinishedIcon}>✧</div>
+                <p className={styles.kicker}>YOUR SECRET SANTA MATCH IS READY</p>
+                <h2 id="draw-modal-title">It's a match!</h2>
+                <p className={styles.drawModalCopy}>Your recipient has been revealed below. Keep it a secret!</p>
+                <button type="button" onClick={() => setDrawAnimationOpen(false)}>View my recipient</button>
+              </>
+            )}
+          </section>
+        </div>
+      )}
+\n      {successOpen && (
         <div className={styles.modalBackdrop} role="presentation" onClick={() => setSuccessOpen(false)}>
           <section className={styles.successModal} role="dialog" aria-modal="true" aria-labelledby="save-success-title" onClick={(event) => event.stopPropagation()}>
             <div className={styles.modalSparkle}>✧</div>
