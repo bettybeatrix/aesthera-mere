@@ -10,6 +10,7 @@ export default function SecretSantaAdmin() {
   const [busy,setBusy]=useState(false);
   const [error,setError]=useState("");
   const [message,setMessage]=useState("");
+  const [demoPairs,setDemoPairs]=useState<{giver:string;recipient:string}[]|null>(null);
   async function request(path:string,method="GET") {
     return fetch(path,{method,headers:{"x-secret-santa-setup-key":key},cache:"no-store"});
   }
@@ -33,6 +34,18 @@ export default function SecretSantaAdmin() {
     catch(e){setError(e instanceof Error?e.message:"The draw failed.");}
     setBusy(false);
   }
+  function previewDummyDraw() {
+    const demoNames = Array.from({ length: 13 }, (_, index) => `Test Participant ${String(index + 1).padStart(2, "0")}`);
+    const recipients = [...demoNames];
+    for (let attempt = 0; attempt < 100; attempt++) {
+      for (let i = recipients.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [recipients[i], recipients[j]] = [recipients[j], recipients[i]];
+      }
+      if (recipients.every((name, index) => name !== demoNames[index])) break;
+    }
+    setDemoPairs(demoNames.map((giver, index) => ({ giver, recipient: recipients[index] })));
+  }
   function downloadCodes() {
     if(!codes)return;
     const csv=["Name,Private Access Code",...codes.map(x=>'"'+x.name.replaceAll('"','""')+'","'+x.accessCode+'"')].join("\n");
@@ -44,7 +57,7 @@ export default function SecretSantaAdmin() {
   {status&&<section className={styles.dashboard} style={{marginTop:18}}><div className={styles.budgetCard}><div><span>WISHLISTS SUBMITTED</span><strong>{status.wishlistsSubmitted}/{status.total}</strong></div><div><span>DRAW ASSIGNMENTS</span><strong>{status.assignments}/{status.total}</strong></div></div>
   <div className={styles.recipientCard}><p className={styles.kicker}>DRAW INTEGRITY CHECK</p><h3>{status.drawComplete?"All assignments valid":status.assignments===0?"Draw not started":"Draw needs review"}</h3><p>Unique recipients: {status.uniqueRecipients}/{status.total}</p><p>Missing givers: {status.missingGivers} · Missing recipients: {status.missingRecipients}</p><p>Self-assignments: {status.selfAssignments}</p><p>{status.drawComplete?"Every participant has exactly one distinct recipient.":"The draw is not yet complete or needs attention."}</p></div>
   <div className={styles.recipientCard}><p className={styles.kicker}>PARTICIPANT CHECKLIST</p>{status.participants.map(p=><div key={p.name} style={{display:"flex",justifyContent:"space-between",gap:12,padding:"9px 0",borderBottom:"1px solid #eee",fontSize:12}}><span>{p.name}</span><strong style={{color:p.wishlistSubmitted?"#55734f":"#999"}}>{p.wishlistSubmitted?"Wishlist submitted":"Pending"}</strong></div>)}</div>
-  <div className={styles.panelForm}><h3>Organizer actions</h3><button type="button" onClick={refresh} disabled={busy}>Refresh status</button><button type="button" onClick={generateCodes} disabled={busy||status.assignments>0}>Generate / replace all 13 access codes</button><button type="button" onClick={startDraw} disabled={busy||status.wishlistsSubmitted!==13||status.assignments>0}>Start final draw</button><p className={styles.helper}>The draw button only activates when all 13 wishlists are submitted and no previous draw exists.</p></div>
-  {codes&&<div className={styles.recipientCard}><p className={styles.kicker}>ONE-TIME ACCESS CODES</p><p className={styles.helper}>Download this list now and send each code privately. It will disappear if you leave or refresh this page.</p>{codes.map(c=><div key={c.name} style={{display:"flex",justifyContent:"space-between",gap:12,padding:"9px 0",borderBottom:"1px solid #eee",fontSize:12}}><span>{c.name}</span><code>{c.accessCode}</code></div>)}<button style={{marginTop:16}} onClick={downloadCodes}>Download access codes (CSV)</button></div>}</section>}
+  <div className={styles.panelForm}><h3>Organizer actions</h3><button type="button" onClick={previewDummyDraw} disabled={busy}>Preview sample draw (dummy data)</button><p className={styles.helper}>This is a practice preview using 13 fictional participants. It does not save anything to the database and will not affect the real draw.</p><button type="button" onClick={refresh} disabled={busy}>Refresh status</button><button type="button" onClick={generateCodes} disabled={busy||status.assignments>0}>Generate / replace all 13 access codes</button><button type="button" onClick={startDraw} disabled={busy||status.wishlistsSubmitted!==13||status.assignments>0}>Start final draw</button><p className={styles.helper}>The draw button only activates when all 13 wishlists are submitted and no previous draw exists.</p></div>
+  {demoPairs&&<div className={styles.recipientCard}><p className={styles.kicker}>SAMPLE DRAW PREVIEW · DUMMY DATA ONLY</p><h3>Example giver and recipient pairs</h3><p className={styles.helper}>These are fictional names for demonstration. No real participant assignments have been made.</p>{demoPairs.map(pair=><div key={pair.giver} style={{display:"grid",gridTemplateColumns:"1fr auto 1fr",gap:10,padding:"9px 0",borderBottom:"1px solid #eee",fontSize:12}}><span>{pair.giver}</span><span aria-hidden="true">→</span><strong>{pair.recipient}</strong></div>)}<button style={{marginTop:16}} onClick={previewDummyDraw}>Generate another sample</button><button style={{marginTop:8}} onClick={()=>setDemoPairs(null)}>Close preview</button></div>}{codes&&<div className={styles.recipientCard}><p className={styles.kicker}>ONE-TIME ACCESS CODES</p><p className={styles.helper}>Download this list now and send each code privately. It will disappear if you leave or refresh this page.</p>{codes.map(c=><div key={c.name} style={{display:"flex",justifyContent:"space-between",gap:12,padding:"9px 0",borderBottom:"1px solid #eee",fontSize:12}}><span>{c.name}</span><code>{c.accessCode}</code></div>)}<button style={{marginTop:16}} onClick={downloadCodes}>Download access codes (CSV)</button></div>}</section>}
   <footer className={styles.footer}>AESTHERA MÈRE BEAUTY CREATIONS <span>✧</span> GLITZ & GLAM 2026</footer></main>;
 }
