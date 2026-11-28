@@ -34,7 +34,9 @@ export default function SecretSantaApp() {
   const [busy, setBusy] = useState(false);
   const [editing, setEditing] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
-  const [drawBusy, setDrawBusy] = useState(false);\n  const [drawAnimationOpen, setDrawAnimationOpen] = useState(false);\n  const [drawAnimationDone, setDrawAnimationDone] = useState(false);
+  const [drawBusy, setDrawBusy] = useState(false);
+  const [drawAnimationOpen, setDrawAnimationOpen] = useState(false);
+  const [drawAnimationDone, setDrawAnimationDone] = useState(false);
   const [error, setError] = useState("");
 
   const loadMe = useCallback(async () => {
@@ -304,7 +306,8 @@ export default function SecretSantaApp() {
           </section>
         </div>
       )}
-\n      {successOpen && (
+
+      {successOpen && (
         <div className={styles.modalBackdrop} role="presentation" onClick={() => setSuccessOpen(false)}>
           <section className={styles.successModal} role="dialog" aria-modal="true" aria-labelledby="save-success-title" onClick={(event) => event.stopPropagation()}>
             <div className={styles.modalSparkle}>✧</div>
