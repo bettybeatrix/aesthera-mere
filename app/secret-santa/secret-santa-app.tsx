@@ -34,6 +34,7 @@ export default function SecretSantaApp() {
   const [busy, setBusy] = useState(false);
   const [editing, setEditing] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
+  const [drawBusy, setDrawBusy] = useState(false);
   const [error, setError] = useState("");
 
   const loadMe = useCallback(async () => {
@@ -111,6 +112,19 @@ export default function SecretSantaApp() {
     setBusy(false);
   }
 
+  async function drawMyRecipient() {
+    setDrawBusy(true);
+    setError("");
+    try {
+      const response = await fetch("/api/secret-santa/draw", { method: "POST" });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error ?? "The draw is not available yet.");
+      await loadMe();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Unable to draw your recipient.");
+    }
+    setDrawBusy(false);
+  }
   async function signOut() {
     setBusy(true);
     await fetch("/api/secret-santa/logout", { method: "POST" });
@@ -188,9 +202,11 @@ export default function SecretSantaApp() {
             <div className={styles.drawCard}>
               <p className={styles.kicker}>THE SECRET DRAW</p>
               <h3>{data.drawStarted ? "Your name has been drawn!" : "Your recipient will be revealed here."}</h3>
-              <p>{data.drawStarted ? "Your assignment is being prepared. Refresh this page shortly." : "The organizer will start the draw once all wishlists have been submitted."}</p>
+              <p>{data.drawStarted ? "Your assignment is being prepared. Refresh this page shortly." : "The draw becomes available once everyone has submitted a wishlist. Each participant draws their own recipient."}</p>
               <div className={styles.progress}><span style={{ width: `${Math.min(100, (data.progress.submitted / Math.max(1, data.progress.total)) * 100)}%` }} /></div>
               <small>{data.progress.submitted} of {data.progress.total} wishlists submitted</small>
+              {data.progress.submitted === data.progress.total && <button type="button" onClick={drawMyRecipient} disabled={drawBusy}>{drawBusy ? "Preparing your draw..." : data.drawStarted ? "Reveal my recipient" : "Draw my Secret Santa"}</button>}
+              {error && <p className={styles.error}>{error}</p>}
             </div>
           )}
 
