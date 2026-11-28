@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
       .eq("giver_id", auth.id)
       .maybeSingle();
 
-    let recipient = null;
+    const { count: assignmentCount } = await auth.db\n      .from("ss_assignments")\n      .select("giver_id", { count: "exact", head: true });\n    const drawStarted = (assignmentCount ?? 0) > 0;\n\n    let recipient = null;
     if (assignment?.recipient_id) {
       const { data: person } = await auth.db
         .from("ss_participants")
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       participant: { id: auth.id, name: auth.name },
       wishlist: wishlist ?? null,
-      hasDrawn: Boolean(assignment),
+      hasDrawn: Boolean(assignment),\n      drawStarted,
       recipient,
       progress: { submitted: submittedCount ?? 0, total: participantCount ?? 13 },
     });
