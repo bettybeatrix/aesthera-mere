@@ -61,7 +61,8 @@ export async function GET(request: NextRequest) {
       participant: { id: auth.id, name: auth.name },
       wishlist: wishlist ?? null,
       hasDrawn: Boolean(assignment),
-      drawStarted,\n      drawNames: (drawNames ?? []).map((person) => person.name),
+      drawStarted,
+      drawNames: (drawNames ?? []).map((person) => person.name),
       recipient,
       progress: { submitted: submittedCount ?? 0, total: participantCount ?? 13 },
     });
