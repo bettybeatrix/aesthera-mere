@@ -8,7 +8,7 @@ export async function PUT(request: NextRequest) {
     const auth = await getParticipantFromRequest(request);
     if (!auth) return NextResponse.json({ error: "Please sign in with your private access code." }, { status: 401 });
 
-    const body = await request.json();
+    const { count: assignmentCount, error: assignmentCheckError } = await auth.db\n      .from("ss_assignments")\n      .select("giver_id", { count: "exact", head: true });\n    if (assignmentCheckError) throw assignmentCheckError;\n    if ((assignmentCount ?? 0) > 0) {\n      return NextResponse.json({ error: "Wishlists are locked because the Secret Santa draw has started." }, { status: 423 });\n    }\n\n    const body = await request.json();
     const giftIdeas = Array.isArray(body.giftIdeas)
       ? body.giftIdeas.filter((item: unknown): item is string => typeof item === "string").map((item: string) => item.trim()).filter(Boolean).slice(0, 5)
       : [];
